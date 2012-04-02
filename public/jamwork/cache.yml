@@ -1,0 +1,35 @@
+!!com.aptana.scripting.model.BundleElement
+author: Dreiwerken GmbH
+children:
+- !!com.aptana.scripting.model.SnippetElement
+  async: false
+  customProperties:
+    prefix_values: [debug]
+  displayName: DebugLogger
+  expansion: \jamwork\debug\DebugLogger::getInstance()->log(${1:output});
+  input: [none]
+  inputPath: null
+  keyBindingMap: null
+  outputPath: null
+  outputType: insert_as_snippet
+  path: bundle.rb
+  runType: current_thread
+  scope: null
+  workingDirectoryType: UNDEFINED
+- !!com.aptana.scripting.model.EnvironmentElement {customProperties: null, displayName: environment-684246f1-26e3-4bb3-ba2a-5d865ecaa85b,
+  path: bundle.rb, scope: source.php}
+copyright: null
+customProperties: {contact_email_rot_13: ''}
+decreaseIndentMarkers: &id001 {}
+description: ''
+displayName: PHP
+fileTypeRegistry: *id001
+fileTypes: []
+foldingStartMarkers: {!scope 'source.php': !regexp '(?-mix:(\/\*|\{\s*$|<<<HTML))'}
+foldingStopMarkers: {!scope 'source.php': !regexp '(?-mix:(\*\/|^\s*\}|^HTML;))'}
+increaseIndentMarkers: *id001
+license: null
+licenseUrl: null
+path: bundle.rb
+repository: null
+visible: true
