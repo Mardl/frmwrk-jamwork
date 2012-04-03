@@ -379,7 +379,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	
 	protected function tearDown()
 	{
-		$this->registry->reset();
+		Registry::reset();
 		unset($this->registry);
 		unset($this->response);
 		unset($this->template);

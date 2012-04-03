@@ -179,7 +179,6 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 		$method = new \ReflectionMethod($this->mysqlDatabase, 'getPrimary');
 		$method->setAccessible(true);
 		$field = $method->invoke($this->mysqlDatabase, 'testtable2');
-
 		$this->assertSame($field, '');
 	}
 	
@@ -194,7 +193,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	protected function tearDown()
-	{		
+	{	
 		$this->query->setQueryOnce('TRUNCATE TABLE `testtable`');
 		$this->recordset->execute($this->query);
 		Registry::reset();
@@ -202,4 +201,5 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 		unset($this->query);
 		unset($this->recordset);
 	}
+
 }

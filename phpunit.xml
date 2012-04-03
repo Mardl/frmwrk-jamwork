@@ -1,0 +1,10 @@
+<phpunit bootstrap="unittest/bootstrap.php"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	stopOnFailure="false">
+	<testsuite name="jamwork Testsuite">
+		<directory>unittest/jamwork</directory>
+	</testsuite>
+</phpunit>

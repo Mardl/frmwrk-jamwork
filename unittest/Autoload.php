@@ -1,6 +1,6 @@
 <?php
 
-require_once '../public/jamwork/Autoload.php';
+require_once 'public/jamwork/Autoload.php';
 
 function unittestLoader($className)
 {
