@@ -8,4 +8,3 @@
 		<directory>unittest/jamwork</directory>
 	</testsuite>
 </phpunit>
-
