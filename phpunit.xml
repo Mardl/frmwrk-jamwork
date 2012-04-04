@@ -4,7 +4,7 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	stopOnFailure="false">
-	<testsuite name="jamwork Testsuite">
+	<testsuite name="Testsuite for library jamwork">
 		<directory>unittest/jamwork</directory>
 	</testsuite>
 </phpunit>
