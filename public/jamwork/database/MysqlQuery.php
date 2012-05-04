@@ -85,44 +85,6 @@ class MysqlQuery implements Query
 	}
 	
 	/**
-	 * Fügt eine neue WHERE-Klausel mit "AND" hinzu
-	 * und escaped jeden Parameter
-	 *
-	 * @param string         $field Feld für die Bedingung
-	 * @param string|integer $value Vergleichswert
-	 * @param string         $op    Optionaler Operator, default "="
-	 *
-	 * @return MysqlQuery
-	 */
-	public function andWhere($field, $value, $op = '=')
-	{
-		$string = $this->clause.' AND ';
-		
-		if (is_null($value))
-		{
-			$string .= $field.' '.$op.' null ';
-		}
-		else if (is_numeric($value))
-		{
-			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
-		}
-		else if (is_string($value))
-		{
-			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
-		}
-		else if (is_array($value))
-		{
-			$string .= $this->in($field, $value);
-		}
-		else
-		{
-			return 'NULL';
-		}
-		
-		return $this->where($string);
-	}
-	
-	/**
 	 * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
 	 * und escaped jeden Parameter
 	 * 
