@@ -74,7 +74,7 @@ class MysqlDatabase implements Database
 
 				if ( $key == 'PRI')	
 				{
-					$where = ' WHERE '.$field.' = '.$this->clear($recordSet[$field]);
+					$where = ' WHERE '.$field.' = '.mysql_real_escape_string($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
 			}			
@@ -109,13 +109,14 @@ class MysqlDatabase implements Database
 				{
 					$setField .= ', ';
 				}
-				$setField .= $field.' = "'.$this->clear($recordSet[$field]).'"';
+				$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
 			}
 		}
 		
 		$query .= $setField;
 		
 		$queryObj = $this->newQuery()->setQueryOnce($query);
+				
 		if ($this->newRecordSet()->execute($queryObj)->isSuccessfull())
 		{
 			$id = mysql_insert_id();
@@ -149,7 +150,7 @@ class MysqlDatabase implements Database
 			{			
 				if ( $key == 'PRI')	
 				{
-					$where = ' WHERE '.$field.' = '.$this->clear($recordSet[$field]);
+					$where = ' WHERE '.$field.' = '.mysql_real_escape_string($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
 			}
