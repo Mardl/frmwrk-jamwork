@@ -53,14 +53,25 @@ class MysqlQuery implements Query
 	 */
 	public function addWhere($field, $value, $op = '=')
 	{
-		if (is_numeric($value))
+		if (is_null($value))
+		{
+			$string = $field.' '.$op.' null';
+		}
+		else if (is_numeric($value))
 		{
 			$string = $field.' '.$op.' '.mysql_real_escape_string($value);
 		}
-		
-		if (is_string($value))
+		else if (is_string($value))
 		{
 			$string = $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+		}
+		else if (is_array($value))
+		{
+			$string = $this->in($field, $value);
+		}
+		else
+		{
+			return 'NULL';
 		}
 		
 		return $this->where($string);
@@ -80,14 +91,25 @@ class MysqlQuery implements Query
 	{
 		$string = $this->clause.' AND ';
 		
-		if (is_numeric($value))
+		if (is_null($value))
+		{
+			$string .= $field.' '.$op.' null ';
+		}
+		else if (is_numeric($value))
 		{
 			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
 		}
-		
-		if (is_string($value))
+		else if (is_string($value))
 		{
 			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+		}
+		else if (is_array($value))
+		{
+			$string .= $this->in($field, $value);
+		}
+		else
+		{
+			return 'NULL';
 		}
 		
 		return $this->where($string);
@@ -111,6 +133,11 @@ class MysqlQuery implements Query
 			array_map(
 				function($item)
 				{
+					if (is_string($item))
+					{
+						return "'".mysql_real_escape_string($item)."'";	
+					}
+					
 					return mysql_real_escape_string($item);
 				},
 				$values
@@ -122,34 +149,6 @@ class MysqlQuery implements Query
 		return $string;
 	}
 	
-	/**
-	 * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
-	 * und escaped jeden Parameter
-	 *
-	 * @param string $field  Feld
-	 * @param array  $values Array mit String-Werten
-	 *
-	 * @return string
-	 */
-	public function inStrings($field, array $values)
-	{
-		$string = $field." IN ('";
-	
-		$string .= implode(
-			"','",
-			array_map(
-				function($item)
-				{
-					return mysql_real_escape_string($item);
-				},
-				$values
-			)
-		);
-	
-		$string .= "')";
-	
-		return $string;
-	}
 	
 	public function orderBy($order)
 	{
