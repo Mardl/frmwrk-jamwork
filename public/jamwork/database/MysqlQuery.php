@@ -84,6 +84,20 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 	
+	public function addWhereIsNull($field)
+	{
+		$string = '';
+		
+		if (!empty($this->clause))
+		{
+			$string = $this->clause.' AND ';
+		}
+		
+		$string .= $field.' IS NULL ';
+		
+		return $this->where($string);
+	}
+	
 	/**
 	 * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
 	 * und escaped jeden Parameter
