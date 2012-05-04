@@ -31,6 +31,11 @@ class DateTimeConverter
 		$this->analyze();
 	}
 	
+	public function __toString()
+	{
+		return $this->get('Y-m-d H:i:s');
+	}
+	
 	public function setOffset($time)
 	{
 		$this->offset = $time;

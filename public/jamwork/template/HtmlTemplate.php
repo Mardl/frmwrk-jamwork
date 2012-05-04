@@ -4,20 +4,20 @@ namespace jamwork\template;
 
 class HtmlTemplate implements Template
 {
-	private $templateDir = '';
-	private $templateFile = '';
-	private $templateFiles = array();
-	private $js = null;
-	private $css = null;
-	private $sections = array();
-	private $mainSection = '';
-	private $body = '';
-	private $sectionList = array();
-	private $doctype = '';
-	private $xmlHeader = '';
-	private $baseUrl = '';
-	private $title = '';
-	private $minify = true;
+	protected $templateDir = '';
+	protected $templateFile = '';
+	protected $templateFiles = array();
+	protected $js = null;
+	protected $css = null;
+	protected $sections = array();
+	protected $mainSection = '';
+	protected $body = '';
+	protected $sectionList = array();
+	protected $doctype = '';
+	protected $xmlHeader = '';
+	protected $baseUrl = '';
+	protected $title = '';
+	protected $minify = true;
 	
 	public function __construct($templateDir, $shrink=true)
 	{
