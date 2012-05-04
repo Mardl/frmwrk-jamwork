@@ -41,6 +41,16 @@ class MysqlQuery implements Query
 		return $this;
 	}
 	
+	/**
+	 * Fügt eine neue WHERE-Klausel hinzu
+	 * und escaped jeden Parameter
+	 * 
+	 * @param string         $field Feld für die Bedingung
+	 * @param string|integer $value Vergleichswert
+	 * @param string         $op    Optionaler Operator, default "="
+	 * 
+	 * @return MysqlQuery
+	 */
 	public function addWhere($field, $value, $op = '=')
 	{
 		if (is_numeric($value))
@@ -56,6 +66,16 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 	
+	/**
+	 * Fügt eine neue WHERE-Klausel mit "AND" hinzu
+	 * und escaped jeden Parameter
+	 *
+	 * @param string         $field Feld für die Bedingung
+	 * @param string|integer $value Vergleichswert
+	 * @param string         $op    Optionaler Operator, default "="
+	 *
+	 * @return MysqlQuery
+	 */
 	public function andWhere($field, $value, $op = '=')
 	{
 		$string = $this->clause.' AND ';
@@ -71,6 +91,35 @@ class MysqlQuery implements Query
 		}
 		
 		return $this->where($string);
+	}
+	
+	/**
+	 * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
+	 * und escaped jeden Parameter
+	 * 
+	 * @param string $field  Feld
+	 * @param array  $values Array mit dem Werten
+	 * 
+	 * @return string
+	 */
+	public function in($field, array $values)
+	{
+		$string = $field.' IN (';
+		
+		$string .= implode(
+			',',
+			array_map(
+				function($item)
+				{
+					return mysql_real_escape_string($item);
+				},
+				$values
+			)
+		);
+				
+		$string .= ')';
+		
+		return $string;
 	}
 	
 	public function orderBy($order)
@@ -96,15 +145,42 @@ class MysqlQuery implements Query
 		return $this;
 	}
 	
+	/**
+	 * Fügt einen neuen Join hinzu
+	 * 
+	 * @param string $join Join-Table
+	 * @param string $type Art des Joins, default LEFT
+	 * 
+	 * @return MysqlQuery
+	 */
 	public function join($join, $type = 'LEFT')
 	{
 		$this->jointable[] = array($join, $type);
 		return $this;
 	}
 	
+	/**
+	 * Fügt einen Join hinzu vorgefertig auf INNER JOIN
+	 * 
+	 * @param string $join Join-Table
+	 * 
+	 * @return MysqlQuery
+	 */
 	public function innerJoin($join)
 	{
 		return $this->join($join, 'INNER');
+	}
+	
+	/**
+	 * Fügt einen Join hinzu vorgefertig auf LEFT JOIN
+	 *
+	 * @param string $join Join-Table
+	 *
+	 * @return MysqlQuery
+	 */
+	public function leftJoin($join)
+	{
+		return $this->join($join, 'LEFT');
 	}
 	
 	public function on($joinOn)
@@ -113,6 +189,13 @@ class MysqlQuery implements Query
 		return $this;
 	}
 	
+	/**
+	 * Hinterlegt ein vorgefertigtes SQL-Statement.
+	 * 
+	 * @throws \ErrorException Wenn ein SELECT-Statement ausgeführt werden soll
+	 * 
+	 * @return MysqlQuery
+	 */
 	public function setQueryOnce($queryString)
 	{	
 		if (substr(strtoupper(trim($queryString)),0,6) == 'SELECT')
