@@ -53,21 +53,28 @@ class MysqlQuery implements Query
 	 */
 	public function addWhere($field, $value, $op = '=')
 	{
+		$string = '';
+		
+		if (!empty($this->clause))
+		{
+			$string = $this->clause.' AND ';
+		}	
+			
 		if (is_null($value))
 		{
-			$string = $field.' '.$op.' null';
+			return $this;
 		}
 		else if (is_numeric($value))
 		{
-			$string = $field.' '.$op.' '.mysql_real_escape_string($value);
+			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
 		}
 		else if (is_string($value))
 		{
-			$string = $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
 		}
 		else if (is_array($value))
 		{
-			$string = $this->in($field, $value);
+			$string .= $this->in($field, $value);
 		}
 		else
 		{
