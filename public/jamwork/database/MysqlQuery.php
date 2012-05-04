@@ -28,15 +28,49 @@ class MysqlQuery implements Query
 		$this->table = $table;
 		return $this;
 	}
+	
 	public function select($fields)
 	{
 		$this->fields = $fields;
 		return $this;
 	}
+	
 	public function where($clause)
 	{
 		$this->clause = $clause;
 		return $this;
+	}
+	
+	public function addWhere($field, $value, $op = '=')
+	{
+		if (is_numeric($value))
+		{
+			$string = $field.' '.$op.' '.mysql_real_escape_string($value);
+		}
+		
+		if (is_string($value))
+		{
+			$string = $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+		}
+		
+		return $this->where($string);
+	}
+	
+	public function andWhere($field, $value, $op = '=')
+	{
+		$string = $this->clause.' AND ';
+		
+		if (is_numeric($value))
+		{
+			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
+		}
+		
+		if (is_string($value))
+		{
+			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+		}
+		
+		return $this->where($string);
 	}
 	
 	public function orderBy($order)
@@ -51,10 +85,10 @@ class MysqlQuery implements Query
 		return $this;
 	}
 	
-	public function limit($start, $limit=null)
+	public function limit($offset, $limit=null)
 	{
 		$this->limit = array();
-		$this->limit[] = $start;
+		$this->limit[] = $offset;
 		if($limit !== null)
 		{
 			$this->limit[] = $limit;
@@ -62,10 +96,15 @@ class MysqlQuery implements Query
 		return $this;
 	}
 	
-	public function join($join)
+	public function join($join, $type = 'LEFT')
 	{
-		$this->jointable[] = $join;
+		$this->jointable[] = array($join, $type);
 		return $this;
+	}
+	
+	public function innerJoin($join)
+	{
+		return $this->join($join, 'INNER');
 	}
 	
 	public function on($joinOn)
@@ -76,6 +115,11 @@ class MysqlQuery implements Query
 	
 	public function setQueryOnce($queryString)
 	{	
+		if (substr(strtoupper(trim($queryString)),0,6) == 'SELECT')
+		{
+			throw new \ErrorException('Benutze den Querybuilder fÃ¼r SELECT-Statements');
+		}
+		
 		$this->ownQuery = $queryString;
 		return $this;
 	}
@@ -87,7 +131,7 @@ class MysqlQuery implements Query
 			$query = $this->ownQuery;
 			/* 
 			 * Clearing des onceQuery entfernt -> jedes Objekt hat EINE Aufgabe
-			 * verwendet man das Objekt mehrfach für verschidene Queries, so sollte man mehrere Objekte haben!
+			 * verwendet man das Objekt mehrfach fï¿½r verschidene Queries, so sollte man mehrere Objekte haben!
 			 * Zitat: Vadim am 29.02.2012
 			 */
 			// $this->ownQuery = '';
@@ -107,7 +151,7 @@ class MysqlQuery implements Query
 		{
 			foreach($this->jointable as $key => $value)
 			{
-				$query .= " LEFT JOIN ".$value." ON ".$this->joinon[$key]." ";
+				$query .= " ".$value[1]." JOIN ".$value[0]." ON ".$this->joinon[$key]." ";
 			}
 		}
 
@@ -127,7 +171,7 @@ class MysqlQuery implements Query
 		{
 			$query .= " LIMIT ".implode(', ',$this->limit);
 		}
-		return $this->database->clear($query);
+		return $query;//return $this->database->clear($query);
 	}
 
 }
