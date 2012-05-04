@@ -98,7 +98,7 @@ class MysqlQuery implements Query
 	 * und escaped jeden Parameter
 	 * 
 	 * @param string $field  Feld
-	 * @param array  $values Array mit dem Werten
+	 * @param array  $values Array mit Integer-Werten
 	 * 
 	 * @return string
 	 */
@@ -119,6 +119,35 @@ class MysqlQuery implements Query
 				
 		$string .= ')';
 		
+		return $string;
+	}
+	
+	/**
+	 * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
+	 * und escaped jeden Parameter
+	 *
+	 * @param string $field  Feld
+	 * @param array  $values Array mit String-Werten
+	 *
+	 * @return string
+	 */
+	public function inStrings($field, array $values)
+	{
+		$string = $field." IN ('";
+	
+		$string .= implode(
+			"','",
+			array_map(
+				function($item)
+				{
+					return mysql_real_escape_string($item);
+				},
+				$values
+			)
+		);
+	
+		$string .= "')";
+	
 		return $string;
 	}
 	
