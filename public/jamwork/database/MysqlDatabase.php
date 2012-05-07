@@ -58,6 +58,7 @@ class MysqlDatabase implements Database
 	{
 		$this->counts['update']++;
 		$primary = 0;
+		$priCount = 0;
 		$setField = '';
 		$where = '';
 		$this->readFields($tableName);
@@ -70,10 +71,11 @@ class MysqlDatabase implements Database
 				{
 					$setField .= ', ';
 				}
-				$setField .= $field.' = "'.$this->clear($recordSet[$field]).'"';
+				$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
 
 				if ( $key == 'PRI')	
 				{
+					$priCount++;
 					$where = ' WHERE '.$field.' = '.mysql_real_escape_string($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
@@ -81,6 +83,10 @@ class MysqlDatabase implements Database
 		}
 		$query .= $setField . $where;
 		
+		if ($priCount > 1)
+		{
+			throw new \Exception("Update auf multi Primary key nicht möglich.");
+		}		
 		if (empty($primary))
 		{
 			throw new \Exception("Kein Primary key angegeben.");
@@ -141,6 +147,7 @@ class MysqlDatabase implements Database
 	{
 		$this->counts['delete']++;
 		$primary = 0;
+		$priCount = 0;
 		$where = '';
 		$this->readFields($tableName);
 		$query = 'DELETE FROM '.$tableName;
@@ -150,12 +157,17 @@ class MysqlDatabase implements Database
 			{			
 				if ( $key == 'PRI')	
 				{
+					$priCount++;
 					$where = ' WHERE '.$field.' = '.mysql_real_escape_string($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
 			}
 		}
 		$query .= $where;
+		if ($priCount > 1)
+		{
+			throw new \Exception("Delete auf multi Primary key nicht möglich.");
+		}		
 		if (empty($primary))
 		{
 			throw new \Exception("Kein Primary key angegeben.");

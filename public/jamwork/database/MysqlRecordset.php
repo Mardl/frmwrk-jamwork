@@ -15,18 +15,25 @@ class MysqlRecordset implements Recordset
 		$sql = $this->query->get();
 		$this->result = mysql_query($sql);
 		
-		$debugger = Registry::getInstance()->debugger;
-		
-		if ($debugger)
+		try
 		{
-			if (@$debugger->queries)
+			$debugger = Registry::getInstance()->debugger;
+			
+			if ($debugger)
 			{
-				$debugger->queries[] = $sql;
+				if (@$debugger->queries)
+				{
+					$debugger->queries[] = $sql;
+				}
+				else
+				{
+					$debugger->queries = array($sql);
+				}
 			}
-			else
-			{
-				$debugger->queries = array($sql);
-			}
+		}
+		catch (\Exception $e)
+		{
+			// Nothing to do, debugger not initiated
 		}
 		
 		return $this;
