@@ -2,6 +2,8 @@
 
 namespace jamwork\database;
 
+use jamwork\common\Registry;
+
 class MysqlRecordset implements Recordset
 {
 	protected $query = null;
@@ -12,6 +14,28 @@ class MysqlRecordset implements Recordset
 		$this->query = $query;
 		$sql = $this->query->get();
 		$this->result = mysql_query($sql);
+		
+		try
+		{
+			$debugger = Registry::getInstance()->debugger;
+			
+			if ($debugger)
+			{
+				if (@$debugger->queries)
+				{
+					$debugger->queries[] = $sql;
+				}
+				else
+				{
+					$debugger->queries = array($sql);
+				}
+			}
+		}
+		catch (\Exception $e)
+		{
+			// Nothing to do, debugger not initiated
+		}
+		
 		return $this;
 	}
 	
