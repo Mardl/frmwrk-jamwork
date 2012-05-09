@@ -265,7 +265,8 @@ class MysqlQuery implements Query
 		{
 			$query .= " LIMIT ".implode(', ',$this->limit);
 		}
-		return $query;//return $this->database->clear($query);
+		//return $query;//
+		return $this->database->clear($query);
 	}
 
 }
