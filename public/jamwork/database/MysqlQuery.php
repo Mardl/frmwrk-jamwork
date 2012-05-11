@@ -9,6 +9,7 @@ class MysqlQuery implements Query
 	protected $table = '';
 	protected $fields = '*';
 	protected $clause = '';
+	protected $having = '';
 	protected $order = '';
 	protected $groupby = '';
 	protected $jointable = array();
@@ -51,13 +52,13 @@ class MysqlQuery implements Query
 	 * 
 	 * @return MysqlQuery
 	 */
-	public function addWhere($field, $value, $op = '=')
+	public function addWhere($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
 		
 		if (!empty($this->clause))
 		{
-			$string = $this->clause.' AND ';
+			$string = $this->clause.' '.$concat.' ';
 		}	
 			
 		if (is_null($value))
@@ -84,18 +85,48 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 	
-	public function addWhereIsNull($field)
+	public function addWhereIsNull($field, $op = 'IS', $concat = 'AND')
 	{
 		$string = '';
 		
 		if (!empty($this->clause))
 		{
-			$string = $this->clause.' AND ';
+			$string = $this->clause.' '.$concat.' ';
 		}
 		
-		$string .= $field.' IS NULL ';
+		$string .= $field.' '.$op.' NULL ';
 		
 		return $this->where($string);
+	}
+	
+	public function addHaving($field, $value, $op = '=', $concat = 'AND')
+	{
+		$string = '';
+		
+		if (!empty($this->having))
+		{
+			$string = $this->having.' '.$concat.' ';
+		}	
+			
+		if (is_null($value))
+		{
+			$string .= $field.' '.$op.' NULL';
+		}
+		else if (is_numeric($value))
+		{
+			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
+		}
+		else if (is_string($value))
+		{
+			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+		}
+		else
+		{
+			return 'NULL';
+		}
+		
+		$this->having = $string;
+		return $this;
 	}
 	
 	/**
@@ -257,6 +288,10 @@ class MysqlQuery implements Query
 		{
 			$query .= " GROUP BY ".$this->groupby;
 		}
+		if ( !empty($this->having) ) 
+		{
+			$query .= " HAVING ".$this->having;
+		}
 		if ( !empty($this->order) ) 
 		{
 			$query .= " ORDER BY ".$this->order;
@@ -265,7 +300,8 @@ class MysqlQuery implements Query
 		{
 			$query .= " LIMIT ".implode(', ',$this->limit);
 		}
-		return $query;//return $this->database->clear($query);
+		//return $query;//
+		return $this->database->clear($query);
 	}
 
 }
