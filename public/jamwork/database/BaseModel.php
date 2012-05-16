@@ -109,7 +109,7 @@ class BaseModel
 	
 	protected function deleteRecordValue($key)
 	{
-		unset($this->record[$this->prefix.$key]);
+		$this->record[$this->prefix.$key] = 0;
 	}
 	
 	public function get($key, $def=null)
