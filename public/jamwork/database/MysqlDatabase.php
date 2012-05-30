@@ -71,7 +71,15 @@ class MysqlDatabase implements Database
 				{
 					$setField .= ', ';
 				}
-				$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
+				
+				if ($recordSet[$field] !== 'NULL')
+				{
+					$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
+				}
+				else 
+				{
+					$setField .= $field.' = NULL';
+				}
 
 				if ( $key == 'PRI')	
 				{
@@ -107,6 +115,8 @@ class MysqlDatabase implements Database
 		$setField = '';
 		$this->readFields($tableName);
 		$query = 'INSERT INTO '.$tableName.' SET ';
+		
+		
 		foreach ( $this->field[$tableName] as $field => $key) 
 		{
 			if (isset($recordSet[$field]))
@@ -115,7 +125,16 @@ class MysqlDatabase implements Database
 				{
 					$setField .= ', ';
 				}
-				$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
+				
+				if ($recordSet[$field] !== 'NULL')
+				{
+					$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
+				}
+				else
+				{
+					$setField .= $field.' = NULL';
+				}
+				
 			}
 		}
 		
