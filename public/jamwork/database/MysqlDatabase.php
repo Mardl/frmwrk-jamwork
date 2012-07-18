@@ -92,7 +92,7 @@ class MysqlDatabase implements Database
 			throw new \Exception("Kein Primary key angegeben.");
 		}
 		$queryObj = $this->newQuery()->setQueryOnce($query);
-		if ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessfull())
+		if ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful())
 		{
 			return $primary;
 		} 
@@ -123,7 +123,7 @@ class MysqlDatabase implements Database
 		
 		$queryObj = $this->newQuery()->setQueryOnce($query);
 				
-		if ($this->newRecordSet()->execute($queryObj)->isSuccessfull())
+		if ($this->newRecordSet()->execute($queryObj)->isSuccessful())
 		{
 			$id = mysql_insert_id();
 			$pri = $this->getPrimary($tableName);
@@ -174,7 +174,7 @@ class MysqlDatabase implements Database
 		}
 				
 		$queryObj = $this->newQuery()->setQueryOnce($query);
-		return ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessfull() ? true : false);
+		return ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful() ? true : false);
 		
 	}
 	
