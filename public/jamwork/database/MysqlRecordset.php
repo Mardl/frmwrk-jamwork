@@ -38,8 +38,18 @@ class MysqlRecordset implements Recordset
 		
 		return $this;
 	}
-	
+
+	/**
+	 * @deprecated
+	 * @return bool
+	 */
 	public function isSuccessfull()
+	{
+		return $this->isSuccessful();
+	}
+
+
+	public function isSuccessful()
 	{
 		if($this->result)
 		{
