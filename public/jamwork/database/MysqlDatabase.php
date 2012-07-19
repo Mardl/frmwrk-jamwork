@@ -65,14 +65,15 @@ class MysqlDatabase implements Database
 		$query = 'UPDATE '.$tableName.' SET ';
 		foreach ( $this->field[$tableName] as $field => $key) 
 		{
-			if (isset($recordSet[$field]))
+			
+			if (array_key_exists($field,$recordSet))
 			{
 				if (!empty($setField))
 				{
 					$setField .= ', ';
 				}
 				
-				if ($recordSet[$field] !== 'NULL')
+				if ($recordSet[$field] !== 'NULL' && $recordSet[$field] !== null)
 				{
 					$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
 				}
@@ -80,6 +81,7 @@ class MysqlDatabase implements Database
 				{
 					$setField .= $field.' = NULL';
 				}
+				
 
 				if ( $key == 'PRI')	
 				{
@@ -90,6 +92,7 @@ class MysqlDatabase implements Database
 			}			
 		}
 		$query .= $setField . $where;
+		
 		
 		if ($priCount > 1)
 		{
