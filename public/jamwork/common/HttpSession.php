@@ -6,8 +6,12 @@ class HttpSession implements Session
 {
 	private $session = array();
 	
-	public function __construct()
+	public function __construct($SID = '')
 	{
+		if(!empty($SID))
+		{
+			session_id($SID);
+		}
 		session_start();
 		$this->session = $_SESSION;
 	}
