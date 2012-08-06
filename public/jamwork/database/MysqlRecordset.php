@@ -26,7 +26,7 @@ class MysqlRecordset implements Recordset
 			
 			if ($debugger)
 			{
-				if (@$debugger->queries)
+				if (isset($debugger->queries))
 				{
 					$debugger->queries[] = $sql;
 				}
