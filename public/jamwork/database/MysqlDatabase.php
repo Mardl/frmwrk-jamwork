@@ -102,7 +102,7 @@ class MysqlDatabase implements Database
 		{
 			throw new \Exception("Kein Primary key angegeben.");
 		}
-		
+
 		$queryObj = $this->newQuery()->setQueryOnce($query);
 		if ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful())
 		{

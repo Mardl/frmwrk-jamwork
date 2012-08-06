@@ -8,7 +8,12 @@ class MysqlRecordset implements Recordset
 {
 	protected $query = null;
 	protected $result = false;
-	
+
+
+	/**
+	 * @param Query $query
+	 * @return Recordset
+	 */
 	public function execute(Query $query)
 	{
 		$this->query = $query;
