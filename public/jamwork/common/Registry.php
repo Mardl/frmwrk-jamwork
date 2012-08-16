@@ -29,8 +29,12 @@ class Registry
     {
     	
     }
- 
-    public static function getInstance()
+
+	/**
+	 * @static
+	 * @return Registry
+	 */
+	public static function getInstance()
     {
         if (self::$uniqueInstance === NULL) {
             self::$uniqueInstance = new Registry();
@@ -94,7 +98,10 @@ class Registry
 	{
 		$this->set(self::KEY_DATABASE, $database , self::KEY_SYSTEM);
 	}
-	
+
+	/**
+	 * @return Database
+	 */
 	public function getDatabase()
 	{
 		return $this->get(self::KEY_DATABASE, self::KEY_SYSTEM );

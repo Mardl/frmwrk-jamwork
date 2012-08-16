@@ -84,7 +84,7 @@ class MysqlQuery implements Query
 		
 		return $this->where($string);
 	}
-	
+
 	public function addWhereIsNull($field, $op = 'IS', $concat = 'AND')
 	{
 		$string = '';

@@ -65,14 +65,15 @@ class MysqlDatabase implements Database
 		$query = 'UPDATE '.$tableName.' SET ';
 		foreach ( $this->field[$tableName] as $field => $key) 
 		{
-			if (isset($recordSet[$field]))
+			
+			if (array_key_exists($field,$recordSet))
 			{
 				if (!empty($setField))
 				{
 					$setField .= ', ';
 				}
 				
-				if ($recordSet[$field] !== 'NULL')
+				if ($recordSet[$field] !== 'NULL' && $recordSet[$field] !== null)
 				{
 					$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
 				}
@@ -80,6 +81,7 @@ class MysqlDatabase implements Database
 				{
 					$setField .= $field.' = NULL';
 				}
+				
 
 				if ( $key == 'PRI')	
 				{
@@ -94,13 +96,15 @@ class MysqlDatabase implements Database
 		if ($priCount > 1)
 		{
 			throw new \Exception("Update auf multi Primary key nicht möglich.");
-		}		
+		}
+
 		if (empty($primary))
 		{
 			throw new \Exception("Kein Primary key angegeben.");
 		}
+
 		$queryObj = $this->newQuery()->setQueryOnce($query);
-		if ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessfull())
+		if ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful())
 		{
 			return $primary;
 		} 
@@ -142,7 +146,7 @@ class MysqlDatabase implements Database
 		
 		$queryObj = $this->newQuery()->setQueryOnce($query);
 				
-		if ($this->newRecordSet()->execute($queryObj)->isSuccessfull())
+		if ($this->newRecordSet()->execute($queryObj)->isSuccessful())
 		{
 			$id = mysql_insert_id();
 			$pri = $this->getPrimary($tableName);
@@ -193,7 +197,7 @@ class MysqlDatabase implements Database
 		}
 				
 		$queryObj = $this->newQuery()->setQueryOnce($query);
-		return ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessfull() ? true : false);
+		return ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful() ? true : false);
 		
 	}
 	

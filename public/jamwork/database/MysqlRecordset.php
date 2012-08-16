@@ -8,7 +8,12 @@ class MysqlRecordset implements Recordset
 {
 	protected $query = null;
 	protected $result = false;
-	
+
+
+	/**
+	 * @param Query $query
+	 * @return Recordset
+	 */
 	public function execute(Query $query)
 	{
 		$this->query = $query;
@@ -21,7 +26,7 @@ class MysqlRecordset implements Recordset
 			
 			if ($debugger)
 			{
-				if (@$debugger->queries)
+				if (isset($debugger->queries))
 				{
 					$debugger->queries[] = $sql;
 				}
@@ -38,8 +43,18 @@ class MysqlRecordset implements Recordset
 		
 		return $this;
 	}
-	
+
+	/**
+	 * @deprecated
+	 * @return bool
+	 */
 	public function isSuccessfull()
+	{
+		return $this->isSuccessful();
+	}
+
+
+	public function isSuccessful()
 	{
 		if($this->result)
 		{
