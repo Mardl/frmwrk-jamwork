@@ -16,6 +16,8 @@ class MysqlQuery implements Query
 	protected $limit = array();
 	protected $joinon = array();
 	protected $ownQuery = '';
+	protected $openClosure = false;
+	protected $closeClosure = false;
 	
 	private $database = null;
 	
@@ -42,6 +44,16 @@ class MysqlQuery implements Query
 		return $this;
 	}
 	
+	public function openClosure(){
+		$this->openClosure = true;
+		return $this;
+	}
+	
+	public function closeClosure(){
+		$this->clause .= ' )';
+		return $this;
+	}
+	
 	/**
 	 * Fügt eine neue WHERE-Klausel hinzu
 	 * und escaped jeden Parameter
@@ -58,7 +70,15 @@ class MysqlQuery implements Query
 		
 		if (!empty($this->clause))
 		{
-			$string = $this->clause.' '.$concat.' ';
+			if ($this->openClosure)
+			{
+				$string = $this->clause.' '.$concat.' (';
+				$this->openClosure = false;
+			}
+			else
+			{
+				$string = $this->clause.' '.$concat.' ';
+			}
 		}	
 			
 		if (is_null($value))
@@ -81,6 +101,8 @@ class MysqlQuery implements Query
 		{
 			return 'NULL';
 		}
+		
+		
 		
 		return $this->where($string);
 	}
