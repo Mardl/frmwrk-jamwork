@@ -12,6 +12,7 @@ interface Database
 	 */
 	public function newQuery();
 
+
 	/**
 	 * @abstract
 	 * @return Recordset

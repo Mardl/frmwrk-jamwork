@@ -11,6 +11,8 @@ class MysqlRecordset implements Recordset
 
 
 	/**
+	 * Führt das übergeben Query Objekt aus
+	 *
 	 * @param Query $query
 	 * @return Recordset
 	 */
@@ -18,21 +20,32 @@ class MysqlRecordset implements Recordset
 	{
 		$this->query = $query;
 		$sql = $this->query->get();
-		$this->result = mysql_query($sql);
-		
+		return $this->executeStmt($sql);
+	}
+
+	/**
+	 * Führt den übergebenen Statement String aus
+	 *
+	 * @param $stmtString Statement das ausgeführt werden soll
+	 * @return MysqlRecordset
+	 */
+	private function executeStmt($stmtString)
+	{
+		$this->result = mysql_query($stmtString);
+
 		try
 		{
 			$debugger = Registry::getInstance()->debugger;
-			
+
 			if ($debugger)
 			{
 				if (isset($debugger->queries))
 				{
-					$debugger->queries[] = $sql;
+					$debugger->queries[] = $stmtString;
 				}
 				else
 				{
-					$debugger->queries = array($sql);
+					$debugger->queries = array($stmtString);
 				}
 			}
 		}
@@ -40,7 +53,7 @@ class MysqlRecordset implements Recordset
 		{
 			// Nothing to do, debugger not initiated
 		}
-		
+
 		return $this;
 	}
 
