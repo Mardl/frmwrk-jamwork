@@ -157,6 +157,20 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 	
+	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
+	{
+		$string = '';
+	
+		if (!empty($this->clause))
+		{
+			$string = $this->clause.' '.$concat.' ';
+		}
+	
+		$string .= $field.' = '.mysql_real_escape_string($value).' ';
+	
+		return $this->where($string);
+	}
+	
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
 	{
 		$string = '';
@@ -170,6 +184,8 @@ class MysqlQuery implements Query
 	
 		return $this->where($string);
 	}
+	
+	
 	
 	public function addHaving($field, $value, $op = '=', $concat = 'AND')
 	{
