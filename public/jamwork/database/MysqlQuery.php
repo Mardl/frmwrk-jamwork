@@ -106,15 +106,7 @@ class MysqlQuery implements Query
 		
 		if (!empty($this->clause))
 		{
-			if ($this->openClosure)
-			{
-				$string = $this->clause.' '.$concat.' (';
-				$this->openClosure = false;
-			}
-			else
-			{
-				$string = $this->clause.' '.$concat.' ';
-			}
+			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}	
 			
 		if (is_null($value))
@@ -149,7 +141,8 @@ class MysqlQuery implements Query
 		
 		if (!empty($this->clause))
 		{
-			$string = $this->clause.' '.$concat.' ';
+			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
+			//$string = $this->clause.' '.$concat.' ';
 		}
 		
 		$string .= $field.' '.$op.' NULL ';
@@ -163,21 +156,22 @@ class MysqlQuery implements Query
 	
 		if (!empty($this->clause))
 		{
-			$string = $this->clause.' '.$concat.' ';
+			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
+			//$string = $this->clause.' '.$concat.' ';
 		}
 	
 		$string .= $field.' = '.mysql_real_escape_string($value).' ';
 	
 		return $this->where($string);
 	}
-	
+
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
 	{
 		$string = '';
 	
 		if (!empty($this->clause))
 		{
-			$string = $this->clause.' '.$concat.' ';
+			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
 	
 		$string .= $field.' LIKE "'.sprintf($phraseOrder, mysql_real_escape_string($value)).'" ';
@@ -193,7 +187,8 @@ class MysqlQuery implements Query
 		
 		if (!empty($this->having))
 		{
-			$string = $this->having.' '.$concat.' ';
+			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
+			//$string = $this->having.' '.$concat.' ';
 		}	
 			
 		if (is_null($value))
@@ -441,6 +436,23 @@ class MysqlQuery implements Query
 		}
 
 		return $this->database->clear($query);
+	}
+
+	private function concatToClause($clause, $concat, $openClosure)
+	{
+		$strOut = "";
+
+		if ($openClosure)
+		{
+			$strOut = $clause.' '.$concat.' (';
+			$this->openClosure = false;
+		}
+		else
+		{
+			$strOut = $clause.' '.$concat.' ';
+		}
+
+		return $strOut;
 	}
 
 }
