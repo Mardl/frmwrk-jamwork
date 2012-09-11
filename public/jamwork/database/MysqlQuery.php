@@ -187,8 +187,7 @@ class MysqlQuery implements Query
 		
 		if (!empty($this->having))
 		{
-			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
-			//$string = $this->having.' '.$concat.' ';
+			$string = $this->having.' '.$concat.' ';
 		}	
 			
 		if (is_null($value))
