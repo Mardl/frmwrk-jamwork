@@ -6,7 +6,9 @@ use \jamwork\database\Database;
 
 class MysqlQuery implements Query
 {
+	protected $queryTyp = 1;
 	protected $table = '';
+	protected $sets = '';
 	protected $fields = '*';
 	protected $clause = '';
 	protected $having = '';
@@ -16,6 +18,8 @@ class MysqlQuery implements Query
 	protected $limit = array();
 	protected $joinon = array();
 	protected $ownQuery = '';
+	protected $openClosure = false;
+	protected $closeClosure = false;
 	
 	private $database = null;
 	
@@ -32,14 +36,58 @@ class MysqlQuery implements Query
 	
 	public function select($fields)
 	{
+		$this->setSelectType();
 		$this->fields = $fields;
 		return $this;
 	}
-	
+
+	public function update($table)
+	{
+		$this->setUpdateType();
+		$this->table = $table;
+		return $this;
+	}
+
+	public function set($fieldName, $value)
+	{
+		$this->sets[$fieldName] = $value;
+		return $this;
+	}
+
 	public function where($clause)
 	{
 		$this->clause = $clause;
 		return $this;
+	}
+	
+	public function openClosure(){
+		$this->openClosure = true;
+		return $this;
+	}
+	
+	public function closeClosure(){
+		$this->clause .= ' )';
+		return $this;
+	}
+
+	private function setSelectType()
+	{
+		$this->queryTyp = 1;
+	}
+
+	private function setUpdateType()
+	{
+		$this->queryTyp = 2;
+	}
+
+	protected function isSelectStatement()
+	{
+		return ($this->queryTyp == 1);
+	}
+
+	protected function isUpdateStatement()
+	{
+		return ($this->queryTyp == 2);
 	}
 	
 	/**
@@ -58,7 +106,15 @@ class MysqlQuery implements Query
 		
 		if (!empty($this->clause))
 		{
-			$string = $this->clause.' '.$concat.' ';
+			if ($this->openClosure)
+			{
+				$string = $this->clause.' '.$concat.' (';
+				$this->openClosure = false;
+			}
+			else
+			{
+				$string = $this->clause.' '.$concat.' ';
+			}
 		}	
 			
 		if (is_null($value))
@@ -82,6 +138,8 @@ class MysqlQuery implements Query
 			return 'NULL';
 		}
 		
+		
+		
 		return $this->where($string);
 	}
 
@@ -99,6 +157,20 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 	
+	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
+	{
+		$string = '';
+	
+		if (!empty($this->clause))
+		{
+			$string = $this->clause.' '.$concat.' ';
+		}
+	
+		$string .= $field.' = '.mysql_real_escape_string($value).' ';
+	
+		return $this->where($string);
+	}
+	
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
 	{
 		$string = '';
@@ -112,6 +184,8 @@ class MysqlQuery implements Query
 	
 		return $this->where($string);
 	}
+	
+	
 	
 	public function addHaving($field, $value, $op = '=', $concat = 'AND')
 	{
@@ -262,8 +336,18 @@ class MysqlQuery implements Query
 		$this->ownQuery = $queryString;
 		return $this;
 	}
-	
+
 	public function get()
+	{
+		if($this->isUpdateStatement())
+		{
+			return $this->getUpdate();
+		}
+
+		return $this->getSelect();
+	}
+
+	private function getSelect()
 	{
 		if(!empty($this->ownQuery))
 		{
@@ -315,6 +399,47 @@ class MysqlQuery implements Query
 			$query .= " LIMIT ".implode(', ',$this->limit);
 		}
 		//return $query;//
+		return $this->database->clear($query);
+	}
+
+	private function getUpdate()
+	{
+		if(!empty($this->ownQuery))
+		{
+			$query = $this->ownQuery;
+			return $query;
+		}
+
+		$query = "UPDATE ".$this->table." SET ";
+
+		if(is_array($this->sets))
+		{
+			$setValues = "";
+
+			foreach($this->sets as $key => $value)
+			{
+				if (is_null($value))
+				{
+					$setValues .= $key . " = NULL";
+				}
+				else if (is_numeric($value))
+				{
+					$setValues .= $key . " = " . $value;
+				}
+				else if (is_string($value))
+				{
+					$setValues .= $key . " = '" . $value . "'";
+				}
+			}
+
+			$query .= $setValues;
+		}
+
+		if ( !empty($this->clause) )
+		{
+			$query .= " WHERE ".$this->clause;
+		}
+
 		return $this->database->clear($query);
 	}
 

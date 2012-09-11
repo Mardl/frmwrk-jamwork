@@ -27,7 +27,7 @@ class MysqlDatabase implements Database
 
 		$db = mysql_select_db($this->dbname) or die ('Error select_db to mysql');
 	}
-		
+
 	public function newQuery()
 	{
 		$query = new MysqlQuery($this);
