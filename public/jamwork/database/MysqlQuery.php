@@ -104,7 +104,7 @@ class MysqlQuery implements Query
 	{
 		$string = '';
 		
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}	
@@ -139,7 +139,7 @@ class MysqlQuery implements Query
 	{
 		$string = '';
 		
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 			//$string = $this->clause.' '.$concat.' ';
@@ -154,7 +154,7 @@ class MysqlQuery implements Query
 	{
 		$string = '';
 	
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 			//$string = $this->clause.' '.$concat.' ';
@@ -169,7 +169,7 @@ class MysqlQuery implements Query
 	{
 		$string = '';
 	
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
@@ -443,10 +443,17 @@ class MysqlQuery implements Query
 
 		if ($openClosure)
 		{
-			$strOut = $clause.' '.$concat.' (';
+			if (!empty($this->clause))
+			{
+				$strOut = $clause.' '.$concat.' (';
+			}
+			else
+			{
+				$strOut = $clause.' (';
+			}
 			$this->openClosure = false;
 		}
-		else
+		else if (!empty($this->clause))
 		{
 			$strOut = $clause.' '.$concat.' ';
 		}
