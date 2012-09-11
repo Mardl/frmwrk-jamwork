@@ -65,15 +65,15 @@ class MysqlQuery implements Query
 		{
 			return $this;
 		}
-		else if (is_numeric($value))
+		elseif (is_numeric($value))
 		{
 			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
 		}
-		else if (is_string($value))
+		elseif (is_string($value))
 		{
 			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
 		}
-		else if (is_array($value))
+		elseif (is_array($value))
 		{
 			$string .= $this->in($field, $value);
 		}
@@ -270,7 +270,7 @@ class MysqlQuery implements Query
 			$query = $this->ownQuery;
 			/* 
 			 * Clearing des onceQuery entfernt -> jedes Objekt hat EINE Aufgabe
-			 * verwendet man das Objekt mehrfach f�r verschidene Queries, so sollte man mehrere Objekte haben!
+			 * verwendet man das Objekt mehrfach für verschidene Queries, so sollte man mehrere Objekte haben!
 			 * Zitat: Vadim am 29.02.2012
 			 */
 			// $this->ownQuery = '';

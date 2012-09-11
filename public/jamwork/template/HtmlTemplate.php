@@ -18,6 +18,7 @@ class HtmlTemplate implements Template
 	protected $baseUrl = '';
 	protected $title = '';
 	protected $minify = true;
+	protected $meta = array();
 	
 	public function __construct($templateDir, $shrink=true)
 	{
@@ -25,6 +26,9 @@ class HtmlTemplate implements Template
 		$this->css = new CssStylesheet($shrink);
 
 		$this->setTemplateDir($templateDir);
+
+		$this->addMeta('language', 'de');
+		$this->addMeta('Content-Type', 'text/html; charset=utf-8', 'http-equiv');
 	}
 	
 	public function __destruct()
@@ -36,6 +40,22 @@ class HtmlTemplate implements Template
 		{
 			unset($obj);
 		}
+	}
+	
+	public function addMeta($key, $value, $keyName='name')
+	{
+		$this->meta[$keyName.'="'.$key.'"'] = $value;
+	}
+	
+	public function getMeta()
+	{
+		$strOut = array();
+		foreach($this->meta as $key => $content)
+		{
+			$strOut[] = '<meta '.$key.' content="'.$content.'" />';
+		}
+		
+		return implode("\n", $strOut);
 	}
 	
 	public function setCacheDir($dir)
@@ -113,8 +133,7 @@ class HtmlTemplate implements Template
 		$strOut .= $this->getDoctype();
 		$strOut .= '<head>'."\n";
 		$strOut .= $this->getBaseUrl();
-		$strOut .= '<meta name="language" content="de" />'."\n";
-		$strOut .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";
+		$strOut .= $this->getMeta()."\n"."\n";
 		$strOut .= $this->getTitle();
 		$strOut .= $this->getFavicon();
 		$strOut .= $this->css()->flush();
