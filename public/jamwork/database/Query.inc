@@ -64,7 +64,7 @@ interface Query
 	 * @param $distinct
 	 * @return void
 	 */
-	public function setDistinct($distinct);
+	public function distinct($distinct);
 
 
 	/**
