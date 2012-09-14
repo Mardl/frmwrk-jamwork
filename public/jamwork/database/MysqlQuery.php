@@ -7,6 +7,7 @@ use \jamwork\database\Database;
 class MysqlQuery implements Query
 {
 	protected $queryTyp = 1;
+	protected $distinct = false;
 	protected $table = '';
 	protected $sets = '';
 	protected $fields = '*';
@@ -70,6 +71,12 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	public function distinct($distinct = true)
+	{
+		$this->distinct = $distinct;
+		return $this;
+	}
+
 	private function setSelectType()
 	{
 		$this->queryTyp = 1;
@@ -111,6 +118,7 @@ class MysqlQuery implements Query
 			
 		if (is_null($value))
 		{
+			throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			return $this;
 		}
 		else if (is_numeric($value))
@@ -355,6 +363,12 @@ class MysqlQuery implements Query
 			return $query;
 		}
 		$query = "SELECT ";
+
+		if($this->distinct)
+		{
+			$query .= "DISTINCT ";
+		}
+
 		if (is_array($this->fields))
 		{
 			$query .= implode (',', $this->fields);
