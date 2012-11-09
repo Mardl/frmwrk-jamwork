@@ -19,6 +19,7 @@ class MysqlQuery implements Query
 	protected $limit = array();
 	protected $joinon = array();
 	protected $ownQuery = '';
+	protected $lastQuery = array();
 	protected $openClosure = false;
 	protected $closeClosure = false;
 	
@@ -360,6 +361,7 @@ class MysqlQuery implements Query
 			 * Zitat: Vadim am 29.02.2012
 			 */
 			// $this->ownQuery = '';
+			$this->lastQuery[] = $query;
 			return $query;
 		}
 		$query = "SELECT ";
@@ -406,8 +408,10 @@ class MysqlQuery implements Query
 		{
 			$query .= " LIMIT ".implode(', ',$this->limit);
 		}
-		//return $query;//
-		return $this->database->clear($query);
+
+		$query = $this->database->clear($query);
+		$this->lastQuery[] = $query;
+		return $query;
 	}
 
 	private function getUpdate()

@@ -32,6 +32,7 @@ class HttpSession implements Session
 		{
 			return $this->session[$name];
 		}
+		return '';
 	}
 	
 	public function delete($name)
