@@ -67,6 +67,9 @@ class MysqlRecordset implements Recordset
 	}
 
 
+	/**
+	 * @return bool
+	 */
 	public function isSuccessful()
 	{
 		if($this->result)
@@ -75,7 +78,10 @@ class MysqlRecordset implements Recordset
 		}
 		return false;
 	}
-	
+
+	/**
+	 * @return bool|int
+	 */
 	public function count()
 	{
 		if (!$this->result)
@@ -84,7 +90,10 @@ class MysqlRecordset implements Recordset
 		}
 		return mysql_num_rows($this->result);
 	}
-	
+
+	/**
+	 * @return array|bool
+	 */
 	public function get()
 	{
 		if (!$this->result)

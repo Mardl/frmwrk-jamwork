@@ -24,18 +24,29 @@ class MysqlQuery implements Query
 	protected $closeClosure = false;
 	
 	private $database = null;
-	
+
+	/**
+	 * @param Database $database
+	 */
 	public function __construct(Database $database)
 	{
 		$this->database = $database;
 	}
-	
+
+	/**
+	 * @param string $table
+	 * @return MysqlQuery|Query
+	 */
 	public function from($table)
 	{
 		$this->table = $table;
 		return $this;
 	}
-	
+
+	/**
+	 * @param $fields
+	 * @return MysqlQuery|Query
+	 */
 	public function select($fields)
 	{
 		$this->setSelectType();
@@ -43,6 +54,10 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	/**
+	 * @param $table
+	 * @return MysqlQuery
+	 */
 	public function update($table)
 	{
 		$this->setUpdateType();
@@ -50,28 +65,47 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	/**
+	 * @param $fieldName
+	 * @param $value
+	 * @return MysqlQuery
+	 */
 	public function set($fieldName, $value)
 	{
 		$this->sets[$fieldName] = $value;
 		return $this;
 	}
 
+	/**
+	 * @param $clause
+	 * @return MysqlQuery|Query
+	 */
 	public function where($clause)
 	{
 		$this->clause = $clause;
 		return $this;
 	}
-	
+
+	/**
+	 * @return MysqlQuery
+	 */
 	public function openClosure(){
 		$this->openClosure = true;
 		return $this;
 	}
-	
+
+	/**
+	 * @return MysqlQuery
+	 */
 	public function closeClosure(){
 		$this->clause .= ' )';
 		return $this;
 	}
 
+	/**
+	 * @param bool $distinct
+	 * @return MysqlQuery|void
+	 */
 	public function distinct($distinct = true)
 	{
 		$this->distinct = $distinct;
@@ -144,6 +178,12 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 
+	/**
+	 * @param $field
+	 * @param string $op
+	 * @param string $concat
+	 * @return MysqlQuery|Query
+	 */
 	public function addWhereIsNull($field, $op = 'IS', $concat = 'AND')
 	{
 		$string = '';
@@ -158,7 +198,14 @@ class MysqlQuery implements Query
 		
 		return $this->where($string);
 	}
-	
+
+	/**
+	 * @param $field
+	 * @param $value
+	 * @param string $op
+	 * @param string $concat
+	 * @return MysqlQuery|Query
+	 */
 	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
@@ -174,6 +221,13 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 
+	/**
+	 * @param $field
+	 * @param $value
+	 * @param string $phraseOrder
+	 * @param string $concat
+	 * @return MysqlQuery|Query
+	 */
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
 	{
 		$string = '';
@@ -187,9 +241,15 @@ class MysqlQuery implements Query
 	
 		return $this->where($string);
 	}
-	
-	
-	
+
+
+	/**
+	 * @param $field
+	 * @param $value
+	 * @param string $op
+	 * @param string $concat
+	 * @return MysqlQuery|Query|string
+	 */
 	public function addHaving($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
@@ -253,20 +313,33 @@ class MysqlQuery implements Query
 		
 		return $string;
 	}
-	
-	
+
+
+	/**
+	 * @param $order
+	 * @return MysqlQuery|Query
+	 */
 	public function orderBy($order)
 	{
 		$this->order = $order;
 		return $this;
 	}
-	
+
+	/**
+	 * @param $groupby
+	 * @return MysqlQuery|Query
+	 */
 	public function groupBy($groupby)
 	{
 		$this->groupby = $groupby;
 		return $this;
 	}
-	
+
+	/**
+	 * @param $offset
+	 * @param null $limit
+	 * @return MysqlQuery|Query
+	 */
 	public function limit($offset, $limit=null)
 	{
 		$this->limit = array();
@@ -315,7 +388,11 @@ class MysqlQuery implements Query
 	{
 		return $this->join($join, 'LEFT');
 	}
-	
+
+	/**
+	 * @param $joinOn
+	 * @return MysqlQuery|Query
+	 */
 	public function on($joinOn)
 	{
 		$this->joinon[] = $joinOn;
@@ -340,6 +417,9 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	/**
+	 * @return Query|string
+	 */
 	public function get()
 	{
 		if($this->isUpdateStatement())
