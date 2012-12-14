@@ -194,6 +194,11 @@ class HttpRequest implements Request
 	{
 		if($this->isKeyInArray($array, $name))
 		{
+			if (is_scalar($array[$name]))
+			{
+				return trim($array[$name]);
+			}
+			array_walk_recursive($array[$name], 'trim');
 			return $array[$name];
 		}
 		

@@ -10,7 +10,8 @@ class MysqlDatabase implements Database
 	protected $dbname = '';
 	protected $connection = false;
 	protected $field = array();
-	
+	protected $transaction = 0;
+
 	public $counts = array('query' => 0, 'recordset' => 0, 'update' => 0, 'insert' => 0, 'delete' => 0);
 	
 	private $mockQuery = false;
@@ -28,13 +29,76 @@ class MysqlDatabase implements Database
 		$db = mysql_select_db($this->dbname) or die ('Error select_db to mysql');
 	}
 
+	/**
+	 * start Transaction
+	 */
+	public function startTransaction()
+	{
+
+		if ($this->transaction <= 0)
+		{
+			$this->transaction = 0; // initialisieren, sicher ist sicher;
+			$rs = $this->newRecordSet();
+			$rs->execute($this->newQuery()->setQueryOnce("SET AUTOCOMMIT=0;"));
+			$rs->execute($this->newQuery()->setQueryOnce("START TRANSACTION;"));
+		}
+
+		$this->transaction++;
+	}
+
+	/**
+	 * commit Transaction
+	 */
+	public function commit()
+	{
+		if ($this->transaction > 0)
+		{
+			$this->transaction--;
+			if ($this->transaction == 0)
+			{
+				$rs = $this->newRecordSet();
+				$rs->execute($this->newQuery()->setQueryOnce("COMMIT;"));
+				$rs->execute($this->newQuery()->setQueryOnce("SET AUTOCOMMIT=1;"));
+			}
+		}
+	}
+
+
+	/**
+	 * @param bool $noException Exception nicht werfen. Z.B. wenn im catch der rollback gemacht wird
+	 * @throws \Exception
+	 */
+	public function rollback($throwException=true)
+	{
+		if ($this->transaction > 0)
+		{
+			$errno = mysql_errno();
+			$error = mysql_error();
+			$this->transaction = 0;
+			$rs = $this->newRecordSet();
+			$rs->execute($this->newQuery()->setQueryOnce("ROLLBACK;"));
+			$rs->execute($this->newQuery()->setQueryOnce("SET AUTOCOMMIT=1;"));
+
+			if ($throwException)
+			{
+				throw new \Exception("DB-Fehler\r\nFehler-Nr: ".$errno."\r\nFehler: ".$error);
+			}
+		}
+	}
+
+	/**
+	 * @return MysqlQuery|Query
+	 */
 	public function newQuery()
 	{
 		$query = new MysqlQuery($this);
 		$this->counts['query']++;
 		return $query;
 	}
-	
+
+	/**
+	 * @return MysqlRecordset|Recordset
+	 */
 	public function newRecordSet()
 	{
 		$this->counts['recordset']++;
@@ -54,6 +118,12 @@ class MysqlDatabase implements Database
 		return '';
 	}
 
+	/**
+	 * @param string $tableName
+	 * @param array $recordSet
+	 * @return bool|int
+	 * @throws \Exception
+	 */
 	public function update($tableName, array $recordSet)
 	{
 		$this->counts['update']++;
@@ -112,7 +182,12 @@ class MysqlDatabase implements Database
 		return false;
 		
 	}
-	
+
+	/**
+	 * @param string $tableName
+	 * @param array $recordSet
+	 * @return bool|int
+	 */
 	public function insert($tableName, array $recordSet)
 	{
 		$this->counts['insert']++;
@@ -141,6 +216,11 @@ class MysqlDatabase implements Database
 				
 			}
 		}
+
+		if (empty($setField))
+		{
+			$setField .= $this->getPrimary($tableName).' = null';
+		}
 		
 		$query .= $setField;
 		
@@ -158,14 +238,24 @@ class MysqlDatabase implements Database
 		}
 		return false;
 	}
-	
+
+	/**
+	 * @param string $str
+	 * @return mixed
+	 */
 	public function clear($str)
 	{
 		$str = str_replace("\\", "\\\\", $str);
 		#$str = str_replace('"', '\\"', $str);
 		return $str;
 	}
-	
+
+	/**
+	 * @param string $tableName
+	 * @param array $recordSet
+	 * @return bool
+	 * @throws \Exception
+	 */
 	public function delete($tableName, array $recordSet)
 	{
 		$this->counts['delete']++;
@@ -200,7 +290,10 @@ class MysqlDatabase implements Database
 		return ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful() ? true : false);
 		
 	}
-	
+
+	/**
+	 * @param string $tableName
+	 */
 	protected function readFields($tableName)
 	{
 		if ( !isset($this->field[$tableName]))

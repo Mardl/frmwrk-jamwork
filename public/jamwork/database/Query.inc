@@ -59,6 +59,13 @@ interface Query
 	 */
 	public function get();
 
+	/**
+	 * @abstract
+	 * @param $distinct
+	 * @return void
+	 */
+	public function distinct($distinct = true);
+
 
 	/**
 	 * @abstract

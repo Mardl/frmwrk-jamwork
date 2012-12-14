@@ -7,6 +7,7 @@ use \jamwork\database\Database;
 class MysqlQuery implements Query
 {
 	protected $queryTyp = 1;
+	protected $distinct = false;
 	protected $table = '';
 	protected $sets = '';
 	protected $fields = '*';
@@ -18,22 +19,34 @@ class MysqlQuery implements Query
 	protected $limit = array();
 	protected $joinon = array();
 	protected $ownQuery = '';
+	protected $lastQuery = array();
 	protected $openClosure = false;
 	protected $closeClosure = false;
 	
 	private $database = null;
-	
+
+	/**
+	 * @param Database $database
+	 */
 	public function __construct(Database $database)
 	{
 		$this->database = $database;
 	}
-	
+
+	/**
+	 * @param string $table
+	 * @return MysqlQuery|Query
+	 */
 	public function from($table)
 	{
 		$this->table = $table;
 		return $this;
 	}
-	
+
+	/**
+	 * @param $fields
+	 * @return MysqlQuery|Query
+	 */
 	public function select($fields)
 	{
 		$this->setSelectType();
@@ -41,6 +54,10 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	/**
+	 * @param $table
+	 * @return MysqlQuery
+	 */
 	public function update($table)
 	{
 		$this->setUpdateType();
@@ -48,25 +65,50 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	/**
+	 * @param $fieldName
+	 * @param $value
+	 * @return MysqlQuery
+	 */
 	public function set($fieldName, $value)
 	{
 		$this->sets[$fieldName] = $value;
 		return $this;
 	}
 
+	/**
+	 * @param $clause
+	 * @return MysqlQuery|Query
+	 */
 	public function where($clause)
 	{
 		$this->clause = $clause;
 		return $this;
 	}
-	
+
+	/**
+	 * @return MysqlQuery
+	 */
 	public function openClosure(){
 		$this->openClosure = true;
 		return $this;
 	}
-	
+
+	/**
+	 * @return MysqlQuery
+	 */
 	public function closeClosure(){
 		$this->clause .= ' )';
+		return $this;
+	}
+
+	/**
+	 * @param bool $distinct
+	 * @return MysqlQuery|void
+	 */
+	public function distinct($distinct = true)
+	{
+		$this->distinct = $distinct;
 		return $this;
 	}
 
@@ -104,13 +146,14 @@ class MysqlQuery implements Query
 	{
 		$string = '';
 		
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}	
 			
 		if (is_null($value))
 		{
+			throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			return $this;
 		}
 		elseif (is_numeric($value))
@@ -135,11 +178,17 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 
+	/**
+	 * @param $field
+	 * @param string $op
+	 * @param string $concat
+	 * @return MysqlQuery|Query
+	 */
 	public function addWhereIsNull($field, $op = 'IS', $concat = 'AND')
 	{
 		$string = '';
 		
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 			//$string = $this->clause.' '.$concat.' ';
@@ -149,12 +198,19 @@ class MysqlQuery implements Query
 		
 		return $this->where($string);
 	}
-	
+
+	/**
+	 * @param $field
+	 * @param $value
+	 * @param string $op
+	 * @param string $concat
+	 * @return MysqlQuery|Query
+	 */
 	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
 	
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 			//$string = $this->clause.' '.$concat.' ';
@@ -165,11 +221,18 @@ class MysqlQuery implements Query
 		return $this->where($string);
 	}
 
+	/**
+	 * @param $field
+	 * @param $value
+	 * @param string $phraseOrder
+	 * @param string $concat
+	 * @return MysqlQuery|Query
+	 */
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
 	{
 		$string = '';
 	
-		if (!empty($this->clause))
+		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
@@ -178,9 +241,15 @@ class MysqlQuery implements Query
 	
 		return $this->where($string);
 	}
-	
-	
-	
+
+
+	/**
+	 * @param $field
+	 * @param $value
+	 * @param string $op
+	 * @param string $concat
+	 * @return MysqlQuery|Query|string
+	 */
 	public function addHaving($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
@@ -244,20 +313,33 @@ class MysqlQuery implements Query
 		
 		return $string;
 	}
-	
-	
+
+
+	/**
+	 * @param $order
+	 * @return MysqlQuery|Query
+	 */
 	public function orderBy($order)
 	{
 		$this->order = $order;
 		return $this;
 	}
-	
+
+	/**
+	 * @param $groupby
+	 * @return MysqlQuery|Query
+	 */
 	public function groupBy($groupby)
 	{
 		$this->groupby = $groupby;
 		return $this;
 	}
-	
+
+	/**
+	 * @param $offset
+	 * @param null $limit
+	 * @return MysqlQuery|Query
+	 */
 	public function limit($offset, $limit=null)
 	{
 		$this->limit = array();
@@ -306,7 +388,11 @@ class MysqlQuery implements Query
 	{
 		return $this->join($join, 'LEFT');
 	}
-	
+
+	/**
+	 * @param $joinOn
+	 * @return MysqlQuery|Query
+	 */
 	public function on($joinOn)
 	{
 		$this->joinon[] = $joinOn;
@@ -331,6 +417,9 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	/**
+	 * @return Query|string
+	 */
 	public function get()
 	{
 		if($this->isUpdateStatement())
@@ -352,9 +441,16 @@ class MysqlQuery implements Query
 			 * Zitat: Vadim am 29.02.2012
 			 */
 			// $this->ownQuery = '';
+			$this->lastQuery[] = $query;
 			return $query;
 		}
 		$query = "SELECT ";
+
+		if($this->distinct)
+		{
+			$query .= "DISTINCT ";
+		}
+
 		if (is_array($this->fields))
 		{
 			$query .= implode (',', $this->fields);
@@ -392,8 +488,10 @@ class MysqlQuery implements Query
 		{
 			$query .= " LIMIT ".implode(', ',$this->limit);
 		}
-		//return $query;//
-		return $this->database->clear($query);
+
+		$query = $this->database->clear($query);
+		$this->lastQuery[] = $query;
+		return $query;
 	}
 
 	private function getUpdate()
@@ -443,10 +541,17 @@ class MysqlQuery implements Query
 
 		if ($openClosure)
 		{
-			$strOut = $clause.' '.$concat.' (';
+			if (!empty($this->clause))
+			{
+				$strOut = $clause.' '.$concat.' (';
+			}
+			else
+			{
+				$strOut = $clause.' (';
+			}
 			$this->openClosure = false;
 		}
-		else
+		else if (!empty($this->clause))
 		{
 			$strOut = $clause.' '.$concat.' ';
 		}
