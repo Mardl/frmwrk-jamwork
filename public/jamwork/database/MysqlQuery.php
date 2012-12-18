@@ -156,15 +156,15 @@ class MysqlQuery implements Query
 			throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			return $this;
 		}
-		else if (is_numeric($value))
+		elseif (is_numeric($value))
 		{
 			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
 		}
-		else if (is_string($value))
+		elseif (is_string($value))
 		{
 			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
 		}
-		else if (is_array($value))
+		elseif (is_array($value))
 		{
 			$string .= $this->in($field, $value);
 		}

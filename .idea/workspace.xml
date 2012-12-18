@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a7c454da-956d-48d9-8928-b7e63a170663" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/bundle.rb" afterPath="$PROJECT_DIR$/public/jamwork/bundle.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/debug/FirePHPCore/LICENSE" afterPath="$PROJECT_DIR$/public/jamwork/debug/FirePHPCore/LICENSE" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/Autoload.php" afterPath="$PROJECT_DIR$/public/jamwork/Autoload.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/cache.yml" afterPath="$PROJECT_DIR$/public/jamwork/cache.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/AutoCommandResolver.php" afterPath="$PROJECT_DIR$/public/jamwork/common/AutoCommandResolver.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/Command.inc" afterPath="$PROJECT_DIR$/public/jamwork/common/Command.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/CommandFactory.php" afterPath="$PROJECT_DIR$/public/jamwork/common/CommandFactory.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/CommandResolver.inc" afterPath="$PROJECT_DIR$/public/jamwork/common/CommandResolver.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/Event.php" afterPath="$PROJECT_DIR$/public/jamwork/common/Event.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/EventDispatcher.php" afterPath="$PROJECT_DIR$/public/jamwork/common/EventDispatcher.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/EventHandler.inc" afterPath="$PROJECT_DIR$/public/jamwork/common/EventHandler.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/FileSystemCommandResolver.php" afterPath="$PROJECT_DIR$/public/jamwork/common/FileSystemCommandResolver.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/HttpRequest.php" afterPath="$PROJECT_DIR$/public/jamwork/common/HttpRequest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/HttpResponse.php" afterPath="$PROJECT_DIR$/public/jamwork/common/HttpResponse.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/HttpSession.php" afterPath="$PROJECT_DIR$/public/jamwork/common/HttpSession.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/Registry.php" afterPath="$PROJECT_DIR$/public/jamwork/common/Registry.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/Request.inc" afterPath="$PROJECT_DIR$/public/jamwork/common/Request.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/Response.inc" afterPath="$PROJECT_DIR$/public/jamwork/common/Response.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/Session.inc" afterPath="$PROJECT_DIR$/public/jamwork/common/Session.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/WebServiceHandler.php" afterPath="$PROJECT_DIR$/public/jamwork/common/WebServiceHandler.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/common/WebServiceItem.php" afterPath="$PROJECT_DIR$/public/jamwork/common/WebServiceItem.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/controller/DateTimeConverter.php" afterPath="$PROJECT_DIR$/public/jamwork/controller/DateTimeConverter.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/BaseModel.php" afterPath="$PROJECT_DIR$/public/jamwork/database/BaseModel.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/BaseRepository.php" afterPath="$PROJECT_DIR$/public/jamwork/database/BaseRepository.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/Database.inc" afterPath="$PROJECT_DIR$/public/jamwork/database/Database.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/MysqlDatabase.php" afterPath="$PROJECT_DIR$/public/jamwork/database/MysqlDatabase.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/MysqlQuery.php" afterPath="$PROJECT_DIR$/public/jamwork/database/MysqlQuery.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/MysqlRecordset.php" afterPath="$PROJECT_DIR$/public/jamwork/database/MysqlRecordset.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/Query.inc" afterPath="$PROJECT_DIR$/public/jamwork/database/Query.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/database/Recordset.inc" afterPath="$PROJECT_DIR$/public/jamwork/database/Recordset.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/debug/DebugLogger.php" afterPath="$PROJECT_DIR$/public/jamwork/debug/DebugLogger.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/debug/FirePHPCore/FirePHP.class.php" afterPath="$PROJECT_DIR$/public/jamwork/debug/FirePHPCore/FirePHP.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/debug/FirePHPCore/fb.php" afterPath="$PROJECT_DIR$/public/jamwork/debug/FirePHPCore/fb.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/AbstractField.php" afterPath="$PROJECT_DIR$/public/jamwork/form/AbstractField.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Button.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Button.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Checkbox.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Checkbox.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Field.inc" afterPath="$PROJECT_DIR$/public/jamwork/form/Field.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/FileField.php" afterPath="$PROJECT_DIR$/public/jamwork/form/FileField.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Form.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Form.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/FormFactory.php" afterPath="$PROJECT_DIR$/public/jamwork/form/FormFactory.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/FormHTML.php" afterPath="$PROJECT_DIR$/public/jamwork/form/FormHTML.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/FormOutput.inc" afterPath="$PROJECT_DIR$/public/jamwork/form/FormOutput.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Hidden.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Hidden.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Option.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Option.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Password.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Password.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Ptag.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Ptag.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Radiobutton.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Radiobutton.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Select.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Select.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Textarea.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Textarea.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Textfield.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Textfield.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/form/Trenner.php" afterPath="$PROJECT_DIR$/public/jamwork/form/Trenner.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/helper/Anchor.php" afterPath="$PROJECT_DIR$/public/jamwork/helper/Anchor.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/helper/DefaultUrlGenerator.php" afterPath="$PROJECT_DIR$/public/jamwork/helper/DefaultUrlGenerator.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/helper/Hyperlink.php" afterPath="$PROJECT_DIR$/public/jamwork/helper/Hyperlink.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/helper/UnordertList.php" afterPath="$PROJECT_DIR$/public/jamwork/helper/UnordertList.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/helper/Uri.php" afterPath="$PROJECT_DIR$/public/jamwork/helper/Uri.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/helper/UrlGenerator.inc" afterPath="$PROJECT_DIR$/public/jamwork/helper/UrlGenerator.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/helper/UrlParser.php" afterPath="$PROJECT_DIR$/public/jamwork/helper/UrlParser.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/modulverwaltung/AbstractModulConfig.php" afterPath="$PROJECT_DIR$/public/jamwork/modulverwaltung/AbstractModulConfig.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/modulverwaltung/ModulController.php" afterPath="$PROJECT_DIR$/public/jamwork/modulverwaltung/ModulController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/modulverwaltung/ModulObject.php" afterPath="$PROJECT_DIR$/public/jamwork/modulverwaltung/ModulObject.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/table/Table.php" afterPath="$PROJECT_DIR$/public/jamwork/table/Table.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/table/TableBody.php" afterPath="$PROJECT_DIR$/public/jamwork/table/TableBody.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/table/TableHTML.php" afterPath="$PROJECT_DIR$/public/jamwork/table/TableHTML.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/table/TableOutput.inc" afterPath="$PROJECT_DIR$/public/jamwork/table/TableOutput.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/table/TableRow.php" afterPath="$PROJECT_DIR$/public/jamwork/table/TableRow.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/CssStylesheet.php" afterPath="$PROJECT_DIR$/public/jamwork/template/CssStylesheet.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/FrontendController.php" afterPath="$PROJECT_DIR$/public/jamwork/template/FrontendController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/HtmlSection.php" afterPath="$PROJECT_DIR$/public/jamwork/template/HtmlSection.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/HtmlTemplate.php" afterPath="$PROJECT_DIR$/public/jamwork/template/HtmlTemplate.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/Javascript.php" afterPath="$PROJECT_DIR$/public/jamwork/template/Javascript.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/Script.inc" afterPath="$PROJECT_DIR$/public/jamwork/template/Script.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/Section.inc" afterPath="$PROJECT_DIR$/public/jamwork/template/Section.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/jamwork/template/Template.inc" afterPath="$PROJECT_DIR$/public/jamwork/template/Template.inc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/AllTest.php" afterPath="$PROJECT_DIR$/unittest/AllTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/Autoload.php" afterPath="$PROJECT_DIR$/unittest/Autoload.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/CheckTests.php" afterPath="$PROJECT_DIR$/unittest/CheckTests.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/SingleTest.php" afterPath="$PROJECT_DIR$/unittest/SingleTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/TestsTester.php" afterPath="$PROJECT_DIR$/unittest/TestsTester.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/index.php" afterPath="$PROJECT_DIR$/unittest/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/AutoCommandResolverTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/AutoCommandResolverTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/CommandFactoryTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/CommandFactoryTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/EventDispatcherTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/EventDispatcherTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/EventTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/EventTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/FileSystemCommandResolverTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/FileSystemCommandResolverTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/HttpRequestTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/HttpRequestTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/HttpResponseTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/HttpResponseTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/HttpSessionTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/HttpSessionTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/common/RegistryTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/common/RegistryTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/controller/DateTimeConverterTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/controller/DateTimeConverterTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/database/MysqlDatabaseTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/database/MysqlDatabaseTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/database/MysqlQueryTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/database/MysqlQueryTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/database/MysqlRecordsetTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/database/MysqlRecordsetTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/debug/DebugLoggerTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/debug/DebugLoggerTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/AbstractFieldTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/AbstractFieldTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/ButtonTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/ButtonTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/CheckboxTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/CheckboxTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/FileFieldTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/FileFieldTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/FormFactoryTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/FormFactoryTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/FormHTMLTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/FormHTMLTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/FormTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/FormTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/HiddenTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/HiddenTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/OptionTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/OptionTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/PasswordTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/PasswordTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/PtagTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/PtagTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/RadiobuttonTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/RadiobuttonTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/SelectTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/SelectTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/TextareaTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/TextareaTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/form/TextfieldTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/form/TextfieldTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/helper/UriTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/helper/UriTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/modulverwaltung/AbstractModulConfigTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/modulverwaltung/AbstractModulConfigTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/modulverwaltung/ModulControllerTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/modulverwaltung/ModulControllerTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/modulverwaltung/ModulObjectTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/modulverwaltung/ModulObjectTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/table/TableBodyTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/table/TableBodyTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/table/TableDataTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/table/TableDataTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/table/TableHTMLTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/table/TableHTMLTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/table/TableRowTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/table/TableRowTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/table/TableTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/table/TableTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/template/CssStylesheetTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/template/CssStylesheetTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/template/FrontendControllerTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/template/FrontendControllerTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/template/HtmlSectionTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/template/HtmlSectionTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/template/HtmlTemplateTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/template/HtmlTemplateTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jamwork/template/JavascriptTest.php" afterPath="$PROJECT_DIR$/unittest/jamwork/template/JavascriptTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/jquery-1.6.2.js" afterPath="$PROJECT_DIR$/unittest/jquery-1.6.2.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/UnittestCommand.php" afterPath="$PROJECT_DIR$/unittest/module/UnittestCommand.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/testmodul1/Testmodul1Command.php" afterPath="$PROJECT_DIR$/unittest/module/testmodul1/Testmodul1Command.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/testmodul1/Testmodul1Config.php" afterPath="$PROJECT_DIR$/unittest/module/testmodul1/Testmodul1Config.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/testmodulnoname/TestmodulnonameCommand.php" afterPath="$PROJECT_DIR$/unittest/module/testmodulnoname/TestmodulnonameCommand.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/testmodulnoname/TestmodulnonameConfig.php" afterPath="$PROJECT_DIR$/unittest/module/testmodulnoname/TestmodulnonameConfig.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/testmodulnoversion/TestmodulnoversionCommand.php" afterPath="$PROJECT_DIR$/unittest/module/testmodulnoversion/TestmodulnoversionCommand.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/testmodulnoversion/TestmodulnoversionConfig.php" afterPath="$PROJECT_DIR$/unittest/module/testmodulnoversion/TestmodulnoversionConfig.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/unittestCancelEventHandler.php" afterPath="$PROJECT_DIR$/unittest/module/unittestCancelEventHandler.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/unittestEventHandler.php" afterPath="$PROJECT_DIR$/unittest/module/unittestEventHandler.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/module/unittestFooCommand.php" afterPath="$PROJECT_DIR$/unittest/module/unittestFooCommand.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/runUnit.php" afterPath="$PROJECT_DIR$/unittest/runUnit.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/static/afile.txt" afterPath="$PROJECT_DIR$/unittest/static/afile.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/static/bfile.txt" afterPath="$PROJECT_DIR$/unittest/static/bfile.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/static/test.txt" afterPath="$PROJECT_DIR$/unittest/static/test.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/static/tmpJsFile.js" afterPath="$PROJECT_DIR$/unittest/static/tmpJsFile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/static/zfile.txt" afterPath="$PROJECT_DIR$/unittest/static/zfile.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/testTemplate/css/cssFile_1.css" afterPath="$PROJECT_DIR$/unittest/testTemplate/css/cssFile_1.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/testTemplate/js/jsFile_1.js" afterPath="$PROJECT_DIR$/unittest/testTemplate/js/jsFile_1.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/testTemplate/templateFile_1.html" afterPath="$PROJECT_DIR$/unittest/testTemplate/templateFile_1.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unittest/testTemplate/templateFile_2.html" afterPath="$PROJECT_DIR$/unittest/testTemplate/templateFile_2.html" />
+    </list>
+    <ignored path="jamwork.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="jamwork" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="MysqlQuery.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/jamwork/database/MysqlQuery.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-5.55858">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents ProjectPane="true" />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jamwork" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="database" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method>
+        <option name="PhingTarget" enabled="false" />
+      </method>
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="DETECT_NESTED_COPIES" value="true" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <created>1345122969465</created>
+      <updated>1345122969465</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_NEW_TODO" value="true" />
+    <option name="myTodoPanelSettings">
+      <value>
+        <are-packages-shown value="false" />
+        <are-modules-shown value="false" />
+        <flatten-packages value="false" />
+        <is-autoscroll-to-source value="false" />
+      </value>
+    </option>
+    <option name="PERFORM_UPDATE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_COMMIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_CHECKOUT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
+    <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="false" />
+    <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
+    <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
+    <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
+    <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
+    <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
+    <option name="SHORT_DIFF_HORISONTALLY" value="true" />
+    <option name="SHORT_DIFF_EXTRA_LINES" value="2" />
+    <option name="SOFT_WRAPS_IN_SHORT_DIFF" value="true" />
+    <option name="INCLUDE_TEXT_INTO_PATCH" value="false" />
+    <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
+    <option name="CREATE_PATCH_EXPAND_DETAILS_DEFAULT" value="true" />
+    <option name="SHOW_FILE_HISTORY_DETAILS" value="true" />
+    <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
+    <option name="LAST_COMMIT_MESSAGE" />
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+    <option name="ACTIVE_VCS_NAME" />
+    <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
+    <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
+    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/public/jamwork/database/MysqlQuery.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-5.55858">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

@@ -8,9 +8,10 @@ class BaseModel
 {
 	protected $record = array();
 	protected $prefix = '';
-	private $change = false;
-	private $insert = false;
-	private $new = false;
+	protected $change = false;
+	protected $insert = false;
+	protected $new = false;
+	protected $dontSave = false;
 	
 	public function __construct($record=array())
 	{
@@ -33,6 +34,10 @@ class BaseModel
 		$this->insert = true;
 		$this->change = true;
 		$this->deleteRecordValue('id');
+	}
+
+	public function dontSave($bool=true) {
+		$this->dontSave = $bool;
 	}
 	
 	public function getRecord()
@@ -87,7 +92,7 @@ class BaseModel
 		$eventDispatcher->triggerEvent('onModelSaveError', $this);
 	}
 	
-	private function isInsert()
+	public function isInsert()
 	{
 		return $this->insert == true;
 	}
@@ -109,7 +114,7 @@ class BaseModel
 	
 	protected function deleteRecordValue($key)
 	{
-		unset($this->record[$this->prefix.$key]);
+		$this->record[$this->prefix.$key] = 0;
 	}
 	
 	public function get($key, $def=null)
@@ -125,10 +130,11 @@ class BaseModel
 	{
 		$this->change = true;
 		$this->record[$this->prefix.$key] = $value;
+		return $this;
 	}
 	
 	protected function hasChange()
 	{
-		return $this->change == true;
+		return $this->change == true && $this->dontSave === false;
 	}
 }

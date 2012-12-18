@@ -11,29 +11,45 @@ abstract class BaseRepository
 	private $models = array();
 	
 	abstract function getById($id);
-	
+
+	/**
+	 * @return \jamwork\common\Registry
+	 */
 	protected function getRegistry()
 	{
 		return Registry::getInstance();
 	}
-	
+
+	/**
+	 * @return MysqlDatabase
+	 */
 	protected function getDatabase()
 	{
 		return $this->getRegistry()->getDatabase();
 	}
-	
+
+	/**
+	 * @return MysqlQuery
+	 */
 	protected function getQuery()
 	{
 		$query = $this->getDatabase()->newQuery();
 		return $query;
 	}
-	
+
+	/**
+	 * @return MysqlRecordset
+	 */
 	protected function getRecordset()
 	{
 		$recordset = $this->getDatabase()->newRecordSet();
 		return $recordset;
 	}
-	
+
+	/**
+	 * @param mixed $modelOrId
+	 * @return null|int
+	 */
 	protected function findId($modelOrId)
 	{
 		if($modelOrId instanceof BaseModel)
