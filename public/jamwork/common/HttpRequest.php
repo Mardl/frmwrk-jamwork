@@ -224,13 +224,13 @@ class HttpRequest implements Request
 		return '';
 	}
 	
-	public function getServer($key)
+	public function getServer($key, $default = '')
 	{
 		if(isset($this->server[$key]))
 		{
 			return $this->server[$key];
 		}
-		return '';
+		return $default;
 	}
 	
 	public function getScriptName()
