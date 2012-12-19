@@ -1,3 +1,7 @@
-.project
+.DS_*
 .settings
-
+.project
+Thumbs.db
+.buildpath
+.idea/
+._*

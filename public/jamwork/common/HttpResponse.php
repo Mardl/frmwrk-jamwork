@@ -8,21 +8,35 @@ class HttpResponse implements Response
 	private $headers = array();
 	private $body = '';
 	private $returns = array();
-	
+
+	/**
+	 * @param $status
+	 */
 	public function setStatus($status)
 	{
 		$this->status = $status;
 	}
+
+	/**
+	 * @return string
+	 */
 	public function getStatus()
 	{
 		return $this->status;
 	}
-	
+
+	/**
+	 * @param $name
+	 * @param $value
+	 */
 	public function addHeader($name, $value)
 	{
 		$this->headers[$name] = $value;
 	}
-		
+
+	/**
+	 * @param $name
+	 */
 	public function unsetHeader($name)
 	{
 		if(isset($this->headers[$name]))
@@ -30,20 +44,36 @@ class HttpResponse implements Response
 			unset($this->headers[$name]);
 		}
 	}
+
+	/**
+	 * @return array
+	 */
 	public function getHeader()
 	{
 		return $this->headers;
 	}
+
+	/**
+	 * @param $name
+	 * @return bool
+	 */
 	public function hasHeader($name)
 	{
 		return isset($this->headers[$name]);
 	}
 
+	/**
+	 * @param $data
+	 */
 	public function write($data)
 	{
 		$this->body .= $data;
 	}
-	
+
+	/**
+	 * @param Command $obj
+	 * @param $data
+	 */
 	public function addReturn(Command $obj, $data)
 	{
 		$commandName = get_class($obj);
@@ -56,24 +86,35 @@ class HttpResponse implements Response
 			$this->returns[$commandName] .= $data;
 		}
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function getReturns()
 	{
 		return $this->returns;
 	}
 
+	/**
+	 * @param $body
+	 */
 	public function setBody($body)
 	{
 		$this->body = $body;
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function getBody()
 	{
 		return $this->body;
 	}
 	
-	// @TODO: muss in den FrontEndController rein! mardl
-
+	/**
+	 * @param bool $dump
+	 * @return string
+	 */
 	public function flush($dump = false)
 	{
 		$return = '';
@@ -90,7 +131,11 @@ class HttpResponse implements Response
 		
 		print $return;
 	}
-	
+
+	/**
+	 * @param bool $dump
+	 * @return string
+	 */
 	public function flushHeader($dump = false)
 	{
 		$header = '';
@@ -114,7 +159,11 @@ class HttpResponse implements Response
 			return $header;
 		}
 	}
-	
+
+	/**
+	 * @param bool $dump
+	 * @return string
+	 */
 	private function flushStatus($dump = false)
 	{
 		if(!$dump)
@@ -124,8 +173,13 @@ class HttpResponse implements Response
 		}
 		return "HEADER: HTTP/1.0 {$this->status}\n";
 	}
-	
 
+
+	/**
+	 * @param $filePath Pfad zur Datei fuer DOwnload
+	 * @param bool $mock nur fuer unittest
+	 * @return bool true fuer unittest
+	 */
 	public function downloadFile($filePath, $mock=false)
 	{
 		$pathinfo = pathinfo($filePath);
@@ -152,5 +206,23 @@ class HttpResponse implements Response
 		}
 		echo $this->flush();
 		exit();
-	}	
+	}
+
+	/**
+	 * Redirect
+	 *
+	 * @param string  $url    Target url
+	 * @param integer $status Status
+	 *
+	 * @return void
+	 */
+	public function redirect($url, $status = 302)
+	{
+		$this->setBody('');
+		$this->setStatus($status);
+		$this->addHeader('Location',$url);
+		$this->flush();
+		die();
+	}
+
 }
