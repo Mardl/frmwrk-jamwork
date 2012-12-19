@@ -216,7 +216,7 @@ class MysqlQuery implements Query
 			//$string = $this->clause.' '.$concat.' ';
 		}
 	
-		$string .= $field.' = '.mysql_real_escape_string($value).' ';
+		$string .= $field.' '.$op.' '.mysql_real_escape_string($value).' ';
 	
 		return $this->where($string);
 	}

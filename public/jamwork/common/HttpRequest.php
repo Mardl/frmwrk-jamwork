@@ -133,7 +133,11 @@ class HttpRequest implements Request
 			unset($this->post[$name]);
 		}
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return mixed
+	 */
 	public function getPost($name)
 	{
 		return $this->getFromKeyInArray($this->post, $name);
@@ -189,7 +193,13 @@ class HttpRequest implements Request
 	{
 		return isset($array[$name]) ? true : false;
 	}
-	
+
+	/**
+	 * @param $array
+	 * @param $name
+	 * @return mixed
+	 * @throws \Exception
+	 */
 	private function getFromKeyInArray($array,$name)
 	{
 		if($this->isKeyInArray($array, $name))

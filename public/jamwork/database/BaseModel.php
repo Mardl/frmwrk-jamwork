@@ -44,7 +44,10 @@ class BaseModel
 	{
 		return $this->record;
 	}
-	
+
+	/**
+	 * @return int
+	 */
 	public function getId()
 	{
 		if($this->get('id') === null)
