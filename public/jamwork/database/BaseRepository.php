@@ -62,7 +62,7 @@ abstract class BaseRepository
 			return $modelOrId;
 		}
 		
-		return null;
+		return 0;
 	}
 	
 	protected function getModel($modelClass, $query, $force=false)
