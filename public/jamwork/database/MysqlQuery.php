@@ -246,6 +246,11 @@ class MysqlQuery implements Query
 	}
 
 
+	public function innerStatement($field, $value)
+	{
+		return $this->addWhereFunc($field,'('.$value.')','in');
+	}
+
 	/**
 	 * @param $field
 	 * @param $value
@@ -316,7 +321,6 @@ class MysqlQuery implements Query
 		
 		return $string;
 	}
-
 
 	/**
 	 * @param $order
