@@ -22,7 +22,10 @@ class MysqlQuery implements Query
 	protected $lastQuery = array();
 	protected $openClosure = false;
 	protected $closeClosure = false;
-	
+
+	/**
+	 * @var Database
+	 */
 	private $database = null;
 
 	/**
@@ -491,6 +494,7 @@ class MysqlQuery implements Query
 
 		$query = $this->database->clear($query);
 		$this->lastQuery[] = $query;
+
 		return $query;
 	}
 

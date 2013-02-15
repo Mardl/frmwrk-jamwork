@@ -140,4 +140,26 @@ class BaseModel
 	{
 		return $this->change == true && $this->dontSave === false;
 	}
+
+	protected function cleanText($todo, $tags=true)
+	{
+		if(is_array($todo))
+		{
+			foreach($todo as $key => $value)
+			{
+				$todo[$key] = $this->cleanText($value,$tags);
+			}
+			return $todo;
+		}
+
+		$text = $todo;
+		if ($tags)
+		{
+			$search = "'<script[^>]*?>.*?</script>'si";
+			$text = preg_replace($search, "\n", html_entity_decode($text));
+			$text = preg_replace('/<[^>]*>/', '', $text);
+		}
+		$text = trim($text);
+		return $text;
+	}
 }

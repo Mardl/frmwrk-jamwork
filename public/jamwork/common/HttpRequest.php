@@ -2,6 +2,8 @@
 
 namespace jamwork\common;
 
+use \jamwork\common\Request;
+
 class HttpRequest implements Request
 {
 	private $parameters = array();

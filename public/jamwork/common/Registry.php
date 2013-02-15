@@ -24,8 +24,8 @@ class Registry
     {
     	
     }
-	
-    private final function __clone()
+
+	private final function __clone()
     {
     	
     }
@@ -167,8 +167,8 @@ class Registry
 	}
 	
 	/* Private Funktionen zum Zugriff der Interzeptoren*/
-	 
-	private function hasKey($key, $const)
+
+	protected function hasKey($key, $const)
 	{
 		if (empty($key) || empty($const))
 		{
@@ -178,19 +178,19 @@ class Registry
 		return isset($this->values[$const][$key]);
 	}
 
-	private function unsetKey($key,$const)
+	protected function unsetKey($key,$const)
 	{
 		if($this->hasKey($key,$const)) {
 			unset($this->values[$const][$key]);
 		}
 	}
 
-	private function set($key, $value , $const)
+	protected function set($key, $value , $const)
 	{
 		$this->values[$const][$key] = $value;
 	}
 	
-	private function get($key,$const)
+	protected function get($key,$const)
 	{
 		if($this->hasKey($key,$const)) 
 		{
