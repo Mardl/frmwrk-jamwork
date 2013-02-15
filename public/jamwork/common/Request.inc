@@ -2,7 +2,7 @@
 
 namespace jamwork\common;
 
-interface Request 
+interface Request
 {
 	public function __construct(array $get, array $post, array $server, array $cookie);
 	

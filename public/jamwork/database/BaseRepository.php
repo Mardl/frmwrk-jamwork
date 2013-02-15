@@ -7,8 +7,8 @@ use \jamwork\database\BaseModel;
 
 abstract class BaseRepository
 {
-	private $database = null;
-	private $models = array();
+	protected $database = null;
+	protected $models = array();
 	
 	abstract function getById($id);
 
@@ -62,14 +62,14 @@ abstract class BaseRepository
 			return $modelOrId;
 		}
 		
-		return null;
+		return 0;
 	}
 	
-	protected function getModel($modelClass, $query)
+	protected function getModel($modelClass, $query, $force=false)
 	{
 		$key = $this->getKey($query);
 		
-		if(isset($this->models[$key]))
+		if(isset($this->models[$key]) && !$force)
 		{
 			return $this->models[$key];
 		}
@@ -86,18 +86,16 @@ abstract class BaseRepository
 		return md5($sql);
 	}
 	
-	protected function getModels($modelClass, $query)
+	protected function getModels($modelClass, $query, $force=false)
 	{
 		$key = $this->getKey($query);
-		if(isset($this->models[$key]))
-		{
+		if(array_key_exists($key, $this->models) && !$force) {
 			return $this->models[$key];
 		}
-		
+
 		$recordset = $this->getRecordset()->execute($query);
 		$models = array();
-		while($rec = $recordset->get())
-		{
+		while($rec = $recordset->get()) {
 			$models[] = new $modelClass( $rec );
 		}
 		

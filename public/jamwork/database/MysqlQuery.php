@@ -22,7 +22,10 @@ class MysqlQuery implements Query
 	protected $lastQuery = array();
 	protected $openClosure = false;
 	protected $closeClosure = false;
-	
+
+	/**
+	 * @var Database
+	 */
 	private $database = null;
 
 	/**
@@ -216,7 +219,7 @@ class MysqlQuery implements Query
 			//$string = $this->clause.' '.$concat.' ';
 		}
 	
-		$string .= $field.' = '.mysql_real_escape_string($value).' ';
+		$string .= $field.' '.$op.' '.mysql_real_escape_string($value).' ';
 	
 		return $this->where($string);
 	}
@@ -491,6 +494,7 @@ class MysqlQuery implements Query
 
 		$query = $this->database->clear($query);
 		$this->lastQuery[] = $query;
+
 		return $query;
 	}
 
