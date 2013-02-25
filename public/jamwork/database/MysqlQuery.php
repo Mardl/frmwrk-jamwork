@@ -156,7 +156,8 @@ class MysqlQuery implements Query
 			
 		if (is_null($value))
 		{
-			throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
+			//throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
+			throw new \Exception('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			return $this;
 		}
 		elseif (is_numeric($value))

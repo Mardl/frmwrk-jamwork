@@ -264,23 +264,31 @@ class MysqlDatabase implements Database
 		$where = '';
 		$this->readFields($tableName);
 		$query = 'DELETE FROM '.$tableName;
+		$where = '';
+
 		foreach ( $this->field[$tableName] as $field => $key) 
 		{
 			if (isset($recordSet[$field]))
 			{			
 				if ( $key == 'PRI')	
 				{
+					if(empty($where))
+					{
+						$where = ' WHERE ';
+					}
+					else
+					{
+						$where .= ' AND ';
+					}
+
 					$priCount++;
-					$where = ' WHERE '.$field.' = '.mysql_real_escape_string($recordSet[$field]);
+					$where = $where.$field.' = '.mysql_real_escape_string($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
 			}
 		}
 		$query .= $where;
-		if ($priCount > 1)
-		{
-			throw new \Exception("Delete auf multi Primary key nicht möglich.");
-		}		
+
 		if (empty($primary))
 		{
 			throw new \Exception("Kein Primary key angegeben.");
