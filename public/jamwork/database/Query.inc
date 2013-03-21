@@ -108,6 +108,15 @@ interface Query
 	public function addHaving($field, $value, $op = '=', $concat = 'AND');
 
 	/**
+	 * @param $field
+	 * @param $valueMin
+	 * @param $valueMax
+	 * @param string $concat
+	 * @return mixed
+	 */
+	public function addWhereBetween($field, $valueMin, $valueMax, $concat = 'AND');
+
+	/**
 	 * @abstract
 	 * @param $field
 	 * @param array $values
