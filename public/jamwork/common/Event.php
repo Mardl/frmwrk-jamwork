@@ -28,7 +28,7 @@ class Event
 	
 	public function getInfo()
 	{
-		return $this->info;		
+		return $this->info;
 	}
 	
 	public function isCanceled()
