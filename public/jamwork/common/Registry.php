@@ -23,12 +23,12 @@ class Registry
 	 * @var $uniqueInstance Registry
 	 */
 	private static $uniqueInstance = NULL;
- 
+
     protected function __construct()
     {
     	
     }
-	
+
     private final function __clone()
     {
     	
@@ -61,7 +61,7 @@ class Registry
 	{
 		return $this->unsetKey($key,self::KEY_REGISTRY);
 	}
-	
+
 	public function __isset($key)
 	{
 		return $this->hasKey($key,self::KEY_REGISTRY);
@@ -71,28 +71,28 @@ class Registry
 	{
 		$this->set(self::KEY_REQUEST, $request , self::KEY_SYSTEM);
 	}
-	
+
 	public function getRequest()
 	{
 		return $this->get(self::KEY_REQUEST, self::KEY_SYSTEM );
 	}
-	
+
 	public function hasRequest()
 	{
 		return $this->hasKey(self::KEY_REQUEST, self::KEY_SYSTEM );
 	}
 
-	
+
 	public function setResponse(Response $response)
 	{
 		$this->set(self::KEY_RESPONSE, $response , self::KEY_SYSTEM);
 	}
-	
+
 	public function getResponse()
 	{
 		return $this->get(self::KEY_RESPONSE, self::KEY_SYSTEM );
 	}
-	
+
 	public function hasResponse()
 	{
 		return $this->hasKey(self::KEY_RESPONSE, self::KEY_SYSTEM );
@@ -110,7 +110,7 @@ class Registry
 	{
 		return $this->get(self::KEY_DATABASE, self::KEY_SYSTEM );
 	}
-	
+
 	public function hasDatabase()
 	{
 		return $this->hasKey(self::KEY_DATABASE, self::KEY_SYSTEM );
@@ -120,12 +120,12 @@ class Registry
 	{
 		$this->set(self::KEY_TEMPLATE, $template , self::KEY_SYSTEM);
 	}
-	
+
 	public function getTemplate()
 	{
 		return $this->get(self::KEY_TEMPLATE, self::KEY_SYSTEM );
 	}
-	
+
 	public function hasTemplate()
 	{
 		return $this->hasKey(self::KEY_TEMPLATE, self::KEY_SYSTEM );
@@ -135,12 +135,12 @@ class Registry
 	{
 		$this->set(self::KEY_SESSION, $session , self::KEY_SYSTEM);
 	}
-	
+
 	public function getSession()
 	{
 		return $this->get(self::KEY_SESSION, self::KEY_SYSTEM );
 	}
-	
+
 	public function hasSession()
 	{
 		return $this->hasKey(self::KEY_SESSION, self::KEY_SYSTEM );
@@ -154,24 +154,24 @@ class Registry
 	{
         self::$uniqueInstance = NULL;
     }
-	
+
 	public function setEventDispatcher(EventDispatcher $eventDispatcher)
 	{
 		$this->set(self::KEY_EVENTDISPATCHER, $eventDispatcher , self::KEY_SYSTEM);
 	}
-	
+
 	public function getEventDispatcher()
 	{
 		return $this->get(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
 	}
-	
+
 	public function hasEventDispatcher()
 	{
 		return $this->hasKey(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
 	}
 	
 	/* Private Funktionen zum Zugriff der Interzeptoren*/
-	 
+
 	private function hasKey($key, $const)
 	{
 		if (empty($key) || empty($const))
