@@ -10,7 +10,13 @@ class HttpRequest implements Request
 	private $session = array();
 	private $post = array();
 	# private $command = array();
-	
+
+	/**
+	 * @param array $get
+	 * @param array $post
+	 * @param array $server
+	 * @param array $cookie
+	 */
 	public function __construct(array $get, array $post, array $server, array $cookie)
 	{
 		$this->parameters = $this->clearArray($get);

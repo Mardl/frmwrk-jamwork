@@ -18,6 +18,10 @@ class Registry
 	const KEY_SESSION = 'session';
 	
 	protected $values = array();
+
+	/**
+	 * @var $uniqueInstance Registry
+	 */
 	private static $uniqueInstance = NULL;
  
     protected function __construct()
