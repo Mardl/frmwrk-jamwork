@@ -6,9 +6,25 @@ use jamwork\common\Registry;
 
 class MysqlRecordset implements Recordset
 {
+	/**
+	 * @var null
+	 */
 	protected $query = null;
+
+	/**
+	 * @var bool
+	 */
 	protected $result = false;
 
+	/**
+	 * @var string
+	 */
+	protected $errorMessage = '';
+
+	/**
+	 * @var int
+	 */
+	protected $errorNumber = -1;
 
 	/**
 	 * Führt das übergeben Query Objekt aus
@@ -32,6 +48,12 @@ class MysqlRecordset implements Recordset
 	private function executeStmt($stmtString)
 	{
 		$this->result = mysql_query($stmtString);
+
+		if(!$this->result)
+		{
+			$this->errorMessage = mysql_error();
+			$this->errorNumber = mysql_errno();
+		}
 
 		try
 		{
@@ -101,5 +123,21 @@ class MysqlRecordset implements Recordset
 			return false;
 		}
 		return mysql_fetch_assoc($this->result);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getErrorMessage()
+	{
+		return $this->errorMessage;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getErrorNumber()
+	{
+		return $this->errorNumber;
 	}
 }
