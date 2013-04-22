@@ -19,7 +19,7 @@ class MysqlQuery implements Query
 	protected $limit = array();
 	protected $joinon = array();
 	protected $ownQuery = '';
-	protected $lastQuery = array();
+	protected $lastQuery = '';
 	protected $openClosure = false;
 	protected $closeClosure = false;
 
@@ -222,6 +222,40 @@ class MysqlQuery implements Query
 	
 		$string .= $field.' '.$op.' '.mysql_real_escape_string($value).' ';
 	
+		return $this->where($string);
+	}
+
+	/**
+	 * @param $field	betroffenens Feld
+	 * @param $valueMin Wert von
+	 * @param $valueMax Wert bis
+	 * @param string $concat
+	 * @return MysqlQuery|Query
+	 */
+	public function addWhereBetween($field, $valueMin, $valueMax, $concat = 'AND')
+	{
+		if (is_numeric($valueMin) != is_numeric($valueMax))
+		{
+			throw new \InvalidArgumentException('Min- und Maxwert muss bei between vom selben Typen sein!');
+		}
+
+
+		$string = '';
+
+		if (!empty($this->clause) || $this->openClosure)
+		{
+			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
+		}
+
+		if (is_numeric($valueMin))
+		{
+			$string .= $field.' between '.mysql_real_escape_string($valueMin).' AND '.mysql_real_escape_string($valueMax);
+		}
+		else
+		{
+			$string .= $field.' between "'.mysql_real_escape_string($valueMin).'" AND "'.mysql_real_escape_string($valueMax).'"';
+		}
+
 		return $this->where($string);
 	}
 
@@ -449,7 +483,7 @@ class MysqlQuery implements Query
 			 * Zitat: Vadim am 29.02.2012
 			 */
 			// $this->ownQuery = '';
-			$this->lastQuery[] = $query;
+			$this->lastQuery = str_split($query,255);
 			return $query;
 		}
 		$query = "SELECT ";
@@ -498,7 +532,8 @@ class MysqlQuery implements Query
 		}
 
 		$query = $this->database->clear($query);
-		$this->lastQuery[] = $query;
+
+		$this->lastQuery = str_split($query,255);
 
 		return $query;
 	}

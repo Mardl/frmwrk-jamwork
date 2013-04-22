@@ -18,14 +18,19 @@ class Registry
 	const KEY_SESSION = 'session';
 	
 	protected $values = array();
+
+	/**
+	 * @var $uniqueInstance Registry
+	 */
 	private static $uniqueInstance = NULL;
- 
+
     protected function __construct()
     {
     	
     }
 
-	private final function __clone()
+
+    private final function __clone()
     {
     	
     }
@@ -69,6 +74,7 @@ class Registry
 		return $this->unsetKey($key,self::KEY_REGISTRY);
 	}
 
+
 	/**
 	 * @param $key
 	 * @return bool
@@ -86,6 +92,7 @@ class Registry
 		$this->set(self::KEY_REQUEST, $request , self::KEY_SYSTEM);
 	}
 
+
 	/**
 	 * @return Request
 	 */
@@ -93,6 +100,7 @@ class Registry
 	{
 		return $this->get(self::KEY_REQUEST, self::KEY_SYSTEM );
 	}
+
 
 	/**
 	 * @return bool
@@ -102,6 +110,7 @@ class Registry
 		return $this->hasKey(self::KEY_REQUEST, self::KEY_SYSTEM );
 	}
 
+
 	/**
 	 * @param Response $response
 	 */
@@ -110,6 +119,7 @@ class Registry
 		$this->set(self::KEY_RESPONSE, $response , self::KEY_SYSTEM);
 	}
 
+
 	/**
 	 * @return Response
 	 */
@@ -117,6 +127,7 @@ class Registry
 	{
 		return $this->get(self::KEY_RESPONSE, self::KEY_SYSTEM );
 	}
+
 
 	/**
 	 * @return bool
@@ -142,6 +153,7 @@ class Registry
 		return $this->get(self::KEY_DATABASE, self::KEY_SYSTEM );
 	}
 
+
 	/**
 	 * @return bool
 	 */
@@ -158,6 +170,7 @@ class Registry
 		$this->set(self::KEY_TEMPLATE, $template , self::KEY_SYSTEM);
 	}
 
+
 	/**
 	 * @return Template
 	 */
@@ -165,6 +178,7 @@ class Registry
 	{
 		return $this->get(self::KEY_TEMPLATE, self::KEY_SYSTEM );
 	}
+
 
 	/**
 	 * @return bool
@@ -182,6 +196,7 @@ class Registry
 		$this->set(self::KEY_SESSION, $session , self::KEY_SYSTEM);
 	}
 
+
 	/**
 	 * @return Session
 	 */
@@ -189,6 +204,7 @@ class Registry
 	{
 		return $this->get(self::KEY_SESSION, self::KEY_SYSTEM );
 	}
+
 
 	/**
 	 * @return bool
@@ -207,6 +223,7 @@ class Registry
         self::$uniqueInstance = NULL;
     }
 
+
 	/**
 	 * @param EventDispatcher $eventDispatcher
 	 */
@@ -215,6 +232,7 @@ class Registry
 		$this->set(self::KEY_EVENTDISPATCHER, $eventDispatcher , self::KEY_SYSTEM);
 	}
 
+
 	/**
 	 * @return EventDispatcher
 	 */
@@ -222,6 +240,7 @@ class Registry
 	{
 		return $this->get(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
 	}
+
 
 	/**
 	 * @return bool
@@ -232,6 +251,7 @@ class Registry
 	}
 	
 	/* Private Funktionen zum Zugriff der Interzeptoren*/
+
 
 	/**
 	 * @param $key
