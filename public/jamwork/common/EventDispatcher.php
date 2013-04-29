@@ -1,4 +1,5 @@
 <?php
+
 namespace jamwork\common;
 
 class EventDispatcher
