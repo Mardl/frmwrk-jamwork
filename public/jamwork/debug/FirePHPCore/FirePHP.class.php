@@ -298,7 +298,7 @@ class FirePHP {
     {
         if(is_string($console)) {
             if(get_class($this)!='FirePHP_Insight' && !is_subclass_of($this, 'FirePHP_Insight')) {
-                throw new Exception('FirePHP instance not an instance or subclass of FirePHP_Insight!');
+                throw new \Exception('FirePHP instance not an instance or subclass of FirePHP_Insight!');
             }
             $this->logToInsightConsole = $this->to('request')->console($console);
         } else {
@@ -685,7 +685,7 @@ class FirePHP {
     {
         $instance = self::getInstance();
         if (!method_exists($instance, "_to")) {
-            throw new Exception("FirePHP::to() implementation not loaded");
+            throw new \Exception("FirePHP::to() implementation not loaded");
         }
         $args = func_get_args();
         return call_user_func_array(array($instance, '_to'), $args);
@@ -700,7 +700,7 @@ class FirePHP {
     {
         $instance = self::getInstance();
         if (!method_exists($instance, "_plugin")) {
-            throw new Exception("FirePHP::plugin() implementation not loaded");
+            throw new \Exception("FirePHP::plugin() implementation not loaded");
         }
         $args = func_get_args();
         return call_user_func_array(array($instance, '_plugin'), $args);
@@ -827,7 +827,7 @@ class FirePHP {
                     return $msg->log($Label);
                 case self::GROUP_END:
                 	if(count($insightGroupStack)==0) {
-                	    throw new Exception('Too many groupEnd() as opposed to group() calls!');
+                	    throw new \Exception('Too many groupEnd() as opposed to group() calls!');
                 	}
                 	$group = array_pop($insightGroupStack);
                     return $group->close();
@@ -1175,7 +1175,7 @@ class FirePHP {
      */
     protected function newException($Message)
     {
-        return new Exception($Message);
+        return new \Exception($Message);
     }
   
     /**
@@ -1689,7 +1689,7 @@ class FirePHP {
                     array_pop($this->json_objectStack);
 
                     foreach($properties as $property) {
-                        if ($property instanceof Exception) {
+                        if ($property instanceof \Exception) {
                             return $property;
                         }
                     }
@@ -1705,7 +1705,7 @@ class FirePHP {
                 array_pop($this->json_objectStack);
 
                 foreach($elements as $element) {
-                    if ($element instanceof Exception) {
+                    if ($element instanceof \Exception) {
                         return $element;
                     }
                 }
@@ -1724,7 +1724,7 @@ class FirePHP {
                 array_pop($this->json_objectStack);
               
                 foreach($properties as $property) {
-                    if ($property instanceof Exception) {
+                    if ($property instanceof \Exception) {
                         return $property;
                     }
                 }
@@ -1759,7 +1759,7 @@ class FirePHP {
     
         $encoded_value = $this->json_encode($value);
 
-        if ($encoded_value instanceof Exception) {
+        if ($encoded_value instanceof \Exception) {
             return $encoded_value;
         }
 

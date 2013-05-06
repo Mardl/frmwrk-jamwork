@@ -24,8 +24,8 @@ class Registry
     {
     	
     }
-	
-    private final function __clone()
+
+	private final function __clone()
     {
     	
     }
@@ -43,57 +43,92 @@ class Registry
         return self::$uniqueInstance;
     }
 
+	/**
+	 * @param $key
+	 * @param $value
+	 */
 	public function __set($key, $value)
 	{
 		$this->set($key,$value,self::KEY_REGISTRY);
 	}
 
+	/**
+	 * @param $key
+	 * @return mixed
+	 */
 	public function __get($key)
 	{
 		return $this->get($key,self::KEY_REGISTRY);
 	}
 
+	/**
+	 * @param $key
+	 */
 	public function __unset($key)
 	{
 		return $this->unsetKey($key,self::KEY_REGISTRY);
 	}
-	
+
+	/**
+	 * @param $key
+	 * @return bool
+	 */
 	public function __isset($key)
 	{
 		return $this->hasKey($key,self::KEY_REGISTRY);
 	}
 
+	/**
+	 * @param Request $request
+	 */
 	public function setRequest(Request $request)
 	{
 		$this->set(self::KEY_REQUEST, $request , self::KEY_SYSTEM);
 	}
-	
+
+	/**
+	 * @return Request
+	 */
 	public function getRequest()
 	{
 		return $this->get(self::KEY_REQUEST, self::KEY_SYSTEM );
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function hasRequest()
 	{
 		return $this->hasKey(self::KEY_REQUEST, self::KEY_SYSTEM );
 	}
 
-	
+	/**
+	 * @param Response $response
+	 */
 	public function setResponse(Response $response)
 	{
 		$this->set(self::KEY_RESPONSE, $response , self::KEY_SYSTEM);
 	}
-	
+
+	/**
+	 * @return Response
+	 */
 	public function getResponse()
 	{
 		return $this->get(self::KEY_RESPONSE, self::KEY_SYSTEM );
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function hasResponse()
 	{
 		return $this->hasKey(self::KEY_RESPONSE, self::KEY_SYSTEM );
 	}
 
+	/**
+	 * @param Database $database
+	 */
 	public function setDatabase(Database $database)
 	{
 		$this->set(self::KEY_DATABASE, $database , self::KEY_SYSTEM);
@@ -106,37 +141,58 @@ class Registry
 	{
 		return $this->get(self::KEY_DATABASE, self::KEY_SYSTEM );
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function hasDatabase()
 	{
 		return $this->hasKey(self::KEY_DATABASE, self::KEY_SYSTEM );
 	}
 
+	/**
+	 * @param Template $template
+	 */
 	public function setTemplate(Template $template)
 	{
 		$this->set(self::KEY_TEMPLATE, $template , self::KEY_SYSTEM);
 	}
-	
+
+	/**
+	 * @return Template
+	 */
 	public function getTemplate()
 	{
 		return $this->get(self::KEY_TEMPLATE, self::KEY_SYSTEM );
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function hasTemplate()
 	{
 		return $this->hasKey(self::KEY_TEMPLATE, self::KEY_SYSTEM );
 	}
 
+	/**
+	 * @param Session $session
+	 */
 	public function setSession(Session $session)
 	{
 		$this->set(self::KEY_SESSION, $session , self::KEY_SYSTEM);
 	}
-	
+
+	/**
+	 * @return Session
+	 */
 	public function getSession()
 	{
 		return $this->get(self::KEY_SESSION, self::KEY_SYSTEM );
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function hasSession()
 	{
 		return $this->hasKey(self::KEY_SESSION, self::KEY_SYSTEM );
@@ -150,25 +206,39 @@ class Registry
 	{
         self::$uniqueInstance = NULL;
     }
-	
+
+	/**
+	 * @param EventDispatcher $eventDispatcher
+	 */
 	public function setEventDispatcher(EventDispatcher $eventDispatcher)
 	{
 		$this->set(self::KEY_EVENTDISPATCHER, $eventDispatcher , self::KEY_SYSTEM);
 	}
-	
+
+	/**
+	 * @return EventDispatcher
+	 */
 	public function getEventDispatcher()
 	{
 		return $this->get(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function hasEventDispatcher()
 	{
 		return $this->hasKey(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
 	}
 	
 	/* Private Funktionen zum Zugriff der Interzeptoren*/
-	 
-	private function hasKey($key, $const)
+
+	/**
+	 * @param $key
+	 * @param $const
+	 * @return bool
+	 */
+	protected function hasKey($key, $const)
 	{
 		if (empty($key) || empty($const))
 		{
@@ -178,19 +248,34 @@ class Registry
 		return isset($this->values[$const][$key]);
 	}
 
-	private function unsetKey($key,$const)
+	/**
+	 * @param $key
+	 * @param $const
+	 */
+	protected function unsetKey($key,$const)
 	{
 		if($this->hasKey($key,$const)) {
 			unset($this->values[$const][$key]);
 		}
 	}
 
-	private function set($key, $value , $const)
+	/**
+	 * @param $key
+	 * @param $value
+	 * @param $const
+	 */
+	protected function set($key, $value , $const)
 	{
 		$this->values[$const][$key] = $value;
 	}
-	
-	private function get($key,$const)
+
+	/**
+	 * @param $key
+	 * @param $const
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	protected function get($key,$const)
 	{
 		if($this->hasKey($key,$const)) 
 		{

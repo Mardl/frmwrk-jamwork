@@ -8,9 +8,9 @@ use \jamwork\helper\DefaultUrlGenerator;
 
 class Hyperlink
 {
-	private $cmd = '';
-	private $param = array();
-	private $urlGenerator = null;
+	protected $cmd = '';
+	protected $param = array();
+	protected $urlGenerator = null;
 	
 	public function command($cmd)
 	{
@@ -35,7 +35,7 @@ class Hyperlink
 		return $this;
 	}
 	
-	private function getUrlGenerator()
+	protected function getUrlGenerator()
 	{
 		$reg = Registry::getInstance();
 		$eventsDispatcher = $reg->getEventDispatcher();

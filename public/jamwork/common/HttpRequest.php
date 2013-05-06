@@ -2,6 +2,8 @@
 
 namespace jamwork\common;
 
+use \jamwork\common\Request;
+
 class HttpRequest implements Request
 {
 	private $parameters = array();
@@ -10,7 +12,13 @@ class HttpRequest implements Request
 	private $session = array();
 	private $post = array();
 	# private $command = array();
-	
+
+	/**
+	 * @param array $get
+	 * @param array $post
+	 * @param array $server
+	 * @param array $cookie
+	 */
 	public function __construct(array $get, array $post, array $server, array $cookie)
 	{
 		$this->parameters = $this->clearArray($get);
@@ -18,7 +26,11 @@ class HttpRequest implements Request
 		$this->cookie = $this->clearArray($cookie);
 		$this->post = $this->clearArray($post);
 	}
-	
+
+	/**
+	 * @param $arr
+	 * @return mixed
+	 */
 	private function clearArray($arr)
 	{
 		if (get_magic_quotes_gpc())
@@ -52,17 +64,28 @@ class HttpRequest implements Request
 	{
 		return array_keys($this->parameters);
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function getAllParameters()
 	{
 		return $this->parameters;
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return bool
+	 */
 	public function hasParameter($name)
 	{
 		return $this->isKeyInArray($this->parameters, $name);
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return bool
+	 */
 	public function issetParameter($name)
 	{
 		if($this->hasParameter($name))
@@ -72,7 +95,12 @@ class HttpRequest implements Request
 		}
 		return false;
 	}
-	
+
+	/**
+	 * @param $name
+	 * @param null $def
+	 * @return mixed|null
+	 */
 	public function getParamIfExist($name, $def=null)
 	{
 		if($this->hasParameter($name))
@@ -81,7 +109,10 @@ class HttpRequest implements Request
 		}
 		return $def;
 	}
-	
+
+	/**
+	 * @param $name
+	 */
 	public function unsetParameter($name)
 	{
 		if($this->hasParameter($name))
@@ -89,33 +120,55 @@ class HttpRequest implements Request
 			unset($this->parameters[$name]);
 		}
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return mixed
+	 */
 	public function getParameter($name)
 	{
 		return $this->getFromKeyInArray( $this->parameters,$name);
 	}
 
+	/**
+	 * @param $name
+	 * @param $value
+	 */
 	public function setParameter($name, $value)
 	{
 		$this->parameters[$name] = $value;
 	}
 
 
+	/**
+	 * @return array
+	 */
 	public function getPostNames()
 	{
 		return array_keys($this->post);
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function getAllPost()
 	{
 		return $this->post;
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return bool
+	 */
 	public function hasPost($name)
 	{
 		return $this->isKeyInArray($this->post, $name);
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return bool
+	 */
 	public function issetPost($name)
 	{
 		if($this->hasPost($name))
@@ -125,7 +178,10 @@ class HttpRequest implements Request
 		}
 		return false;
 	}
-	
+
+	/**
+	 * @param $name
+	 */
 	public function unsetPost($name)
 	{
 		if($this->issetPost($name))
@@ -133,12 +189,21 @@ class HttpRequest implements Request
 			unset($this->post[$name]);
 		}
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return mixed
+	 */
 	public function getPost($name)
 	{
 		return $this->getFromKeyInArray($this->post, $name);
 	}
-	
+
+	/**
+	 * @param $name
+	 * @param null $def
+	 * @return mixed|null
+	 */
 	public function getPostIfExist($name, $def=null)
 	{
 		if($this->hasPost($name))
@@ -148,48 +213,90 @@ class HttpRequest implements Request
 		return $def;
 	}
 
+	/**
+	 * @param $name
+	 * @param $value
+	 */
 	public function setPost($name, $value)
 	{
 		$this->post[$name] = $value;
 	}
 
 
+	/**
+	 * @return array
+	 */
 	public function getAllCookies()
 	{
 		return $this->cookie;
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return bool
+	 */
 	public function hasCookie($name)
 	{
 		return $this->isKeyInArray($this->cookie, $name);
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return mixed
+	 */
 	public function getCookie($name)
 	{
 		return $this->getFromKeyInArray($this->cookie, $name);
 	}
-	
+
+	/**
+	 * @param $name
+	 * @param $value
+	 * @param int $expire
+	 * @param string $path
+	 * @param string $domain
+	 * @param bool $secure
+	 * @param bool $httponly
+	 */
 	public function setCookie($name, $value, $expire=0, $path='/', $domain='', $secure=false, $httponly=false)
 	{
 		setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
 	}
-	
+
+	/**
+	 * @param $name
+	 */
 	public function deleteCookie($name)
 	{
 		$this->setCookie($name, null, time()-1);
 	}
-	
+
+	/**
+	 * @param $name
+	 * @return mixed
+	 */
 	public function getHeader($name)
 	{
 		$name = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
 		return $this->getFromKeyInArray($this->server, $name);
 	}
-	
+
+	/**
+	 * @param $array
+	 * @param $name
+	 * @return bool
+	 */
 	private function isKeyInArray($array, $name)
 	{
 		return isset($array[$name]) ? true : false;
 	}
-	
+
+	/**
+	 * @param $array
+	 * @param $name
+	 * @return mixed
+	 * @throws \Exception
+	 */
 	private function getFromKeyInArray($array,$name)
 	{
 		if($this->isKeyInArray($array, $name))
@@ -204,7 +311,10 @@ class HttpRequest implements Request
 		
 		throw new \Exception("Array-Parameter '{$name}' ist nicht gesetzt!");
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function getRequestUri()
 	{
 		if(isset($this->server['QUERY_STRING']))
@@ -213,7 +323,12 @@ class HttpRequest implements Request
 		}
 		return '';
 	}
-	
+
+	/**
+	 * @param $key
+	 * @param string $default
+	 * @return string
+	 */
 	public function getServer($key, $default = '')
 	{
 		if(isset($this->server[$key]))
@@ -222,7 +337,10 @@ class HttpRequest implements Request
 		}
 		return $default;
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function getScriptName()
 	{
 		if(isset($this->server['SCRIPT_NAME']))

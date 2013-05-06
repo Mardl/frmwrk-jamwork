@@ -1,10 +1,11 @@
 <?php
+
 namespace jamwork\common;
 
 class EventDispatcher
 {
-	private $handlers = array();
-	private $iterator = 0; //zu testzwecken siehe EventDispatcher Test
+	protected $handlers = array();
+	protected $iterator = 0; //zu testzwecken siehe EventDispatcher Test
 	
 	public function addHandler($eventName, EventHandler $handler)
 	{
