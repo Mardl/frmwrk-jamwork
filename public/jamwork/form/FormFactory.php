@@ -104,7 +104,10 @@ class FormFactory
 		$this->array[$marker] = $field;
 		return $field;
 	}
-	
+
+	/**
+	 * @return Select
+	 */
 	public function select()
 	{
 		$marker = $this->nextMarker();

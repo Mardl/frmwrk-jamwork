@@ -12,7 +12,10 @@ class Select extends AbstractField
 	{
 		return self::TYPE;	
 	}
-	
+
+	/**
+	 * @return Option
+	 */
 	public function newOption()
 	{
 		$option = new Option();

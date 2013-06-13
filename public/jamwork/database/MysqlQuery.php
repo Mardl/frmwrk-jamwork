@@ -22,7 +22,10 @@ class MysqlQuery implements Query
 	protected $lastQuery = '';
 	protected $openClosure = false;
 	protected $closeClosure = false;
-	
+
+	/**
+	 * @var Database
+	 */
 	private $database = null;
 
 	/**
@@ -131,41 +134,41 @@ class MysqlQuery implements Query
 	{
 		return ($this->queryTyp == 2);
 	}
-	
+
 	/**
 	 * Fügt eine neue WHERE-Klausel hinzu
 	 * und escaped jeden Parameter
-	 * 
+	 *
 	 * @param string         $field Feld für die Bedingung
 	 * @param string|integer $value Vergleichswert
 	 * @param string         $op    Optionaler Operator, default "="
-	 * 
+	 *
 	 * @return MysqlQuery
 	 */
 	public function addWhere($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
-		
+
 		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
-		}	
-			
+		}
+
 		if (is_null($value))
 		{
 			//throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			throw new \Exception('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			return $this;
 		}
-		else if (is_numeric($value))
+		elseif (is_numeric($value))
 		{
 			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
 		}
-		else if (is_string($value))
+		elseif (is_string($value))
 		{
 			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
 		}
-		else if (is_array($value))
+		elseif (is_array($value))
 		{
 			$string .= $this->in($field, $value);
 		}
@@ -173,9 +176,9 @@ class MysqlQuery implements Query
 		{
 			return 'NULL';
 		}
-		
-		
-		
+
+
+
 		return $this->where($string);
 	}
 
@@ -188,15 +191,15 @@ class MysqlQuery implements Query
 	public function addWhereIsNull($field, $op = 'IS', $concat = 'AND')
 	{
 		$string = '';
-		
+
 		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 			//$string = $this->clause.' '.$concat.' ';
 		}
-		
+
 		$string .= $field.' '.$op.' NULL ';
-		
+
 		return $this->where($string);
 	}
 
@@ -210,15 +213,15 @@ class MysqlQuery implements Query
 	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
-	
+
 		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 			//$string = $this->clause.' '.$concat.' ';
 		}
-	
-		$string .= $field.' = '.mysql_real_escape_string($value).' ';
-	
+
+		$string .= $field.' '.$op.' '.mysql_real_escape_string($value).' ';
+
 		return $this->where($string);
 	}
 
@@ -266,17 +269,22 @@ class MysqlQuery implements Query
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
 	{
 		$string = '';
-	
+
 		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
-	
+
 		$string .= $field.' LIKE "'.sprintf($phraseOrder, mysql_real_escape_string($value)).'" ';
-	
+
 		return $this->where($string);
 	}
 
+
+	public function innerStatement($field, $value)
+	{
+		return $this->addWhereFunc($field,'('.$value.')','in');
+	}
 
 	/**
 	 * @param $field
@@ -288,12 +296,12 @@ class MysqlQuery implements Query
 	public function addHaving($field, $value, $op = '=', $concat = 'AND')
 	{
 		$string = '';
-		
+
 		if (!empty($this->having))
 		{
 			$string = $this->having.' '.$concat.' ';
-		}	
-			
+		}
+
 		if (is_null($value))
 		{
 			$string .= $field.' '.$op.' NULL';
@@ -310,24 +318,24 @@ class MysqlQuery implements Query
 		{
 			return 'NULL';
 		}
-		
+
 		$this->having = $string;
 		return $this;
 	}
-	
+
 	/**
 	 * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
 	 * und escaped jeden Parameter
-	 * 
+	 *
 	 * @param string $field  Feld
 	 * @param array  $values Array mit Integer-Werten
-	 * 
+	 *
 	 * @return string
 	 */
 	public function in($field, array $values)
 	{
 		$string = $field.' IN (';
-		
+
 		$string .= implode(
 			',',
 			array_map(
@@ -335,20 +343,19 @@ class MysqlQuery implements Query
 				{
 					if (is_string($item))
 					{
-						return "'".mysql_real_escape_string($item)."'";	
+						return "'".mysql_real_escape_string($item)."'";
 					}
-					
+
 					return mysql_real_escape_string($item);
 				},
 				$values
 			)
 		);
-				
+
 		$string .= ')';
-		
+
 		return $string;
 	}
-
 
 	/**
 	 * @param $order
@@ -385,13 +392,13 @@ class MysqlQuery implements Query
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * Fügt einen neuen Join hinzu
-	 * 
+	 *
 	 * @param string $join Join-Table
 	 * @param string $type Art des Joins, default LEFT
-	 * 
+	 *
 	 * @return MysqlQuery
 	 */
 	public function join($join, $type = 'LEFT')
@@ -399,19 +406,19 @@ class MysqlQuery implements Query
 		$this->jointable[] = array($join, $type);
 		return $this;
 	}
-	
+
 	/**
 	 * Fügt einen Join hinzu vorgefertig auf INNER JOIN
-	 * 
+	 *
 	 * @param string $join Join-Table
-	 * 
+	 *
 	 * @return MysqlQuery
 	 */
 	public function innerJoin($join)
 	{
 		return $this->join($join, 'INNER');
 	}
-	
+
 	/**
 	 * Fügt einen Join hinzu vorgefertig auf LEFT JOIN
 	 *
@@ -433,21 +440,22 @@ class MysqlQuery implements Query
 		$this->joinon[] = $joinOn;
 		return $this;
 	}
-	
+
 	/**
 	 * Hinterlegt ein vorgefertigtes SQL-Statement.
-	 * 
+	 *
 	 * @throws \ErrorException Wenn ein SELECT-Statement ausgeführt werden soll
-	 * 
+	 *
 	 * @return MysqlQuery
 	 */
 	public function setQueryOnce($queryString)
-	{	
-		if (substr(strtoupper(trim($queryString)),0,6) == 'SELECT')
+	{
+		$checkString = strtoupper(trim($queryString));
+		if (substr($checkString,0,6) == 'SELECT' && strpos($checkString, "UNION") === false)
 		{
 			throw new \ErrorException('Benutze den Querybuilder für SELECT-Statements');
 		}
-		
+
 		$this->ownQuery = $queryString;
 		return $this;
 	}
@@ -470,7 +478,7 @@ class MysqlQuery implements Query
 		if(!empty($this->ownQuery))
 		{
 			$query = $this->ownQuery;
-			/* 
+			/*
 			 * Clearing des onceQuery entfernt -> jedes Objekt hat EINE Aufgabe
 			 * verwendet man das Objekt mehrfach für verschidene Queries, so sollte man mehrere Objekte haben!
 			 * Zitat: Vadim am 29.02.2012
@@ -490,7 +498,7 @@ class MysqlQuery implements Query
 		{
 			$query .= implode (',', $this->fields);
 		}
-		else 
+		else
 		{
 			$query .= $this->fields;
 		}
@@ -503,23 +511,23 @@ class MysqlQuery implements Query
 			}
 		}
 
-		if ( !empty($this->clause) ) 
+		if ( !empty($this->clause) )
 		{
 			$query .= " WHERE ".$this->clause;
 		}
-		if ( !empty($this->groupby) ) 
+		if ( !empty($this->groupby) )
 		{
 			$query .= " GROUP BY ".$this->groupby;
 		}
-		if ( !empty($this->having) ) 
+		if ( !empty($this->having) )
 		{
 			$query .= " HAVING ".$this->having;
 		}
-		if ( !empty($this->order) ) 
+		if ( !empty($this->order) )
 		{
 			$query .= " ORDER BY ".$this->order;
-		}		
-		if ( !empty($this->limit) ) 
+		}
+		if ( !empty($this->limit) )
 		{
 			$query .= " LIMIT ".implode(', ',$this->limit);
 		}

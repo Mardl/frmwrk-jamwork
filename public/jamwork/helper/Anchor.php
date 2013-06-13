@@ -11,10 +11,16 @@ class Anchor
 	private $external = false;
 	private $textSet = '';
 	private $classes = array();
+	private $attributes = array();
 	
 	public function __construct(Hyperlink $hyperlink)
 	{
 		$this->hyperlink = $hyperlink;
+	}
+	
+	public function attr($key, $value)
+	{
+		$this->attributes[$key] = $value;
 	}
 	
 	public function text($text)
@@ -25,7 +31,8 @@ class Anchor
 	
 	public function title($title)
 	{
-		$this->title = $title;
+		$this->attr('title', $title);
+		//$this->title = $title;
 		return $this;
 	}
 	
@@ -37,7 +44,8 @@ class Anchor
 	
 	public function external()
 	{
-		$this->external = true;
+		$this->attr('target', '_blank');
+		// $this->external = true;
 		return $this;
 	}
 	
@@ -68,10 +76,21 @@ class Anchor
 	
 	public function create()
 	{
-		$strOut = '<a href="'.$this->getHref().'"'.$this->getClasses().$this->getTitle().$this->getExternal().'>'.$this->getText().'</a>';
+		// $strOut = '<a href="'.$this->getHref().'"'.$this->getClasses().$this->getTitle().$this->getExternal().'>'.$this->getText().'</a>';
+		$strOut = '<a href="'.$this->getHref().'"'.$this->getClasses().$this->getAttributes().'>'.$this->getText().'</a>';
 		return $strOut;
 	}
 	
+	private function getAttributes()
+	{
+		$attr = array();
+		foreach($this->attributes as $key => $value)
+		{
+			$attr[] = $key.'="'.$value.'"';
+		}
+		return ' '.implode(' ', $attr);
+	}
+	/*
 	private function getTitle()
 	{
 		if(!empty($this->title))
@@ -89,7 +108,7 @@ class Anchor
 		}
 		return '';
 	}
-	
+	*/
 	public function __toString()
 	{
 		return $this->create();

@@ -6,13 +6,28 @@ class UnordertList
 {
 	private $items = array();
 	private $ulClass = array();
+	private $itemCount = 0;
 	
-	public function addItem($item, $class='')
+	public function addItem($item, $attr='')
 	{
-		$this->items[] = array(
-			'text' => $item,
-			'class' => $class
+		$this->items[ $this->itemCount ] = array(
+			'text' => $item
 		);
+		
+		if(is_array($attr))
+		{
+			foreach($attr as $key => $value)
+			{
+				$this->items[ $this->itemCount ][$key] = $value;
+			}
+		}
+		else
+		{
+			$this->items[ $this->itemCount ]['class'] = $attr;
+		}
+		
+		$this->itemCount++;
+		
 		return $this;
 	}
 	
@@ -55,16 +70,18 @@ class UnordertList
 		$strOut = '';
 		foreach($this->items as $item)
 		{
-			$strOut .= '<li'.$this->getClass($item).'>'.$item['text'].'</li>';
+			$strOut .= '<li'.$this->getItemData($item, 'id').$this->getItemData($item, 'class').'>'.$item['text'].'</li>';
 		}
 		return $strOut;
 	}
 	
-	private function getClass($item)
+	private function getItemData($item, $key, $label='')
 	{
-		if(!empty($item['class']))
+		$label = empty($label) ? $key : $label;
+		
+		if(isset($item[$key]) && !empty($item[$key]))
 		{
-			return ' class="'.$item['class'].'"';
+			return ' '.$label.'="'.$item[$key].'"';
 		}
 		return '';
 	}

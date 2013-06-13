@@ -12,13 +12,11 @@ interface Recordset
 	 */
 	public function execute(Query $query);
 
-
 	/**
 	 * @abstract
 	 * @return integer|boolean
 	 */
 	public function count();
-
-
 	public function get();
+	public function isSuccessful();
 }

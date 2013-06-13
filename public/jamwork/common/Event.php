@@ -4,10 +4,10 @@ namespace jamwork\common;
 
 class Event
 {
-	private $name;
-	private $context;
-	private $info;
-	private $canceled = false;
+	protected $name;
+	protected $context;
+	protected $info;
+	protected $canceled = false;
 	
 	public function __construct($name, $context = null, $info = null)
 	{
@@ -28,7 +28,7 @@ class Event
 	
 	public function getInfo()
 	{
-		return $this->info;		
+		return $this->info;
 	}
 	
 	public function isCanceled()

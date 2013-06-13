@@ -15,7 +15,7 @@ abstract class AbstractField implements Field
 	protected $dataAttr = array();
 	protected $placeholder = '';
 	
-	abstract public function getFieldType(); // Muss den Typ des Field zurückliefern als string
+	abstract public function getFieldType(); // Muss den Typ des Field zurÃ¼ckliefern als string
 
 	public function __construct($marker='')
 	{
