@@ -227,6 +227,7 @@ class MysqlDatabase implements Database
 		$queryObj = $this->newQuery()->setQueryOnce($query);
 
 		$execRs = $this->newRecordSet()->execute($queryObj);
+
 		if ($execRs->isSuccessful())
 		{
 			$id = mysql_insert_id();

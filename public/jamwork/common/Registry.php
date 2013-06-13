@@ -29,8 +29,7 @@ class Registry
     	
     }
 
-
-    private final function __clone()
+	private final function __clone()
     {
     	
     }
@@ -110,7 +109,6 @@ class Registry
 		return $this->hasKey(self::KEY_REQUEST, self::KEY_SYSTEM );
 	}
 
-
 	/**
 	 * @param Response $response
 	 */
@@ -170,7 +168,6 @@ class Registry
 		$this->set(self::KEY_TEMPLATE, $template , self::KEY_SYSTEM);
 	}
 
-
 	/**
 	 * @return Template
 	 */
@@ -178,7 +175,6 @@ class Registry
 	{
 		return $this->get(self::KEY_TEMPLATE, self::KEY_SYSTEM );
 	}
-
 
 	/**
 	 * @return bool
@@ -223,7 +219,6 @@ class Registry
         self::$uniqueInstance = NULL;
     }
 
-
 	/**
 	 * @param EventDispatcher $eventDispatcher
 	 */
@@ -232,7 +227,6 @@ class Registry
 		$this->set(self::KEY_EVENTDISPATCHER, $eventDispatcher , self::KEY_SYSTEM);
 	}
 
-
 	/**
 	 * @return EventDispatcher
 	 */
@@ -240,7 +234,6 @@ class Registry
 	{
 		return $this->get(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
 	}
-
 
 	/**
 	 * @return bool
@@ -251,7 +244,6 @@ class Registry
 	}
 	
 	/* Private Funktionen zum Zugriff der Interzeptoren*/
-
 
 	/**
 	 * @param $key
