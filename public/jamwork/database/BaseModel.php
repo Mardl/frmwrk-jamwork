@@ -141,6 +141,12 @@ class BaseModel
 		return $this->change == true && $this->dontSave === false;
 	}
 
+	/**
+	 * @param $todo
+	 * @param bool $tags
+	 * @return array|string
+	 * @deprecated
+	 */
 	protected function cleanText($todo, $tags=true)
 	{
 		if(is_array($todo))
