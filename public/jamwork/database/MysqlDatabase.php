@@ -204,7 +204,7 @@ class MysqlDatabase implements Database
 				{
 					$setField .= ', ';
 				}
-				
+
 				if ($recordSet[$field] !== 'NULL')
 				{
 					$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
@@ -213,7 +213,7 @@ class MysqlDatabase implements Database
 				{
 					$setField .= $field.' = NULL';
 				}
-				
+
 			}
 		}
 
@@ -225,8 +225,10 @@ class MysqlDatabase implements Database
 		$query .= $setField;
 		
 		$queryObj = $this->newQuery()->setQueryOnce($query);
-				
-		if ($this->newRecordSet()->execute($queryObj)->isSuccessful())
+
+		$execRs = $this->newRecordSet()->execute($queryObj);
+
+		if ($execRs->isSuccessful())
 		{
 			$id = mysql_insert_id();
 			$pri = $this->getPrimary($tableName);

@@ -533,7 +533,9 @@ class MysqlQuery implements Query
 		}
 
 		$query = $this->database->clear($query);
+
 		$this->lastQuery = str_split($query,255);
+
 		return $query;
 	}
 
