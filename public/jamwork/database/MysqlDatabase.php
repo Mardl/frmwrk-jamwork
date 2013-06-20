@@ -200,7 +200,7 @@ class MysqlDatabase implements Database
 		{
 			if (isset($recordSet[$field]))
 			{
-				if (!empty($setField))
+ 				if (!empty($setField))
 				{
 					$setField .= ', ';
 				}
