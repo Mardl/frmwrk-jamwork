@@ -2,7 +2,7 @@
 
 namespace jamwork\debug;
 
-require_once __DIR__.'/FirePHPCore/FirePHP.class.php';
+require_once __DIR__ . '/FirePHPCore/FirePHP.class.php';
 
 class DebugLogger
 {
