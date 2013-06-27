@@ -2,6 +2,13 @@
 
 namespace jamwork\common;
 
+/**
+ * Class HttpSession
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class HttpSession implements Session
 {
 

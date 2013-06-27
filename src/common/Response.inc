@@ -2,6 +2,13 @@
 
 namespace jamwork\common;
 
+/**
+ * Class Response
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 interface Response
 {
 

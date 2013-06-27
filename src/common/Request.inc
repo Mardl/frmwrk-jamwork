@@ -2,6 +2,13 @@
 
 namespace jamwork\common;
 
+/**
+ * Class Request
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 interface Request
 {
 
