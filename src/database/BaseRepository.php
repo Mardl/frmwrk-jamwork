@@ -7,9 +7,10 @@ use \jamwork\database\BaseModel;
 
 abstract class BaseRepository
 {
+
 	protected $database = null;
 	protected $models = array();
-	
+
 	abstract function getById($id);
 
 	/**
@@ -34,6 +35,7 @@ abstract class BaseRepository
 	protected function getQuery()
 	{
 		$query = $this->getDatabase()->newQuery();
+
 		return $query;
 	}
 
@@ -43,6 +45,7 @@ abstract class BaseRepository
 	protected function getRecordset()
 	{
 		$recordset = $this->getDatabase()->newRecordSet();
+
 		return $recordset;
 	}
 
@@ -52,54 +55,59 @@ abstract class BaseRepository
 	 */
 	protected function findId($modelOrId)
 	{
-		if($modelOrId instanceof BaseModel)
+		if ($modelOrId instanceof BaseModel)
 		{
 			return $modelOrId->getId();
 		}
-		
-		if(is_numeric($modelOrId))
+
+		if (is_numeric($modelOrId))
 		{
 			return $modelOrId;
 		}
-		
+
 		return 0;
 	}
-	
-	protected function getModel($modelClass, $query, $force=false)
+
+	protected function getModel($modelClass, $query, $force = false)
 	{
 		$key = $this->getKey($query);
-		
-		if(isset($this->models[$key]) && !$force)
+
+		if (isset($this->models[$key]) && !$force)
 		{
 			return $this->models[$key];
 		}
-				
+
 		$recordset = $this->getRecordset()->execute($query);
 		$rec = $recordset->get();
-		$this->models[$key] = new $modelClass( $rec );
+		$this->models[$key] = new $modelClass($rec);
+
 		return $this->models[$key];
 	}
-	
+
 	private function getKey($query)
 	{
 		$sql = $query->get();
+
 		return md5($sql);
 	}
-	
-	protected function getModels($modelClass, $query, $force=false)
+
+	protected function getModels($modelClass, $query, $force = false)
 	{
 		$key = $this->getKey($query);
-		if(array_key_exists($key, $this->models) && !$force) {
+		if (array_key_exists($key, $this->models) && !$force)
+		{
 			return $this->models[$key];
 		}
 
 		$recordset = $this->getRecordset()->execute($query);
 		$models = array();
-		while($rec = $recordset->get()) {
-			$models[] = new $modelClass( $rec );
+		while ($rec = $recordset->get())
+		{
+			$models[] = new $modelClass($rec);
 		}
-		
+
 		$this->models[$key] = $models;
+
 		return $this->models[$key];
 	}
 }

@@ -9,7 +9,7 @@
 
 	<testsuites>
 		<testsuite name="CoreFramework">
-			<directory suffix="Test.php">tests/</directory>
+			<directory suffix="Test.php">tests/unittests/jamwork/</directory>
 		</testsuite>
 	</testsuites>
 
@@ -20,30 +20,10 @@
 		<log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
 	</logging>
 
-    <!--
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">App/Manager</directory>
-			<directory suffix=".php">App/Models</directory>
-			<directory suffix=".php">App/Modules</directory>
-			<exclude>
-				<directory suffix=".html.php">App/Modules</directory>
-				<directory suffix=".json.php">App/Modules</directory>
-
-				<directory suffix=".php">App/Manager/Directory</directory>
-				<directory suffix=".php">App/Manager/Right</directory>
-
-				<directory suffix=".php">App/Models/Directory</directory>
-				<directory suffix=".php">App/Models/Right</directory>
-
-				<directory suffix=".php">App/Modules/Files</directory>
-				<directory suffix=".php">App/Modules/Index</directory>
-				<directory suffix=".php">App/Modules/System</directory>
-				<directory suffix=".php">App/Modules/Users</directory>
-
-			</exclude>
+			<directory suffix=".php">src</directory>
 		</whitelist>
 	</filter>
-    -->
 
 </phpunit>

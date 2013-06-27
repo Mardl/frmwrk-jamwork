@@ -4,6 +4,7 @@ namespace jamwork\database;
 
 interface Update
 {
+
 	/**
 	 * @abstract
 	 * @param $table
@@ -28,8 +29,8 @@ interface Update
 
 	/**
 	 * @abstract
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -39,7 +40,7 @@ interface Update
 
 	/**
 	 * @abstract
-	 * @param $field
+	 * @param        $field
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -48,8 +49,8 @@ interface Update
 
 	/**
 	 * @abstract
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $phraseOrder
 	 * @param string $concat
 	 * @return Query
@@ -59,7 +60,7 @@ interface Update
 
 	/**
 	 * @abstract
-	 * @param $field
+	 * @param       $field
 	 * @param array $values
 	 * @return Query
 	 */

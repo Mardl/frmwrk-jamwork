@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="CoreFramework" default="build">
+<project name="JamworkFramework" default="build-parallel">
 
 	<!-- 
 	<property name="mysql.host" value="localhost"/>

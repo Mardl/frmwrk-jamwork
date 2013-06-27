@@ -1,6 +1,6 @@
 <?php
 
-require_once 'public/jamwork/Autoload.php';
+require_once 'src/Autoload.php';
 
 function unittestLoader($className)
 {
@@ -22,14 +22,18 @@ function NoFileFoundLoader($className)
 /* Module Autoload */
 function moduleLoader($className)
 {	
-	echo 'test';
-	
 	$fileName = str_replace('\\', '/', $className);
-	$fileName = str_replace('unittest/', '', $fileName);
-	$fileName .= '.php';
-	if(file_exists($fileName))
+	$fileName = str_replace('jamwork/', __DIR__.'/../../src/', $fileName);
+	$fileNameSuffix = $fileName.'.php';
+
+	if(file_exists($fileNameSuffix))
 	{
-		require_once $fileName;
+		require_once $fileNameSuffix;
+	}
+	$fileNameSuffix = $fileName.'.inc';
+	if(file_exists($fileNameSuffix))
+	{
+		require_once $fileNameSuffix;
 	}
 }
 

@@ -17,6 +17,8 @@ interface Recordset
 	 * @return integer|boolean
 	 */
 	public function count();
+
 	public function get();
+
 	public function isSuccessful();
 }

@@ -4,9 +4,10 @@ namespace jamwork\common;
 
 class EventDispatcher
 {
+
 	protected $handlers = array();
 	protected $iterator = 0; //zu testzwecken siehe EventDispatcher Test
-	
+
 	public function addHandler($eventName, EventHandler $handler)
 	{
 		if (!isset($this->handlers[$eventName]))
@@ -15,7 +16,7 @@ class EventDispatcher
 		}
 		$this->handlers[$eventName][] = $handler;
 	}
-	
+
 	public function triggerEvent($event, $context = null, $info = null)
 	{
 		if (!$event instanceof Event)
@@ -27,7 +28,7 @@ class EventDispatcher
 		{
 			return $event;
 		}
-		
+
 		foreach ($this->handlers[$eventName] as $handler)
 		{
 			$handler->handle($event);
@@ -37,6 +38,7 @@ class EventDispatcher
 			}
 			$this->iterator++;
 		}
+
 		return $event;
 	}
 }

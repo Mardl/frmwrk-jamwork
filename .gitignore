@@ -5,3 +5,7 @@ Thumbs.db
 .buildpath
 .idea/
 ._*
+cache.properties
+Vendor
+build/logs
+build/coverage
