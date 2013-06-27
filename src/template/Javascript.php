@@ -2,6 +2,13 @@
 
 namespace jamwork\template;
 
+/**
+ * Class Javascript
+ *
+ * @category Jamwork
+ * @package  Jamwork\template
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class Javascript implements Script
 {
 
@@ -9,11 +16,18 @@ class Javascript implements Script
 	private $cacheDir = 'static/';
 	private $shrink = false;
 
+	/**
+	 * @param bool $shrink
+	 */
 	public function __construct($shrink = false)
 	{
 		$this->shrink = $shrink;
 	}
 
+	/**
+	 * @param string $file
+	 * @return bool
+	 */
 	public function add($file)
 	{
 		if (file_exists($file))
@@ -26,21 +40,35 @@ class Javascript implements Script
 		return false;
 	}
 
+	/**
+	 * @param string $dir
+	 * @return void
+	 */
 	public function setCacheDir($dir)
 	{
 		$this->cacheDir = $dir;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function ksort()
 	{
 		ksort($this->scripts);
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getCacheDir()
 	{
 		return $this->cacheDir;
 	}
 
+	/**
+	 * @param string $file
+	 * @return bool|mixed
+	 */
 	public function remove($file)
 	{
 		if (isset($this->scripts[$file]))
@@ -53,6 +81,9 @@ class Javascript implements Script
 		return false;
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getTmpFile()
 	{
 		// hat Optimierungsbedarf, siehe EGARA
@@ -74,6 +105,9 @@ class Javascript implements Script
 		return $fileName;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function flush()
 	{
 		if ($this->shrink)
@@ -84,6 +118,9 @@ class Javascript implements Script
 		return $this->getAllScripts();
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getAllScripts()
 	{
 		$files = '';

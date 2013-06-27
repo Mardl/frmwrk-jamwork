@@ -6,8 +6,9 @@ use \jamwork\template\HtmlSection;
 
 class HtmlSectionTest extends \PHPUnit_Framework_TestCase
 {
-	private $htmlSection = False;
-	
+
+	private $htmlSection = false;
+
 	public function testAppend()
 	{
 		$attr = $this->readAttribute($this->htmlSection, 'data');
@@ -18,9 +19,9 @@ class HtmlSectionTest extends \PHPUnit_Framework_TestCase
 		$this->htmlSection->append('oof');
 		$attr = $this->readAttribute($this->htmlSection, 'data');
 		$this->assertSame('foooof', $attr);
-		
+
 	}
-	
+
 	public function testPrepend()
 	{
 		$attr = $this->readAttribute($this->htmlSection, 'data');
@@ -30,9 +31,9 @@ class HtmlSectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame('foo', $attr);
 		$this->htmlSection->prepend('oof');
 		$attr = $this->readAttribute($this->htmlSection, 'data');
-		$this->assertSame('ooffoo', $attr);	
+		$this->assertSame('ooffoo', $attr);
 	}
-	
+
 	public function testFlush()
 	{
 		$attr = $this->readAttribute($this->htmlSection, 'data');
@@ -43,12 +44,12 @@ class HtmlSectionTest extends \PHPUnit_Framework_TestCase
 		$flush = $this->htmlSection->flush();
 		$this->assertSame('foo', $flush);
 	}
-	
+
 	protected function setUp()
 	{
 		$this->htmlSection = new HtmlSection();
 	}
-	
+
 	protected function tearDown()
 	{
 		unset($this->htmlSection);

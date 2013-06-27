@@ -2,6 +2,13 @@
 
 namespace jamwork\common;
 
+/**
+ * Class HttpResponse
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class HttpResponse implements Response
 {
 
@@ -11,7 +18,8 @@ class HttpResponse implements Response
 	private $returns = array();
 
 	/**
-	 * @param $status
+	 * @param string $status
+	 * @return void
 	 */
 	public function setStatus($status)
 	{
@@ -27,8 +35,9 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param string $value
+	 * @return void
 	 */
 	public function addHeader($name, $value)
 	{
@@ -36,7 +45,8 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
+	 * @return void
 	 */
 	public function unsetHeader($name)
 	{
@@ -55,7 +65,7 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function hasHeader($name)
@@ -64,7 +74,8 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $data
+	 * @param string $data
+	 * @return void
 	 */
 	public function write($data)
 	{
@@ -73,7 +84,8 @@ class HttpResponse implements Response
 
 	/**
 	 * @param Command $obj
-	 * @param         $data
+	 * @param string  $data
+	 * @return void
 	 */
 	public function addReturn(Command $obj, $data)
 	{
@@ -97,7 +109,8 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $body
+	 * @param string $body
+	 * @return void
 	 */
 	public function setBody($body)
 	{
@@ -179,8 +192,8 @@ class HttpResponse implements Response
 
 
 	/**
-	 * @param      $filePath Pfad zur Datei fuer DOwnload
-	 * @param bool $mock     nur fuer unittest
+	 * @param string $filePath Pfad zur Datei fuer DOwnload
+	 * @param bool   $mock     nur fuer unittest
 	 * @return bool true fuer unittest
 	 */
 	public function downloadFile($filePath, $mock = false)

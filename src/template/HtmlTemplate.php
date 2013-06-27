@@ -2,6 +2,13 @@
 
 namespace jamwork\template;
 
+/**
+ * Class HtmlTemplate
+ *
+ * @category Jamwork
+ * @package  Jamwork\template
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class HtmlTemplate implements Template
 {
 
@@ -21,6 +28,10 @@ class HtmlTemplate implements Template
 	protected $minify = true;
 	protected $meta = array();
 
+	/**
+	 * @param string $templateDir
+	 * @param bool   $shrink
+	 */
 	public function __construct($templateDir, $shrink = true)
 	{
 		$this->js = new Javascript($shrink);
@@ -32,6 +43,9 @@ class HtmlTemplate implements Template
 		$this->addMeta('Content-Type', 'text/html; charset=utf-8', 'http-equiv');
 	}
 
+	/**
+	 * destruct
+	 */
 	public function __destruct()
 	{
 		unset($this->js);
@@ -43,11 +57,20 @@ class HtmlTemplate implements Template
 		}
 	}
 
+	/**
+	 * @param string $key
+	 * @param string $value
+	 * @param string $keyName
+	 * @return void
+	 */
 	public function addMeta($key, $value, $keyName = 'name')
 	{
 		$this->meta[$keyName . '="' . $key . '"'] = $value;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getMeta()
 	{
 		$strOut = array();
@@ -59,6 +82,10 @@ class HtmlTemplate implements Template
 		return implode("\n", $strOut);
 	}
 
+	/**
+	 * @param string $dir
+	 * @return void
+	 */
 	public function setCacheDir($dir)
 	{
 		if (!is_dir($dir))
@@ -76,6 +103,10 @@ class HtmlTemplate implements Template
 		$this->js()->setCacheDir($dir);
 	}
 
+	/**
+	 * @param string $templateFile
+	 * @return bool|mixed
+	 */
 	public function setTemplateFile($templateFile)
 	{
 		if (in_array($templateFile, $this->templateFiles))
@@ -89,16 +120,27 @@ class HtmlTemplate implements Template
 		return false;
 	}
 
+	/**
+	 * @return Javascript|null
+	 */
 	public function js()
 	{
 		return $this->js;
 	}
 
+	/**
+	 * @return CssStylesheet|null
+	 */
 	public function css()
 	{
 		return $this->css;
 	}
 
+	/**
+	 * @param string $key
+	 * @return mixed
+	 * @throws \Exception
+	 */
 	public function section($key)
 	{
 		if (isset($this->sections[$key]))
@@ -109,6 +151,11 @@ class HtmlTemplate implements Template
 		throw new \Exception('Die geforderte Section mit dem Key "' . $key . '" existiert nicht!');
 	}
 
+	/**
+	 * @param string $sectionName
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function setMainSection($sectionName)
 	{
 		if (isset($this->sections[$sectionName]))
@@ -121,6 +168,10 @@ class HtmlTemplate implements Template
 		throw new \Exception('Die Section "' . $sectionName . '" existiert nicht und kann nicht als Main-Section gesetzt werden.');
 	}
 
+	/**
+	 * @return mixed
+	 * @throws \Exception
+	 */
 	public function mainSection()
 	{
 		if (!empty($this->mainSection))
@@ -131,6 +182,9 @@ class HtmlTemplate implements Template
 		throw new \Exception('Die Main-Section wurde nicht definiert!');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function flush()
 	{
 		$strOut = $this->getXmlHeader();
@@ -149,6 +203,9 @@ class HtmlTemplate implements Template
 		return $strOut;
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getFavicon()
 	{
 		$icon = '';
@@ -168,26 +225,44 @@ class HtmlTemplate implements Template
 		return $icon;
 	}
 
+	/**
+	 * @return array|mixed
+	 */
 	public function getSectionList()
 	{
 		return $this->sectionList;
 	}
 
+	/**
+	 * @param string $doctype
+	 * @return void
+	 */
 	public function setDoctype($doctype)
 	{
 		$this->doctype = $doctype;
 	}
 
+	/**
+	 * @param string $xmlHeader
+	 * @return void
+	 */
 	public function setXmlHeader($xmlHeader)
 	{
 		$this->xmlHeader = $xmlHeader;
 	}
 
+	/**
+	 * @param string $baseUrl
+	 * @return void
+	 */
 	public function setBaseUrl($baseUrl)
 	{
 		$this->baseUrl = $baseUrl;
 	}
 
+	/**
+	 * @return void
+	 */
 	private function readFiles()
 	{
 		$iterator = new \DirectoryIterator($this->templateDir);
@@ -211,6 +286,10 @@ class HtmlTemplate implements Template
 		unset($iterator);
 	}
 
+	/**
+	 * @param string $dir
+	 * @return void
+	 */
 	private function readSubDir($dir)
 	{
 		$iterator = new \DirectoryIterator($dir);
@@ -235,6 +314,9 @@ class HtmlTemplate implements Template
 		$this->js()->ksort();
 	}
 
+	/**
+	 * @return void
+	 */
 	private function readTemplate()
 	{
 		$tplFile = $this->templateDir . $this->templateFile . '.html';
@@ -251,6 +333,11 @@ class HtmlTemplate implements Template
 		}
 	}
 
+	/**
+	 * @param string $template
+	 * @return void
+	 * @throws \Exception
+	 */
 	private function setTemplateDir($template)
 	{
 		if (substr($template, -1) != '/')
@@ -269,6 +356,9 @@ class HtmlTemplate implements Template
 		throw new \Exception('Template-Datei (' . $template . ') konnte nicht gefunden werden.');
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getBody()
 	{
 		foreach ($this->sections as $key => $obj)
@@ -279,6 +369,9 @@ class HtmlTemplate implements Template
 		return $this->body . "\n";
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getDoctype()
 	{
 		if (empty($this->doctype))
@@ -293,6 +386,9 @@ class HtmlTemplate implements Template
 		return $this->doctype . "\n";
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getXmlHeader()
 	{
 		if (empty($this->xmlHeader))
@@ -303,11 +399,17 @@ class HtmlTemplate implements Template
 		return $this->xmlHeader . "\n";
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getTitle()
 	{
 		return '<title>' . $this->title . '</title>' . "\n";
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getBaseUrl()
 	{
 		if (empty($this->baseUrl))

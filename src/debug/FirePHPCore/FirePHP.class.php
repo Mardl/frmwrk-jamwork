@@ -1089,19 +1089,25 @@ class FirePHP
 					{
 						/* Skip - FB::trace(), FB::send(), $firephp->trace(), $firephp->fb() */
 					}
-					else if (isset($trace[$i]['class']) && isset($trace[$i + 1]['file']) && $trace[$i]['class'] == 'FirePHP' && substr($this->_standardizePath($trace[$i + 1]['file']), -18, 18) == 'FirePHPCore/fb.php')
-					{
-						/* Skip fb() */
-					}
-					else if (isset($trace[$i]['file']) && substr($this->_standardizePath($trace[$i]['file']), -18, 18) == 'FirePHPCore/fb.php')
-					{
-						/* Skip FB::fb() */
-					}
 					else
 					{
-						$meta['file'] = isset($trace[$i]['file']) ? $this->_escapeTraceFile($trace[$i]['file']) : '';
-						$meta['line'] = isset($trace[$i]['line']) ? $trace[$i]['line'] : '';
-						break;
+						if (isset($trace[$i]['class']) && isset($trace[$i + 1]['file']) && $trace[$i]['class'] == 'FirePHP' && substr($this->_standardizePath($trace[$i + 1]['file']), -18, 18) == 'FirePHPCore/fb.php')
+						{
+							/* Skip fb() */
+						}
+						else
+						{
+							if (isset($trace[$i]['file']) && substr($this->_standardizePath($trace[$i]['file']), -18, 18) == 'FirePHPCore/fb.php')
+							{
+								/* Skip FB::fb() */
+							}
+							else
+							{
+								$meta['file'] = isset($trace[$i]['file']) ? $this->_escapeTraceFile($trace[$i]['file']) : '';
+								$meta['line'] = isset($trace[$i]['line']) ? $trace[$i]['line'] : '';
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -1202,7 +1208,9 @@ class FirePHP
 	protected function _escapeTrace($Trace)
 	{
 		if (!$Trace)
+		{
 			return $Trace;
+		}
 		for ($i = 0; $i < sizeof($Trace); $i++)
 		{
 			if (isset($Trace[$i]['file']))
@@ -1269,7 +1277,9 @@ class FirePHP
 	protected function getUserAgent()
 	{
 		if (!isset($_SERVER['HTTP_USER_AGENT']))
+		{
 			return false;
+		}
 
 		return $_SERVER['HTTP_USER_AGENT'];
 	}
@@ -1371,7 +1381,9 @@ class FirePHP
 	{
 
 		if (!$Table)
+		{
 			return $Table;
+		}
 
 		$new_table = array();
 		foreach ($Table as $row)
@@ -1416,156 +1428,168 @@ class FirePHP
 			return '** ' . (string)$Object . ' **';
 
 		}
-		else if (is_object($Object))
+		else
 		{
-
-			if ($ObjectDepth > $this->options['maxObjectDepth'])
-			{
-				return '** Max Object Depth (' . $this->options['maxObjectDepth'] . ') **';
-			}
-
-			foreach ($this->objectStack as $refVal)
-			{
-				if ($refVal === $Object)
-				{
-					return '** Recursion (' . get_class($Object) . ') **';
-				}
-			}
-			array_push($this->objectStack, $Object);
-
-			$return['__className'] = $class = get_class($Object);
-			$class_lower = strtolower($class);
-
-			$reflectionClass = new ReflectionClass($class);
-			$properties = array();
-			foreach ($reflectionClass->getProperties() as $property)
-			{
-				$properties[$property->getName()] = $property;
-			}
-
-			$members = (array)$Object;
-
-			foreach ($properties as $plain_name => $property)
+			if (is_object($Object))
 			{
 
-				$name = $raw_name = $plain_name;
-				if ($property->isStatic())
+				if ($ObjectDepth > $this->options['maxObjectDepth'])
 				{
-					$name = 'static:' . $name;
-				}
-				if ($property->isPublic())
-				{
-					$name = 'public:' . $name;
-				}
-				else if ($property->isPrivate())
-				{
-					$name = 'private:' . $name;
-					$raw_name = "\0" . $class . "\0" . $raw_name;
-				}
-				else if ($property->isProtected())
-				{
-					$name = 'protected:' . $name;
-					$raw_name = "\0" . '*' . "\0" . $raw_name;
+					return '** Max Object Depth (' . $this->options['maxObjectDepth'] . ') **';
 				}
 
-				if (!(isset($this->objectFilters[$class_lower]) && is_array($this->objectFilters[$class_lower]) && in_array($plain_name, $this->objectFilters[$class_lower])))
+				foreach ($this->objectStack as $refVal)
 				{
-
-					if (array_key_exists($raw_name, $members) && !$property->isStatic())
+					if ($refVal === $Object)
 					{
+						return '** Recursion (' . get_class($Object) . ') **';
+					}
+				}
+				array_push($this->objectStack, $Object);
 
-						$return[$name] = $this->encodeObject($members[$raw_name], $ObjectDepth + 1, 1, $MaxDepth + 1);
+				$return['__className'] = $class = get_class($Object);
+				$class_lower = strtolower($class);
 
+				$reflectionClass = new ReflectionClass($class);
+				$properties = array();
+				foreach ($reflectionClass->getProperties() as $property)
+				{
+					$properties[$property->getName()] = $property;
+				}
+
+				$members = (array)$Object;
+
+				foreach ($properties as $plain_name => $property)
+				{
+
+					$name = $raw_name = $plain_name;
+					if ($property->isStatic())
+					{
+						$name = 'static:' . $name;
+					}
+					if ($property->isPublic())
+					{
+						$name = 'public:' . $name;
 					}
 					else
 					{
-						if (method_exists($property, 'setAccessible'))
+						if ($property->isPrivate())
 						{
-							$property->setAccessible(true);
-							$return[$name] = $this->encodeObject($property->getValue($Object), $ObjectDepth + 1, 1, $MaxDepth + 1);
-						}
-						else if ($property->isPublic())
-						{
-							$return[$name] = $this->encodeObject($property->getValue($Object), $ObjectDepth + 1, 1, $MaxDepth + 1);
+							$name = 'private:' . $name;
+							$raw_name = "\0" . $class . "\0" . $raw_name;
 						}
 						else
 						{
-							$return[$name] = '** Need PHP 5.3 to get value **';
+							if ($property->isProtected())
+							{
+								$name = 'protected:' . $name;
+								$raw_name = "\0" . '*' . "\0" . $raw_name;
+							}
 						}
 					}
-				}
-				else
-				{
-					$return[$name] = '** Excluded by Filter **';
-				}
-			}
-
-			// Include all members that are not defined in the class
-			// but exist in the object
-			foreach ($members as $raw_name => $value)
-			{
-
-				$name = $raw_name;
-
-				if ($name{0} == "\0")
-				{
-					$parts = explode("\0", $name);
-					$name = $parts[2];
-				}
-
-				$plain_name = $name;
-
-				if (!isset($properties[$name]))
-				{
-					$name = 'undeclared:' . $name;
 
 					if (!(isset($this->objectFilters[$class_lower]) && is_array($this->objectFilters[$class_lower]) && in_array($plain_name, $this->objectFilters[$class_lower])))
 					{
 
-						$return[$name] = $this->encodeObject($value, $ObjectDepth + 1, 1, $MaxDepth + 1);
+						if (array_key_exists($raw_name, $members) && !$property->isStatic())
+						{
+
+							$return[$name] = $this->encodeObject($members[$raw_name], $ObjectDepth + 1, 1, $MaxDepth + 1);
+
+						}
+						else
+						{
+							if (method_exists($property, 'setAccessible'))
+							{
+								$property->setAccessible(true);
+								$return[$name] = $this->encodeObject($property->getValue($Object), $ObjectDepth + 1, 1, $MaxDepth + 1);
+							}
+							else
+							{
+								if ($property->isPublic())
+								{
+									$return[$name] = $this->encodeObject($property->getValue($Object), $ObjectDepth + 1, 1, $MaxDepth + 1);
+								}
+								else
+								{
+									$return[$name] = '** Need PHP 5.3 to get value **';
+								}
+							}
+						}
 					}
 					else
 					{
 						$return[$name] = '** Excluded by Filter **';
 					}
 				}
-			}
 
-			array_pop($this->objectStack);
-
-		}
-		elseif (is_array($Object))
-		{
-
-			if ($ArrayDepth > $this->options['maxArrayDepth'])
-			{
-				return '** Max Array Depth (' . $this->options['maxArrayDepth'] . ') **';
-			}
-
-			foreach ($Object as $key => $val)
-			{
-
-				// Encoding the $GLOBALS PHP array causes an infinite loop
-				// if the recursion is not reset here as it contains
-				// a reference to itself. This is the only way I have come up
-				// with to stop infinite recursion in this case.
-				if ($key == 'GLOBALS' && is_array($val) && array_key_exists('GLOBALS', $val))
+				// Include all members that are not defined in the class
+				// but exist in the object
+				foreach ($members as $raw_name => $value)
 				{
-					$val['GLOBALS'] = '** Recursion (GLOBALS) **';
+
+					$name = $raw_name;
+
+					if ($name{0} == "\0")
+					{
+						$parts = explode("\0", $name);
+						$name = $parts[2];
+					}
+
+					$plain_name = $name;
+
+					if (!isset($properties[$name]))
+					{
+						$name = 'undeclared:' . $name;
+
+						if (!(isset($this->objectFilters[$class_lower]) && is_array($this->objectFilters[$class_lower]) && in_array($plain_name, $this->objectFilters[$class_lower])))
+						{
+
+							$return[$name] = $this->encodeObject($value, $ObjectDepth + 1, 1, $MaxDepth + 1);
+						}
+						else
+						{
+							$return[$name] = '** Excluded by Filter **';
+						}
+					}
 				}
 
-				$return[$key] = $this->encodeObject($val, 1, $ArrayDepth + 1, $MaxDepth + 1);
+				array_pop($this->objectStack);
+
 			}
-		}
-		else
-		{
-			if (self::is_utf8($Object))
+			elseif (is_array($Object))
 			{
-				return $Object;
+
+				if ($ArrayDepth > $this->options['maxArrayDepth'])
+				{
+					return '** Max Array Depth (' . $this->options['maxArrayDepth'] . ') **';
+				}
+
+				foreach ($Object as $key => $val)
+				{
+
+					// Encoding the $GLOBALS PHP array causes an infinite loop
+					// if the recursion is not reset here as it contains
+					// a reference to itself. This is the only way I have come up
+					// with to stop infinite recursion in this case.
+					if ($key == 'GLOBALS' && is_array($val) && array_key_exists('GLOBALS', $val))
+					{
+						$val['GLOBALS'] = '** Recursion (GLOBALS) **';
+					}
+
+					$return[$key] = $this->encodeObject($val, 1, $ArrayDepth + 1, $MaxDepth + 1);
+				}
 			}
 			else
 			{
-				return utf8_encode($Object);
+				if (self::is_utf8($Object))
+				{
+					return $Object;
+				}
+				else
+				{
+					return utf8_encode($Object);
+				}
 			}
 		}
 

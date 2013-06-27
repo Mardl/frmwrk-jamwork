@@ -13,7 +13,7 @@ class MysqlRecordset implements Recordset
 	protected $query = null;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $result = false;
 

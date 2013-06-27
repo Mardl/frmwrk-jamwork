@@ -4,6 +4,13 @@ namespace jamwork\common;
 
 use \jamwork\common\Request;
 
+/**
+ * Class HttpRequest
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class HttpRequest implements Request
 {
 
@@ -12,8 +19,6 @@ class HttpRequest implements Request
 	private $cookie = array();
 	private $session = array();
 	private $post = array();
-
-	# private $command = array();
 
 	/**
 	 * @param array $get
@@ -30,10 +35,10 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $arr
+	 * @param array $arr
 	 * @return mixed
 	 */
-	private function clearArray($arr)
+	private function clearArray(array $arr)
 	{
 		if (get_magic_quotes_gpc())
 		{
@@ -51,18 +56,9 @@ class HttpRequest implements Request
 		return $arr;
 	}
 
-	/*
-	public function addCommand($command)
-	{
-		$this->command[] = $command;
-	}
-
-	public function getCommand()
-	{
-		return $this->command;
-	}
-	*/
-
+	/**
+	 * @return array
+	 */
 	public function getParameterNames()
 	{
 		return array_keys($this->parameters);
@@ -77,7 +73,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function hasParameter($name)
@@ -86,7 +82,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function issetParameter($name)
@@ -102,8 +98,8 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param      $name
-	 * @param null $def
+	 * @param string $name
+	 * @param string $def
 	 * @return mixed|null
 	 */
 	public function getParamIfExist($name, $def = null)
@@ -117,7 +113,8 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
+	 * @return void
 	 */
 	public function unsetParameter($name)
 	{
@@ -128,7 +125,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return mixed
 	 */
 	public function getParameter($name)
@@ -137,8 +134,9 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param string $value
+	 * @return void
 	 */
 	public function setParameter($name, $value)
 	{
@@ -163,7 +161,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function hasPost($name)
@@ -172,7 +170,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function issetPost($name)
@@ -188,7 +186,8 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
+	 * @return void
 	 */
 	public function unsetPost($name)
 	{
@@ -199,7 +198,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return mixed
 	 */
 	public function getPost($name)
@@ -208,8 +207,8 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param      $name
-	 * @param null $def
+	 * @param string $name
+	 * @param string $def
 	 * @return mixed|null
 	 */
 	public function getPostIfExist($name, $def = null)
@@ -223,8 +222,9 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param string $value
+	 * @return void
 	 */
 	public function setPost($name, $value)
 	{
@@ -241,7 +241,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function hasCookie($name)
@@ -250,7 +250,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return mixed
 	 */
 	public function getCookie($name)
@@ -259,21 +259,24 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param        $name
-	 * @param        $value
+	 * @param string $name
+	 * @param string $value
 	 * @param int    $expire
 	 * @param string $path
 	 * @param string $domain
 	 * @param bool   $secure
 	 * @param bool   $httponly
+	 * @return void
 	 */
 	public function setCookie($name, $value, $expire = 0, $path = '/', $domain = '', $secure = false, $httponly = false)
 	{
 		setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+		$this->cookie[$name] = $value;
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
+	 * @return void
 	 */
 	public function deleteCookie($name)
 	{
@@ -281,7 +284,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return mixed
 	 */
 	public function getHeader($name)
@@ -292,22 +295,22 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param $array
-	 * @param $name
+	 * @param array  $array
+	 * @param string $name
 	 * @return bool
 	 */
-	private function isKeyInArray($array, $name)
+	private function isKeyInArray(array $array, $name)
 	{
 		return isset($array[$name]) ? true : false;
 	}
 
 	/**
-	 * @param $array
-	 * @param $name
+	 * @param array  $array
+	 * @param string $name
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	private function getFromKeyInArray($array, $name)
+	private function getFromKeyInArray(array $array, $name)
 	{
 		if ($this->isKeyInArray($array, $name))
 		{
@@ -337,7 +340,7 @@ class HttpRequest implements Request
 	}
 
 	/**
-	 * @param        $key
+	 * @param string $key
 	 * @param string $default
 	 * @return string
 	 */

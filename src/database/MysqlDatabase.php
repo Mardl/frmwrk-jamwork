@@ -250,9 +250,12 @@ class MysqlDatabase implements Database
 	/**
 	 * @param string $str
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function clear($str)
 	{
+		// funcktion wurde injektion sicher abgelöst mit mysql_real_escape_string
 		//$str = str_replace('\\', '\\\\', $str);
 		//$str = str_replace('"', '\\"', $str);
 		return $str;

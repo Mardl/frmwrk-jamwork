@@ -5,6 +5,13 @@ namespace jamwork\common;
 use jamwork\database\Database;
 use jamwork\template\Template;
 
+/**
+ * Class Registry
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class Registry
 {
 
@@ -26,11 +33,17 @@ class Registry
 	 */
 	private static $uniqueInstance = null;
 
+	/**
+	 * constructor kann nur abgeleitet werden
+	 */
 	protected function __construct()
 	{
 
 	}
 
+	/**
+	 * @return void
+	 */
 	private final function __clone()
 	{
 
@@ -51,8 +64,9 @@ class Registry
 	}
 
 	/**
-	 * @param $key
-	 * @param $value
+	 * @param string $key
+	 * @param string $value
+	 * @return void
 	 */
 	public function __set($key, $value)
 	{
@@ -60,7 +74,7 @@ class Registry
 	}
 
 	/**
-	 * @param $key
+	 * @param string $key
 	 * @return mixed
 	 */
 	public function __get($key)
@@ -69,7 +83,8 @@ class Registry
 	}
 
 	/**
-	 * @param $key
+	 * @param string $key
+	 * @return void
 	 */
 	public function __unset($key)
 	{
@@ -78,7 +93,7 @@ class Registry
 
 
 	/**
-	 * @param $key
+	 * @param string $key
 	 * @return bool
 	 */
 	public function __isset($key)
@@ -88,6 +103,7 @@ class Registry
 
 	/**
 	 * @param Request $request
+	 * @return void
 	 */
 	public function setRequest(Request $request)
 	{
@@ -114,6 +130,7 @@ class Registry
 
 	/**
 	 * @param Response $response
+	 * @return void
 	 */
 	public function setResponse(Response $response)
 	{
@@ -140,6 +157,7 @@ class Registry
 
 	/**
 	 * @param Database $database
+	 * @return void
 	 */
 	public function setDatabase(Database $database)
 	{
@@ -165,6 +183,7 @@ class Registry
 
 	/**
 	 * @param Template $template
+	 * @return void
 	 */
 	public function setTemplate(Template $template)
 	{
@@ -189,6 +208,7 @@ class Registry
 
 	/**
 	 * @param Session $session
+	 * @return void
 	 */
 	public function setSession(Session $session)
 	{
@@ -216,6 +236,10 @@ class Registry
 	/**
 	 * Warum ist das public? und muss es static sein?
 	 * -- Vadim
+	 * Wegen Unittests, damit sie resetet werden kann
+	 * -- Mardl
+	 *
+	 * @return void
 	 */
 	public static function reset()
 	{
@@ -224,6 +248,7 @@ class Registry
 
 	/**
 	 * @param EventDispatcher $eventDispatcher
+	 * @return void
 	 */
 	public function setEventDispatcher(EventDispatcher $eventDispatcher)
 	{
@@ -249,8 +274,8 @@ class Registry
 	/* Private Funktionen zum Zugriff der Interzeptoren*/
 
 	/**
-	 * @param $key
-	 * @param $const
+	 * @param string $key
+	 * @param string $const
 	 * @return bool
 	 */
 	protected function hasKey($key, $const)
@@ -264,8 +289,9 @@ class Registry
 	}
 
 	/**
-	 * @param $key
-	 * @param $const
+	 * @param string $key
+	 * @param string $const
+	 * @return void
 	 */
 	protected function unsetKey($key, $const)
 	{
@@ -276,9 +302,10 @@ class Registry
 	}
 
 	/**
-	 * @param $key
-	 * @param $value
-	 * @param $const
+	 * @param string $key
+	 * @param string $value
+	 * @param string $const
+	 * @return void
 	 */
 	protected function set($key, $value, $const)
 	{
@@ -286,8 +313,8 @@ class Registry
 	}
 
 	/**
-	 * @param $key
-	 * @param $const
+	 * @param string $key
+	 * @param string $const
 	 * @return mixed
 	 * @throws \Exception
 	 */

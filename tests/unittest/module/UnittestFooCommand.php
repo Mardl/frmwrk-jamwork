@@ -4,6 +4,6 @@ namespace unittest\module;
 
 class UnittestFooCommand
 {
-	
+
 }
 

@@ -317,19 +317,22 @@ class MysqlQuery implements Query
 		{
 			$string .= $field . ' ' . $op . ' NULL';
 		}
-		else if (is_numeric($value))
-		{
-			$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
-		}
 		else
 		{
-			if (is_string($value))
+			if (is_numeric($value))
 			{
-				$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
+				$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
 			}
 			else
 			{
-				return 'NULL';
+				if (is_string($value))
+				{
+					$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
+				}
+				else
+				{
+					return 'NULL';
+				}
 			}
 		}
 
@@ -352,14 +355,14 @@ class MysqlQuery implements Query
 		$string = $field . ' IN (';
 
 		$string .= implode(',', array_map(function ($item)
-				{
-					if (is_string($item))
-					{
-						return "'" . mysql_real_escape_string($item) . "'";
-					}
+		{
+			if (is_string($item))
+			{
+				return "'" . mysql_real_escape_string($item) . "'";
+			}
 
-					return mysql_real_escape_string($item);
-				}, $values));
+			return mysql_real_escape_string($item);
+		}, $values));
 
 		$string .= ')';
 
@@ -576,13 +579,19 @@ class MysqlQuery implements Query
 				{
 					$setValues .= $key . " = NULL";
 				}
-				else if (is_numeric($value))
+				else
 				{
-					$setValues .= $key . " = " . $value;
-				}
-				else if (is_string($value))
-				{
-					$setValues .= $key . " = '" . $value . "'";
+					if (is_numeric($value))
+					{
+						$setValues .= $key . " = " . $value;
+					}
+					else
+					{
+						if (is_string($value))
+						{
+							$setValues .= $key . " = '" . $value . "'";
+						}
+					}
 				}
 			}
 
@@ -613,9 +622,12 @@ class MysqlQuery implements Query
 			}
 			$this->openClosure = false;
 		}
-		else if (!empty($this->clause))
+		else
 		{
-			$strOut = $clause . ' ' . $concat . ' ';
+			if (!empty($this->clause))
+			{
+				$strOut = $clause . ' ' . $concat . ' ';
+			}
 		}
 
 		return $strOut;
