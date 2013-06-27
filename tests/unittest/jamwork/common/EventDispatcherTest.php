@@ -4,8 +4,8 @@ namespace unittest\jamwork\common;
 
 use jamwork\common\EventDispatcher;
 use jamwork\common\Event;
-use unittest\module\unittestEventHandler;
-use unittest\module\unittestCancelEventHandler;
+use unittest\module\UnittestEventHandler;
+use unittest\module\UnittestCancelEventHandler;
 
 
 class EventDispatcherTest extends \PHPUnit_Framework_TestCase 

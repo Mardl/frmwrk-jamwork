@@ -44,7 +44,7 @@ function exceptionHandler($exception)
 	$result = array();
 	foreach ($trace as $key => $stackPoint)
 	{
-		$result[] = sprintf($traceline, $key, $stackPoint['file'], $stackPoint['line'], $stackPoint['function'], isset($stackPoint['args']) ? implode(', ', $stackPoint['args']) : '');
+		$result[] = sprintf($traceline, $key, isset($stackPoint['file']) ? $stackPoint['file'] : '', isset($stackPoint['line']) ? $stackPoint['line'] : '', $stackPoint['function'], isset($stackPoint['args']) ? implode(', ', $stackPoint['args']) : '');
 	}
 	// trace always ends with {main}
 	$result[] = '#' . ++$key . ' {main}';

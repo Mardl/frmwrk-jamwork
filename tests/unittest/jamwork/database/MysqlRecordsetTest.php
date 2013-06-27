@@ -68,7 +68,7 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 	
 	protected function setUp()
 	{
-		$this->mysqlDB = new MysqlDatabase('localhost', 'unittest_jamwork', 'unittest_jamwork', 'unittest_jamwork');
+		$this->mysqlDB = new MysqlDatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
 		$this->query = $this->mysqlDB->newQuery();
 		$this->mysqlRecordset = $this->mysqlDB->newRecordSet();
 	}

@@ -8,6 +8,12 @@ use jamwork\common\Registry;
 
 class FileSystemCommandResolverTest extends \PHPUnit_Framework_TestCase
 {
+
+	/**
+	 * @var FileSystemCommandResolver
+	 */
+	private $CommandResolver;
+
 	public function testGetCommand_OhneCommand()
 	{
 		$request = new HttpRequest(array(),array(),array(), array());
@@ -41,22 +47,6 @@ class FileSystemCommandResolverTest extends \PHPUnit_Framework_TestCase
 		
 		$attr = $this->readAttribute($this->CommandResolver, 'noPermission');	
 		$this->assertSame ('Foo', $attr);
-	}
-	
-	public function testGetCommand_Exception()
-	{
-		$get['cmd'] = '\unittest\module\UnittestFoo';
-		$request = new HttpRequest($get,array(),array(), array());
-		try
-		{
-			$this->CommandResolver->getCommand($request);
-		}
-		catch ( \Exception $e )
-		{
-			return;
-		}
-		
-		$this->Fail("Exception erwartet");
 	}
 	
 	public function testLoadCommand()
@@ -111,10 +101,10 @@ class FileSystemCommandResolverTest extends \PHPUnit_Framework_TestCase
 	protected function setUp()
 	{
 		$registry = Registry::getInstance();
-		$this->eventDispatcher = $this->getMockBuilder('jamwork\common\EventDispatcher')
+		$this->eventDispatcher = $this->getMockBuilder('\jamwork\common\EventDispatcher')
                      	   ->disableOriginalConstructor()
                      	   ->getMock();
-		$this->event = $this->getMockBuilder('jamwork\common\Event')
+		$this->event = $this->getMockBuilder('\jamwork\common\Event')
                      	   ->disableOriginalConstructor()
                      	   ->getMock();				   
 						   

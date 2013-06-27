@@ -6,7 +6,6 @@ class FileSystemCommandResolver implements CommandResolver
 {
 
 	private $noPermission = '';
-	private $noLogin = '';
 
 	public function getCommand(Request $request)
 	{
@@ -46,7 +45,6 @@ class FileSystemCommandResolver implements CommandResolver
 			$eventsDispatcher = $registry->getEventDispatcher();
 
 			$event = $eventsDispatcher->triggerEvent('onCommandLoad', $this, $command);
-
 			if ($event->isCanceled())
 			{
 				$name = $this->noPermission . 'Command';

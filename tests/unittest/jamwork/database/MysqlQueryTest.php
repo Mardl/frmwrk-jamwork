@@ -139,7 +139,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 		
 	protected function setUp()
 	{
-		$this->db = new MysqlDatabase('localhost', 'unittest_jamwork', 'unittest_jamwork', 'unittest_jamwork');
+		$this->db = new MysqlDatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
 
 		$registry = Registry::getInstance();
 		$registry->setDatabase($this->db);

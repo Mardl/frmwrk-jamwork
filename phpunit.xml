@@ -8,8 +8,8 @@
 	stopOnFailure="false">
 
 	<testsuites>
-		<testsuite name="CoreFramework">
-			<directory suffix="Test.php">tests/unittests/jamwork/</directory>
+		<testsuite name="JamworkFramework">
+			<directory suffix="Test.php">tests/</directory>
 		</testsuite>
 	</testsuites>
 

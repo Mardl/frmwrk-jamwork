@@ -10,7 +10,14 @@ use jamwork\common\Registry;
 
 class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 {
+
+	/**
+	 * @var \jamwork\database\MysqlQuery
+	 */
 	private $query;
+	/**
+	 * @var \jamwork\database\MysqlRecordset
+	 */
 	private $recordset;
 	
 	public function testNewRecordSet()	
@@ -184,16 +191,16 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	
 	protected function setUp()
 	{
-		$this->mysqlDatabase = new MysqlDatabase('localhost', 'unittest_jamwork', 'unittest_jamwork', 'unittest_jamwork');	
+		$this->mysqlDatabase = new MysqlDatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
 		$registry = Registry::getInstance();
 		$registry->setDatabase($this->mysqlDatabase);
 		$this->query = $this->mysqlDatabase->newQuery();
-		$this->recordset = $this->mysqlDatabase->newRecordSet();	
+		$this->recordset = $this->mysqlDatabase->newRecordSet();
 		
 	}
 	
 	protected function tearDown()
-	{	
+	{
 		$this->query->setQueryOnce('TRUNCATE TABLE `testtable`');
 		$this->recordset->execute($this->query);
 		Registry::reset();
