@@ -189,6 +189,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 		$method = new \ReflectionMethod($this->mysqlDatabase, 'getPrimary');
 		$method->setAccessible(true);
 		$field = $method->invoke($this->mysqlDatabase, 'testtable');
+
 		$this->assertSame($field, 'tst_id');
 	}
 
@@ -208,8 +209,6 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
   PRIMARY KEY (`tst_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;");
 		$this->recordset->execute($query);
-
-
 	}
 
 	protected function tearDown()

@@ -61,6 +61,13 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(2, $count);
 	}
 
+	public function testCount_Empty()
+	{
+		$this->mysqlRecordset->execute($this->query);
+		$count = $this->mysqlRecordset->count();
+		$this->assertFalse($count);
+	}
+
 	public function testIsSuccessfull_negativ()
 	{
 		$this->query->select('*')->from('not_existing_table');
@@ -81,6 +88,15 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 
 	}
 
+	public function testGetErrorMessage()
+	{
+		/*
+		$unique = uniqid();
+		//errorMessage accessible
+		$this->mysqlRecordset->errorMessage = $unique;
+		$this->assertEquals($this->mysqlRecordset->getErrorMessage(), $unique);
+		*/
+	}
 
 	protected function setUp()
 	{

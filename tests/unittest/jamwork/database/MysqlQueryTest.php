@@ -30,6 +30,13 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 		$this->assertAttributeEquals($sollSelect, 'fields', $this->mysqlQuery);
 	}
 
+	public function testUpdate()
+	{
+		$table = 'db_info';
+		$this->mysqlQuery->update($table);
+		$this->assertAttributeEquals($table, 'table', $this->mysqlQuery);
+	}
+
 	public function testWhere()
 	{
 		$sollWhere = 'id=42';
@@ -37,11 +44,35 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 		$this->assertAttributeEquals($sollWhere, 'clause', $this->mysqlQuery);
 	}
 
+	public function testSet()
+	{
+		$field = 'header_one';
+		$value = 'test';
+		$this->mysqlQuery->set($field, $value);
+		$this->assertAttributeEquals(array($field => $value), 'sets', $this->mysqlQuery);
+	}
+
 	public function testSetQueryOnce()
 	{
 		$sollWhere = 'select bla und blub UNION';
 		$this->mysqlQuery->setQueryOnce($sollWhere);
 		$this->assertAttributeEquals($sollWhere, 'ownQuery', $this->mysqlQuery);
+	}
+
+	public function testSetQueryOnceExpException()
+	{
+		$sollWhereOnce = 'select bla und blub';
+
+		try
+		{
+			$this->mysqlQuery->setQueryOnce($sollWhereOnce);
+		} catch (\Exception $e)
+		{
+			return;
+		}
+
+		// hier darf er nie hinkommen!
+		$this->assertTrue(false);
 	}
 
 
@@ -60,25 +91,10 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 		// beim 2ten Lauf wieder standard
 		//$this->assertsame ('SELECT '.$sollSelect.' FROM '.$sollFrom.' WHERE '.$sollWhere, $this->mysqlQuery->get());
 
-		//der Query Once ist in dem Fall höher priorisiert!
+		//der Query Once ist in dem Fall hï¿½her priorisiert!
 		$this->assertsame($sollWhereOnce, $this->mysqlQuery->get());
 	}
 
-	public function testSetQueryOnceExpException()
-	{
-		$sollWhereOnce = 'select bla und blub';
-
-		try
-		{
-			$this->mysqlQuery->setQueryOnce($sollWhereOnce);
-		} catch (\Exception $e)
-		{
-			return;
-		}
-
-		// hier darf er nie hinkommen!
-		$this->assertTrue(false);
-	}
 
 	public function testGet_Default()
 	{
@@ -99,6 +115,15 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 		$this->assertsame('SELECT ' . $sollSelect . ' FROM ' . $sollFrom, $query->get());
 	}
 
+	public function testGet_distinct()
+	{
+		$sollFrom = 'db_info';
+		$sollSelect = 'row1, row2';
+
+		$query = $this->mysqlQuery->distinct()->from($sollFrom)->select($sollSelect);
+		$this->assertsame('SELECT DISTINCT ' . $sollSelect . ' FROM ' . $sollFrom, $query->get());
+	}
+
 	public function testOrderBy()
 	{
 		$sollFrom = 'db_info';
@@ -107,6 +132,16 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 
 		$query = $this->mysqlQuery->from($sollFrom)->select($sollSelect)->orderBy('order asc');
 		$this->assertsame('SELECT ' . $sollSelect . ' FROM ' . $sollFrom . ' ORDER BY ' . $sollOrder, $query->get());
+	}
+
+	public function testGroupBy()
+	{
+		$sollFrom = 'db_info';
+		$sollSelect = 'row1, row2';
+		$sollOrder = 'order asc';
+
+		$query = $this->mysqlQuery->from($sollFrom)->select($sollSelect)->groupBy('order asc');
+		$this->assertsame('SELECT ' . $sollSelect . ' FROM ' . $sollFrom . ' GROUP BY ' . $sollOrder, $query->get());
 	}
 
 	public function testJoin()
