@@ -186,6 +186,7 @@ class MysqlQuery implements Query
 		}
 		else
 		{
+			throw new \InvalidArgumentException('ACHTUNG: Aufruf von AddWhere mit unbekannten Parameter! Bitte überprüfen!');
 			return 'NULL';
 		}
 
@@ -294,7 +295,7 @@ class MysqlQuery implements Query
 
 	public function innerStatement($field, $value)
 	{
-		return $this->addWhereFunc($field, '(' . $value . ')', 'in');
+		return $this->addWhereFunc($field, '(' . $value . ')', 'IN');
 	}
 
 	/**
@@ -331,6 +332,7 @@ class MysqlQuery implements Query
 				}
 				else
 				{
+					throw new \InvalidArgumentException('ACHTUNG: Aufruf von addHaving mit unbekannten Parameter! Bitte überprüfen!');
 					return 'NULL';
 				}
 			}
@@ -575,23 +577,22 @@ class MysqlQuery implements Query
 
 			foreach ($this->sets as $key => $value)
 			{
+				$setValues .= empty($setValues) ? '' : ', ';
 				if (is_null($value))
 				{
 					$setValues .= $key . " = NULL";
 				}
+				elseif (is_numeric($value))
+				{
+					$setValues .= $key . " = " . mysql_real_escape_string($value);
+				}
+				elseif (is_string($value))
+				{
+					$setValues .= $key . ' = "' . mysql_real_escape_string($value) . '"';
+				}
 				else
 				{
-					if (is_numeric($value))
-					{
-						$setValues .= $key . " = " . $value;
-					}
-					else
-					{
-						if (is_string($value))
-						{
-							$setValues .= $key . " = '" . $value . "'";
-						}
-					}
+					throw new \InvalidArgumentException('ACHTUNG: Aufruf von getUpdate mit unbekannten Parameter von addSet! Bitte überprüfen!');
 				}
 			}
 
