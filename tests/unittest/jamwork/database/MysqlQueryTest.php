@@ -105,8 +105,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		// hier darf er nie hinkommen!
-		$this->assertTrue(false);
+		$this->fail('An expected Exception has not been raised.');
 	}
 
 	public function testInnerStatement()
@@ -134,8 +133,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		// hier darf er nie hinkommen!
-		$this->assertTrue(false);
+		$this->fail('An expected Exception has not been raised.');
 	}
 
 	public function testAddWhere_OpenClosure()
@@ -272,8 +270,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		// hier darf er nie hinkommen!
-		$this->assertTrue(false);
+		$this->fail('An expected Exception has not been raised.');
 	}
 
 	public function testAddWhereBetween_numeric()
@@ -334,8 +331,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		// hier darf er nie hinkommen!
-		$this->assertTrue(false);
+		$this->fail('An expected Exception has not been raised.');
 	}
 
 
@@ -428,8 +424,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		// hier darf er nie hinkommen!
-		$this->assertTrue(false);
+		$this->fail('An expected Exception has not been raised.');
 
 	}
 
@@ -501,8 +496,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		// hier darf er nie hinkommen!
-		$this->assertTrue(false);
+		$this->fail('An expected Exception has not been raised.');
 	}
 
 	public function testOrderBy()

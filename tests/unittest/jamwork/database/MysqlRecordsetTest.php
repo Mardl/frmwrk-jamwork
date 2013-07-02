@@ -90,12 +90,18 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetErrorMessage()
 	{
-		/*
-		$unique = uniqid();
-		//errorMessage accessible
-		$this->mysqlRecordset->errorMessage = $unique;
-		$this->assertEquals($this->mysqlRecordset->getErrorMessage(), $unique);
-		*/
+		$this->query->select('*')->from('not_existing_table');
+		$this->mysqlRecordset->execute($this->query)->isSuccessfull();
+
+		$this->assertSame("Table 'test_jamwork.not_existing_table' doesn't exist",$this->mysqlRecordset->getErrorMessage());
+	}
+
+	public function testGetErrorNumber()
+	{
+		$this->query->select('*')->from('not_existing_table');
+		$this->mysqlRecordset->execute($this->query)->isSuccessfull();
+
+		$this->assertSame(1146,$this->mysqlRecordset->getErrorNumber());
 	}
 
 	protected function setUp()
