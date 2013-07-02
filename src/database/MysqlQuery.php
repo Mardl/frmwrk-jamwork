@@ -6,6 +6,7 @@ use \jamwork\database\Database;
 
 class MysqlQuery implements Query
 {
+
 	protected $queryTyp = 1;
 	protected $distinct = false;
 	protected $table = '';
@@ -43,6 +44,7 @@ class MysqlQuery implements Query
 	public function from($table)
 	{
 		$this->table = $table;
+
 		return $this;
 	}
 
@@ -54,6 +56,7 @@ class MysqlQuery implements Query
 	{
 		$this->setSelectType();
 		$this->fields = $fields;
+
 		return $this;
 	}
 
@@ -65,6 +68,7 @@ class MysqlQuery implements Query
 	{
 		$this->setUpdateType();
 		$this->table = $table;
+
 		return $this;
 	}
 
@@ -76,6 +80,7 @@ class MysqlQuery implements Query
 	public function set($fieldName, $value)
 	{
 		$this->sets[$fieldName] = $value;
+
 		return $this;
 	}
 
@@ -86,22 +91,27 @@ class MysqlQuery implements Query
 	public function where($clause)
 	{
 		$this->clause = $clause;
+
 		return $this;
 	}
 
 	/**
 	 * @return MysqlQuery
 	 */
-	public function openClosure(){
+	public function openClosure()
+	{
 		$this->openClosure = true;
+
 		return $this;
 	}
 
 	/**
 	 * @return MysqlQuery
 	 */
-	public function closeClosure(){
+	public function closeClosure()
+	{
 		$this->clause .= ' )';
+
 		return $this;
 	}
 
@@ -112,6 +122,7 @@ class MysqlQuery implements Query
 	public function distinct($distinct = true)
 	{
 		$this->distinct = $distinct;
+
 		return $this;
 	}
 
@@ -158,15 +169,16 @@ class MysqlQuery implements Query
 		{
 			//throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			throw new \Exception('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
+
 			return $this;
 		}
 		elseif (is_numeric($value))
 		{
-			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
+			$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
 		}
 		elseif (is_string($value))
 		{
-			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+			$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
 		}
 		elseif (is_array($value))
 		{
@@ -178,12 +190,11 @@ class MysqlQuery implements Query
 		}
 
 
-
 		return $this->where($string);
 	}
 
 	/**
-	 * @param $field
+	 * @param        $field
 	 * @param string $op
 	 * @param string $concat
 	 * @return MysqlQuery|Query
@@ -198,14 +209,14 @@ class MysqlQuery implements Query
 			//$string = $this->clause.' '.$concat.' ';
 		}
 
-		$string .= $field.' '.$op.' NULL ';
+		$string .= $field . ' ' . $op . ' NULL ';
 
 		return $this->where($string);
 	}
 
 	/**
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $op
 	 * @param string $concat
 	 * @return MysqlQuery|Query
@@ -220,15 +231,15 @@ class MysqlQuery implements Query
 			//$string = $this->clause.' '.$concat.' ';
 		}
 
-		$string .= $field.' '.$op.' '.mysql_real_escape_string($value).' ';
+		$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value) . ' ';
 
 		return $this->where($string);
 	}
 
 	/**
-	 * @param $field	betroffenens Feld
-	 * @param $valueMin Wert von
-	 * @param $valueMax Wert bis
+	 * @param        $field    betroffenens Feld
+	 * @param        $valueMin Wert von
+	 * @param        $valueMax Wert bis
 	 * @param string $concat
 	 * @return MysqlQuery|Query
 	 */
@@ -249,19 +260,19 @@ class MysqlQuery implements Query
 
 		if (is_numeric($valueMin))
 		{
-			$string .= $field.' between '.mysql_real_escape_string($valueMin).' AND '.mysql_real_escape_string($valueMax);
+			$string .= $field . ' between ' . mysql_real_escape_string($valueMin) . ' AND ' . mysql_real_escape_string($valueMax);
 		}
 		else
 		{
-			$string .= $field.' between "'.mysql_real_escape_string($valueMin).'" AND "'.mysql_real_escape_string($valueMax).'"';
+			$string .= $field . ' between "' . mysql_real_escape_string($valueMin) . '" AND "' . mysql_real_escape_string($valueMax) . '"';
 		}
 
 		return $this->where($string);
 	}
 
 	/**
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $phraseOrder
 	 * @param string $concat
 	 * @return MysqlQuery|Query
@@ -275,7 +286,7 @@ class MysqlQuery implements Query
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
 
-		$string .= $field.' LIKE "'.sprintf($phraseOrder, mysql_real_escape_string($value)).'" ';
+		$string .= $field . ' LIKE "' . sprintf($phraseOrder, mysql_real_escape_string($value)) . '" ';
 
 		return $this->where($string);
 	}
@@ -283,12 +294,12 @@ class MysqlQuery implements Query
 
 	public function innerStatement($field, $value)
 	{
-		return $this->addWhereFunc($field,'('.$value.')','in');
+		return $this->addWhereFunc($field, '(' . $value . ')', 'in');
 	}
 
 	/**
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $op
 	 * @param string $concat
 	 * @return MysqlQuery|Query|string
@@ -299,27 +310,34 @@ class MysqlQuery implements Query
 
 		if (!empty($this->having))
 		{
-			$string = $this->having.' '.$concat.' ';
+			$string = $this->having . ' ' . $concat . ' ';
 		}
 
 		if (is_null($value))
 		{
-			$string .= $field.' '.$op.' NULL';
-		}
-		else if (is_numeric($value))
-		{
-			$string .= $field.' '.$op.' '.mysql_real_escape_string($value);
-		}
-		else if (is_string($value))
-		{
-			$string .= $field.' '.$op.' "'.mysql_real_escape_string($value).'"';
+			$string .= $field . ' ' . $op . ' NULL';
 		}
 		else
 		{
-			return 'NULL';
+			if (is_numeric($value))
+			{
+				$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
+			}
+			else
+			{
+				if (is_string($value))
+				{
+					$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
+				}
+				else
+				{
+					return 'NULL';
+				}
+			}
 		}
 
 		$this->having = $string;
+
 		return $this;
 	}
 
@@ -334,23 +352,17 @@ class MysqlQuery implements Query
 	 */
 	public function in($field, array $values)
 	{
-		$string = $field.' IN (';
+		$string = $field . ' IN (';
 
-		$string .= implode(
-			',',
-			array_map(
-				function($item)
-				{
-					if (is_string($item))
-					{
-						return "'".mysql_real_escape_string($item)."'";
-					}
+		$string .= implode(',', array_map(function ($item)
+		{
+			if (is_string($item))
+			{
+				return "'" . mysql_real_escape_string($item) . "'";
+			}
 
-					return mysql_real_escape_string($item);
-				},
-				$values
-			)
-		);
+			return mysql_real_escape_string($item);
+		}, $values));
 
 		$string .= ')';
 
@@ -364,6 +376,7 @@ class MysqlQuery implements Query
 	public function orderBy($order)
 	{
 		$this->order = $order;
+
 		return $this;
 	}
 
@@ -374,22 +387,24 @@ class MysqlQuery implements Query
 	public function groupBy($groupby)
 	{
 		$this->groupby = $groupby;
+
 		return $this;
 	}
 
 	/**
-	 * @param $offset
+	 * @param      $offset
 	 * @param null $limit
 	 * @return MysqlQuery|Query
 	 */
-	public function limit($offset, $limit=null)
+	public function limit($offset, $limit = null)
 	{
 		$this->limit = array();
 		$this->limit[] = $offset;
-		if($limit !== null)
+		if ($limit !== null)
 		{
 			$this->limit[] = $limit;
 		}
+
 		return $this;
 	}
 
@@ -404,6 +419,7 @@ class MysqlQuery implements Query
 	public function join($join, $type = 'LEFT')
 	{
 		$this->jointable[] = array($join, $type);
+
 		return $this;
 	}
 
@@ -438,6 +454,7 @@ class MysqlQuery implements Query
 	public function on($joinOn)
 	{
 		$this->joinon[] = $joinOn;
+
 		return $this;
 	}
 
@@ -451,12 +468,13 @@ class MysqlQuery implements Query
 	public function setQueryOnce($queryString)
 	{
 		$checkString = strtoupper(trim($queryString));
-		if (substr($checkString,0,6) == 'SELECT' && strpos($checkString, "UNION") === false)
+		if (substr($checkString, 0, 6) == 'SELECT' && strpos($checkString, "UNION") === false)
 		{
 			throw new \ErrorException('Benutze den Querybuilder für SELECT-Statements');
 		}
 
 		$this->ownQuery = $queryString;
+
 		return $this;
 	}
 
@@ -465,7 +483,7 @@ class MysqlQuery implements Query
 	 */
 	public function get()
 	{
-		if($this->isUpdateStatement())
+		if ($this->isUpdateStatement())
 		{
 			return $this->getUpdate();
 		}
@@ -475,7 +493,7 @@ class MysqlQuery implements Query
 
 	private function getSelect()
 	{
-		if(!empty($this->ownQuery))
+		if (!empty($this->ownQuery))
 		{
 			$query = $this->ownQuery;
 			/*
@@ -484,97 +502,105 @@ class MysqlQuery implements Query
 			 * Zitat: Vadim am 29.02.2012
 			 */
 			// $this->ownQuery = '';
-			$this->lastQuery = str_split($query,255);
+			$this->lastQuery = str_split($query, 255);
+
 			return $query;
 		}
 		$query = "SELECT ";
 
-		if($this->distinct)
+		if ($this->distinct)
 		{
 			$query .= "DISTINCT ";
 		}
 
 		if (is_array($this->fields))
 		{
-			$query .= implode (',', $this->fields);
+			$query .= implode(',', $this->fields);
 		}
 		else
 		{
 			$query .= $this->fields;
 		}
-		$query .= " FROM ".$this->table;
-		if ( !empty($this->jointable))
+		$query .= " FROM " . $this->table;
+		if (!empty($this->jointable))
 		{
-			foreach($this->jointable as $key => $value)
+			foreach ($this->jointable as $key => $value)
 			{
-				$query .= " ".$value[1]." JOIN ".$value[0]." ON ".$this->joinon[$key]." ";
+				$query .= " " . $value[1] . " JOIN " . $value[0] . " ON " . $this->joinon[$key] . " ";
 			}
 		}
 
-		if ( !empty($this->clause) )
+		if (!empty($this->clause))
 		{
-			$query .= " WHERE ".$this->clause;
+			$query .= " WHERE " . $this->clause;
 		}
-		if ( !empty($this->groupby) )
+		if (!empty($this->groupby))
 		{
-			$query .= " GROUP BY ".$this->groupby;
+			$query .= " GROUP BY " . $this->groupby;
 		}
-		if ( !empty($this->having) )
+		if (!empty($this->having))
 		{
-			$query .= " HAVING ".$this->having;
+			$query .= " HAVING " . $this->having;
 		}
-		if ( !empty($this->order) )
+		if (!empty($this->order))
 		{
-			$query .= " ORDER BY ".$this->order;
+			$query .= " ORDER BY " . $this->order;
 		}
-		if ( !empty($this->limit) )
+		if (!empty($this->limit))
 		{
-			$query .= " LIMIT ".implode(', ',$this->limit);
+			$query .= " LIMIT " . implode(', ', $this->limit);
 		}
 
 		$query = $this->database->clear($query);
 
-		$this->lastQuery = str_split($query,255);
+		$this->lastQuery = str_split($query, 255);
 
 		return $query;
 	}
 
 	private function getUpdate()
 	{
-		if(!empty($this->ownQuery))
+		if (!empty($this->ownQuery))
 		{
 			$query = $this->ownQuery;
+
 			return $query;
 		}
 
-		$query = "UPDATE ".$this->table." SET ";
+		$query = "UPDATE " . $this->table . " SET ";
 
-		if(is_array($this->sets))
+		if (is_array($this->sets))
 		{
 			$setValues = "";
 
-			foreach($this->sets as $key => $value)
+			foreach ($this->sets as $key => $value)
 			{
 				if (is_null($value))
 				{
 					$setValues .= $key . " = NULL";
 				}
-				else if (is_numeric($value))
+				else
 				{
-					$setValues .= $key . " = " . $value;
-				}
-				else if (is_string($value))
-				{
-					$setValues .= $key . " = '" . $value . "'";
+					if (is_numeric($value))
+					{
+						$setValues .= $key . " = " . $value;
+					}
+					else
+					{
+						if (is_string($value))
+						{
+							$setValues .= $key . " = '" . $value . "'";
+						}
+					}
 				}
 			}
 
 			$query .= $setValues;
 		}
 
-		if ( !empty($this->clause) )
+		if (!empty($this->clause))
 		{
-			$query .= " WHERE ".$this->clause;
+			$query .= " WHERE " . $this->clause;
 		}
 
 		return $this->database->clear($query);
@@ -588,17 +614,20 @@ class MysqlQuery implements Query
 		{
 			if (!empty($this->clause))
 			{
-				$strOut = $clause.' '.$concat.' (';
+				$strOut = $clause . ' ' . $concat . ' (';
 			}
 			else
 			{
-				$strOut = $clause.' (';
+				$strOut = $clause . ' (';
 			}
 			$this->openClosure = false;
 		}
-		else if (!empty($this->clause))
+		else
 		{
-			$strOut = $clause.' '.$concat.' ';
+			if (!empty($this->clause))
+			{
+				$strOut = $clause . ' ' . $concat . ' ';
+			}
 		}
 
 		return $strOut;

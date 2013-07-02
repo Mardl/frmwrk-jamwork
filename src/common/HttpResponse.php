@@ -2,15 +2,24 @@
 
 namespace jamwork\common;
 
+/**
+ * Class HttpResponse
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class HttpResponse implements Response
 {
+
 	private $status = '200 OK';
 	private $headers = array();
 	private $body = '';
 	private $returns = array();
 
 	/**
-	 * @param $status
+	 * @param string $status
+	 * @return void
 	 */
 	public function setStatus($status)
 	{
@@ -26,8 +35,9 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param string $value
+	 * @return void
 	 */
 	public function addHeader($name, $value)
 	{
@@ -35,11 +45,12 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
+	 * @return void
 	 */
 	public function unsetHeader($name)
 	{
-		if(isset($this->headers[$name]))
+		if (isset($this->headers[$name]))
 		{
 			unset($this->headers[$name]);
 		}
@@ -54,7 +65,7 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function hasHeader($name)
@@ -63,7 +74,8 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $data
+	 * @param string $data
+	 * @return void
 	 */
 	public function write($data)
 	{
@@ -72,16 +84,17 @@ class HttpResponse implements Response
 
 	/**
 	 * @param Command $obj
-	 * @param $data
+	 * @param string  $data
+	 * @return void
 	 */
 	public function addReturn(Command $obj, $data)
 	{
 		$commandName = get_class($obj);
-		if(!isset($this->returns[$commandName]))
+		if (!isset($this->returns[$commandName]))
 		{
 			$this->returns[$commandName] = $data;
 		}
-		else 
+		else
 		{
 			$this->returns[$commandName] .= $data;
 		}
@@ -96,7 +109,8 @@ class HttpResponse implements Response
 	}
 
 	/**
-	 * @param $body
+	 * @param string $body
+	 * @return void
 	 */
 	public function setBody($body)
 	{
@@ -110,7 +124,7 @@ class HttpResponse implements Response
 	{
 		return $this->body;
 	}
-	
+
 	/**
 	 * @param bool $dump
 	 * @return string
@@ -121,14 +135,14 @@ class HttpResponse implements Response
 		$return .= $this->flushStatus($dump);
 		$return .= $this->flushHeader($dump);
 		$return .= $this->getBody();
-		
+
 		$this->body = '';
-		
-		if($dump)
+
+		if ($dump)
 		{
 			return $return;
 		}
-		
+
 		print $return;
 	}
 
@@ -139,10 +153,10 @@ class HttpResponse implements Response
 	public function flushHeader($dump = false)
 	{
 		$header = '';
-		
-		foreach($this->headers as $name => $value)
+
+		foreach ($this->headers as $name => $value)
 		{
-			if($dump)
+			if ($dump)
 			{
 				$header .= "HEADER: {$name}: {$value}\n";
 			}
@@ -151,10 +165,10 @@ class HttpResponse implements Response
 				header("{$name}: {$value}");
 			}
 		}
-		
+
 		$this->headers = array();
-		
-		if(!empty($header))
+
+		if (!empty($header))
 		{
 			return $header;
 		}
@@ -166,21 +180,23 @@ class HttpResponse implements Response
 	 */
 	private function flushStatus($dump = false)
 	{
-		if(!$dump)
+		if (!$dump)
 		{
 			header('HTTP/1.0 ' . $this->status);
+
 			return;
 		}
+
 		return "HEADER: HTTP/1.0 {$this->status}\n";
 	}
 
 
 	/**
-	 * @param $filePath Pfad zur Datei fuer DOwnload
-	 * @param bool $mock nur fuer unittest
+	 * @param string $filePath Pfad zur Datei fuer DOwnload
+	 * @param bool   $mock     nur fuer unittest
 	 * @return bool true fuer unittest
 	 */
-	public function downloadFile($filePath, $mock=false)
+	public function downloadFile($filePath, $mock = false)
 	{
 		$pathinfo = pathinfo($filePath);
 		$this->addHeader("Expires", 0);
@@ -196,11 +212,11 @@ class HttpResponse implements Response
 			$this->addHeader("Content-Length", strlen($content));
 		}
 		$this->addHeader("Content-Description", "File Transfer");
-		$this->addHeader("Content-Disposition", 'attachment; filename="'.$pathinfo['basename'].'"');
+		$this->addHeader("Content-Disposition", 'attachment; filename="' . $pathinfo['basename'] . '"');
 		$this->addHeader("Content-Transfer-Encoding", "binary");
 
 		fclose($handle);
-		if ( $mock )
+		if ($mock)
 		{
 			return true;
 		}
@@ -220,7 +236,7 @@ class HttpResponse implements Response
 	{
 		$this->setBody('');
 		$this->setStatus($status);
-		$this->addHeader('Location',$url);
+		$this->addHeader('Location', $url);
 		$this->flush();
 		die();
 	}

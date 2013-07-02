@@ -4,35 +4,36 @@ namespace jamwork\helper;
 
 /**
  * Analysiert einen in den Construktor übergebenen String, ob es sich dabei um eine Url handelt und liefert diverse Url-Parts
- * 
+ *
  * @author Vadim Justus <vadim@dreiwerken.de>
  */
 class UrlParser
 {
+
 	/**
 	 * Is URL
 	 * @param boolean $regMatch
 	 */
 	private $regMatch = false;
-	
+
 	/**
 	 * Origin String
 	 * @param string $originString
 	 */
 	private $originString = '';
-	
+
 	/**
 	 * Array mit Informationen über die URL
 	 * @param array $info
 	 */
 	private $info = array();
-	
+
 	/**
 	 * Array mit Query-Informationen
 	 * @param array $queryInfo
 	 */
 	private $queryInfo = array();
-	
+
 	/**
 	 * Konstruktor
 	 * @param string $url
@@ -50,56 +51,57 @@ class UrlParser
 		
 		$this->regMatch = preg_match("/^$regex$/", $url, $this->info);
 		*/
-		
+
 		$this->originString = $url;
 		$this->info = parse_url($url);
-		
+
 		$scheme = $this->getScheme();
 		$host = $this->getHost();
-		if(!empty($scheme) && !empty($host))
+		if (!empty($scheme) && !empty($host))
 		{
 			$this->regMatch = true;
 		}
 	}
-	
+
 	private function get($key)
 	{
-		if(isset($this->info[$key]))
+		if (isset($this->info[$key]))
 		{
 			return $this->info[$key];
 		}
+
 		return '';
 	}
-	
-	private function queryGet($key, $def='')
+
+	private function queryGet($key, $def = '')
 	{
 		$query = $this->getQuery();
-		if(!empty($query) && empty($this->queryInfo))
+		if (!empty($query) && empty($this->queryInfo))
 		{
 			$this->readQuery($query);
 		}
-		
-		if(isset($this->queryInfo[$key]))
+
+		if (isset($this->queryInfo[$key]))
 		{
 			return $this->queryInfo[$key];
 		}
-		
+
 		return $def;
 	}
-	
+
 	private function readQuery($queryString)
 	{
 		$queries = explode('&', $queryString);
-		foreach($queries as $query)
+		foreach ($queries as $query)
 		{
 			$queryParts = explode('=', $query);
 			$key = $queryParts[0];
 			$value = $queryParts[1];
-			
+
 			$this->queryInfo[$key] = $value;
 		}
 	}
-	
+
 	/**
 	 * Liefert true zurück, wenn den übergeben String tatsächtlich eine Url ist.
 	 * @return boolean
@@ -108,7 +110,7 @@ class UrlParser
 	{
 		return $this->regMatch;
 	}
-	
+
 	/**
 	 * Liefert den origialen String zurück
 	 * @return string
@@ -117,7 +119,7 @@ class UrlParser
 	{
 		return $this->originString;
 	}
-	
+
 	/**
 	 * Liefert das Scheme zurück - z.B. http
 	 * @return string
@@ -126,7 +128,7 @@ class UrlParser
 	{
 		return $this->get('scheme');
 	}
-	
+
 	/**
 	 * Liefert den Host zurück
 	 * @return string
@@ -135,7 +137,7 @@ class UrlParser
 	{
 		return $this->get('host');
 	}
-	
+
 	/**
 	 * Liefert den Hash-Tag der URL zurück
 	 * @return string
@@ -162,7 +164,7 @@ class UrlParser
 	{
 		return $this->get('pass');
 	}
-	
+
 	/**
 	 * Liefert den Query der URL zurück
 	 * @return string
@@ -171,7 +173,7 @@ class UrlParser
 	{
 		return $this->get('query');
 	}
-	
+
 	/**
 	 * Liefert den Pfad der URL zurück
 	 * @return string
@@ -180,7 +182,7 @@ class UrlParser
 	{
 		return $this->get('path');
 	}
-	
+
 	/**
 	 * Überprüft, ob der Query der URL einen bestimmten Key hat
 	 * @param string $key
@@ -189,9 +191,10 @@ class UrlParser
 	public function hasQueryKey($key)
 	{
 		$query = $this->queryGet($key, false);
+
 		return $query !== false;
 	}
-	
+
 	/**
 	 * Liefert den Value eines Query-Eintrags
 	 * @param string $key
@@ -202,4 +205,5 @@ class UrlParser
 		return $this->queryGet($key);
 	}
 }
+
 ?>

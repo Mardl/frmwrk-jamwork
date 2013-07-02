@@ -4,6 +4,7 @@ namespace jamwork\database;
 
 class MysqlDatabase implements Database
 {
+
 	protected $dbhost = '';
 	protected $dbuser = '';
 	protected $dbpwd = '';
@@ -13,11 +14,11 @@ class MysqlDatabase implements Database
 	protected $transaction = 0;
 
 	public $counts = array('query' => 0, 'recordset' => 0, 'update' => 0, 'insert' => 0, 'delete' => 0);
-	
+
 	private $mockQuery = false;
 	private $mockRecordset = false;
-	
-	public function __construct($host, $user, $pwd, $name )
+
+	public function __construct($host, $user, $pwd, $name)
 	{
 		$this->dbhost = $host;
 		$this->dbuser = $user;
@@ -68,7 +69,7 @@ class MysqlDatabase implements Database
 	 * @param bool $noException Exception nicht werfen. Z.B. wenn im catch der rollback gemacht wird
 	 * @throws \Exception
 	 */
-	public function rollback($throwException=true)
+	public function rollback($throwException = true)
 	{
 		if ($this->transaction > 0)
 		{
@@ -81,7 +82,7 @@ class MysqlDatabase implements Database
 
 			if ($throwException)
 			{
-				throw new \Exception("DB-Fehler\r\nFehler-Nr: ".$errno."\r\nFehler: ".$error);
+				throw new \Exception("DB-Fehler\r\nFehler-Nr: " . $errno . "\r\nFehler: " . $error);
 			}
 		}
 	}
@@ -93,6 +94,7 @@ class MysqlDatabase implements Database
 	{
 		$query = new MysqlQuery($this);
 		$this->counts['query']++;
+
 		return $query;
 	}
 
@@ -102,25 +104,27 @@ class MysqlDatabase implements Database
 	public function newRecordSet()
 	{
 		$this->counts['recordset']++;
+
 		return new MysqlRecordset();
 	}
-	
+
 	protected function getPrimary($tableName)
 	{
 		$this->readFields($tableName);
-		foreach ( $this->field[$tableName] as $field => $key)
+		foreach ($this->field[$tableName] as $field => $key)
 		{
-			if ( $key == 'PRI')
+			if ($key == 'PRI')
 			{
 				return $field;
 			}
 		}
+
 		return '';
 	}
 
 	/**
 	 * @param string $tableName
-	 * @param array $recordSet
+	 * @param array  $recordSet
 	 * @return bool|int
 	 * @throws \Exception
 	 */
@@ -132,37 +136,37 @@ class MysqlDatabase implements Database
 		$setField = '';
 		$where = '';
 		$this->readFields($tableName);
-		$query = 'UPDATE '.$tableName.' SET ';
-		foreach ( $this->field[$tableName] as $field => $key) 
+		$query = 'UPDATE ' . $tableName . ' SET ';
+		foreach ($this->field[$tableName] as $field => $key)
 		{
-			
-			if (array_key_exists($field,$recordSet))
+
+			if (array_key_exists($field, $recordSet))
 			{
 				if (!empty($setField))
 				{
 					$setField .= ', ';
 				}
-				
+
 				if ($recordSet[$field] !== 'NULL' && $recordSet[$field] !== null)
 				{
-					$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
+					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
 				}
-				else 
+				else
 				{
-					$setField .= $field.' = NULL';
+					$setField .= $field . ' = NULL';
 				}
-				
 
-				if ( $key == 'PRI')	
+
+				if ($key == 'PRI')
 				{
 					$priCount++;
-					$where = ' WHERE '.$field.' = '.mysql_real_escape_string($recordSet[$field]);
+					$where = ' WHERE ' . $field . ' = ' . mysql_real_escape_string($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
-			}			
+			}
 		}
 		$query .= $setField . $where;
-		
+
 		if ($priCount > 1)
 		{
 			throw new \Exception("Update auf multi Primary key nicht möglich.");
@@ -177,15 +181,15 @@ class MysqlDatabase implements Database
 		if ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful())
 		{
 			return $primary;
-		} 
-		
+		}
+
 		return false;
-		
+
 	}
 
 	/**
 	 * @param string $tableName
-	 * @param array $recordSet
+	 * @param array  $recordSet
 	 * @return bool|int
 	 */
 	public function insert($tableName, array $recordSet)
@@ -193,10 +197,10 @@ class MysqlDatabase implements Database
 		$this->counts['insert']++;
 		$setField = '';
 		$this->readFields($tableName);
-		$query = 'INSERT INTO '.$tableName.' SET ';
-		
-		
-		foreach ( $this->field[$tableName] as $field => $key) 
+		$query = 'INSERT INTO ' . $tableName . ' SET ';
+
+
+		foreach ($this->field[$tableName] as $field => $key)
 		{
 			if (isset($recordSet[$field]))
 			{
@@ -207,11 +211,11 @@ class MysqlDatabase implements Database
 
 				if ($recordSet[$field] !== 'NULL')
 				{
-					$setField .= $field.' = "'.mysql_real_escape_string($recordSet[$field]).'"';
+					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
 				}
 				else
 				{
-					$setField .= $field.' = NULL';
+					$setField .= $field . ' = NULL';
 				}
 
 			}
@@ -219,11 +223,11 @@ class MysqlDatabase implements Database
 
 		if (empty($setField))
 		{
-			$setField .= $this->getPrimary($tableName).' = null';
+			$setField .= $this->getPrimary($tableName) . ' = null';
 		}
-		
+
 		$query .= $setField;
-		
+
 		$queryObj = $this->newQuery()->setQueryOnce($query);
 
 		$execRs = $this->newRecordSet()->execute($queryObj);
@@ -232,21 +236,26 @@ class MysqlDatabase implements Database
 		{
 			$id = mysql_insert_id();
 			$pri = $this->getPrimary($tableName);
-			if(isset($recordSet[$pri]) && !empty($recordSet[$pri]))
+			if (isset($recordSet[$pri]) && !empty($recordSet[$pri]))
 			{
 				$id = $recordSet[$pri];
 			}
+
 			return $id;
 		}
+
 		return false;
 	}
 
 	/**
 	 * @param string $str
 	 * @return mixed
+	 *
+	 * @deprecated
 	 */
 	public function clear($str)
 	{
+		// funcktion wurde injektion sicher abgelöst mit mysql_real_escape_string
 		//$str = str_replace('\\', '\\\\', $str);
 		//$str = str_replace('"', '\\"', $str);
 		return $str;
@@ -254,7 +263,7 @@ class MysqlDatabase implements Database
 
 	/**
 	 * @param string $tableName
-	 * @param array $recordSet
+	 * @param array  $recordSet
 	 * @return bool
 	 * @throws \Exception
 	 */
@@ -265,16 +274,16 @@ class MysqlDatabase implements Database
 		$priCount = 0;
 		$where = '';
 		$this->readFields($tableName);
-		$query = 'DELETE FROM '.$tableName;
+		$query = 'DELETE FROM ' . $tableName;
 		$where = '';
 
-		foreach ( $this->field[$tableName] as $field => $key) 
+		foreach ($this->field[$tableName] as $field => $key)
 		{
 			if (isset($recordSet[$field]))
-			{			
-				if ( $key == 'PRI')	
+			{
+				if ($key == 'PRI')
 				{
-					if(empty($where))
+					if (empty($where))
 					{
 						$where = ' WHERE ';
 					}
@@ -284,7 +293,7 @@ class MysqlDatabase implements Database
 					}
 
 					$priCount++;
-					$where = $where.$field.' = '.mysql_real_escape_string($recordSet[$field]);
+					$where = $where . $field . ' = ' . mysql_real_escape_string($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
 			}
@@ -295,10 +304,11 @@ class MysqlDatabase implements Database
 		{
 			throw new \Exception("Kein Primary key angegeben.");
 		}
-				
+
 		$queryObj = $this->newQuery()->setQueryOnce($query);
+
 		return ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful() ? true : false);
-		
+
 	}
 
 	/**
@@ -306,12 +316,12 @@ class MysqlDatabase implements Database
 	 */
 	protected function readFields($tableName)
 	{
-		if ( !isset($this->field[$tableName]))
+		if (!isset($this->field[$tableName]))
 		{
-			$res = mysql_query('DESCRIBE '.$tableName);
-			while($res && $row = mysql_fetch_array($res)) 
+			$res = mysql_query('DESCRIBE ' . $tableName);
+			while ($res && $row = mysql_fetch_array($res))
 			{
-    			$this->field[$tableName][$row['Field']] = $row['Key'];
+				$this->field[$tableName][$row['Field']] = $row['Key'];
 			}
 		}
 	}

@@ -6,13 +6,14 @@ use jamwork\common\Registry;
 
 class MysqlRecordset implements Recordset
 {
+
 	/**
 	 * @var null
 	 */
 	protected $query = null;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $result = false;
 
@@ -36,6 +37,7 @@ class MysqlRecordset implements Recordset
 	{
 		$this->query = $query;
 		$sql = $this->query->get();
+
 		return $this->executeStmt($sql);
 	}
 
@@ -49,7 +51,7 @@ class MysqlRecordset implements Recordset
 	{
 		$this->result = mysql_query($stmtString);
 
-		if(!$this->result)
+		if (!$this->result)
 		{
 			$this->errorMessage = mysql_error();
 			$this->errorNumber = mysql_errno();
@@ -70,8 +72,7 @@ class MysqlRecordset implements Recordset
 					$debugger->queries = array($stmtString);
 				}
 			}
-		}
-		catch (\Exception $e)
+		} catch (\Exception $e)
 		{
 			// Nothing to do, debugger not initiated
 		}
@@ -94,10 +95,11 @@ class MysqlRecordset implements Recordset
 	 */
 	public function isSuccessful()
 	{
-		if($this->result)
+		if ($this->result)
 		{
 			return true;
 		}
+
 		return false;
 	}
 
@@ -110,6 +112,7 @@ class MysqlRecordset implements Recordset
 		{
 			return false;
 		}
+
 		return mysql_num_rows($this->result);
 	}
 
@@ -122,6 +125,7 @@ class MysqlRecordset implements Recordset
 		{
 			return false;
 		}
+
 		return mysql_fetch_assoc($this->result);
 	}
 

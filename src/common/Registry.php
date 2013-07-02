@@ -1,11 +1,20 @@
 <?php
 
 namespace jamwork\common;
+
 use jamwork\database\Database;
 use jamwork\template\Template;
 
+/**
+ * Class Registry
+ *
+ * @category Jamwork
+ * @package  Jamwork\common
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class Registry
 {
+
 	// key level 1
 	const KEY_SYSTEM = 'system';
 	const KEY_REGISTRY = 'registry';
@@ -16,79 +25,89 @@ class Registry
 	const KEY_DATABASE = 'database';
 	const KEY_TEMPLATE = 'template';
 	const KEY_SESSION = 'session';
-	
+
 	protected $values = array();
 
 	/**
 	 * @var $uniqueInstance Registry
 	 */
-	private static $uniqueInstance = NULL;
+	private static $uniqueInstance = null;
 
-    protected function __construct()
-    {
-    	
-    }
+	/**
+	 * constructor kann nur abgeleitet werden
+	 */
+	protected function __construct()
+	{
 
+	}
+
+	/**
+	 * @return void
+	 */
 	private final function __clone()
-    {
-    	
-    }
+	{
+
+	}
 
 	/**
 	 * @static
 	 * @return Registry
 	 */
 	public static function getInstance()
-    {
-        if (self::$uniqueInstance === NULL) {
-            self::$uniqueInstance = new Registry();
-        }
- 
-        return self::$uniqueInstance;
-    }
-
-	/**
-	 * @param $key
-	 * @param $value
-	 */
-	public function __set($key, $value)
 	{
-		$this->set($key,$value,self::KEY_REGISTRY);
+		if (self::$uniqueInstance === null)
+		{
+			self::$uniqueInstance = new Registry();
+		}
+
+		return self::$uniqueInstance;
 	}
 
 	/**
-	 * @param $key
+	 * @param string $key
+	 * @param string $value
+	 * @return void
+	 */
+	public function __set($key, $value)
+	{
+		$this->set($key, $value, self::KEY_REGISTRY);
+	}
+
+	/**
+	 * @param string $key
 	 * @return mixed
 	 */
 	public function __get($key)
 	{
-		return $this->get($key,self::KEY_REGISTRY);
+		return $this->get($key, self::KEY_REGISTRY);
 	}
 
 	/**
-	 * @param $key
+	 * @param string $key
+	 * @return void
 	 */
 	public function __unset($key)
 	{
-		return $this->unsetKey($key,self::KEY_REGISTRY);
+		return $this->unsetKey($key, self::KEY_REGISTRY);
 	}
 
 
 	/**
-	 * @param $key
+	 * @param string $key
 	 * @return bool
 	 */
 	public function __isset($key)
 	{
-		return $this->hasKey($key,self::KEY_REGISTRY);
+		return $this->hasKey($key, self::KEY_REGISTRY);
 	}
 
 	/**
 	 * @param Request $request
+	 * @return void
 	 */
 	public function setRequest(Request $request)
 	{
-		$this->set(self::KEY_REQUEST, $request , self::KEY_SYSTEM);
+		$this->set(self::KEY_REQUEST, $request, self::KEY_SYSTEM);
 	}
 
 
@@ -97,7 +116,7 @@ class Registry
 	 */
 	public function getRequest()
 	{
-		return $this->get(self::KEY_REQUEST, self::KEY_SYSTEM );
+		return $this->get(self::KEY_REQUEST, self::KEY_SYSTEM);
 	}
 
 
@@ -106,15 +125,16 @@ class Registry
 	 */
 	public function hasRequest()
 	{
-		return $this->hasKey(self::KEY_REQUEST, self::KEY_SYSTEM );
+		return $this->hasKey(self::KEY_REQUEST, self::KEY_SYSTEM);
 	}
 
 	/**
 	 * @param Response $response
+	 * @return void
 	 */
 	public function setResponse(Response $response)
 	{
-		$this->set(self::KEY_RESPONSE, $response , self::KEY_SYSTEM);
+		$this->set(self::KEY_RESPONSE, $response, self::KEY_SYSTEM);
 	}
 
 
@@ -123,7 +143,7 @@ class Registry
 	 */
 	public function getResponse()
 	{
-		return $this->get(self::KEY_RESPONSE, self::KEY_SYSTEM );
+		return $this->get(self::KEY_RESPONSE, self::KEY_SYSTEM);
 	}
 
 
@@ -132,15 +152,16 @@ class Registry
 	 */
 	public function hasResponse()
 	{
-		return $this->hasKey(self::KEY_RESPONSE, self::KEY_SYSTEM );
+		return $this->hasKey(self::KEY_RESPONSE, self::KEY_SYSTEM);
 	}
 
 	/**
 	 * @param Database $database
+	 * @return void
 	 */
 	public function setDatabase(Database $database)
 	{
-		$this->set(self::KEY_DATABASE, $database , self::KEY_SYSTEM);
+		$this->set(self::KEY_DATABASE, $database, self::KEY_SYSTEM);
 	}
 
 	/**
@@ -148,7 +169,7 @@ class Registry
 	 */
 	public function getDatabase()
 	{
-		return $this->get(self::KEY_DATABASE, self::KEY_SYSTEM );
+		return $this->get(self::KEY_DATABASE, self::KEY_SYSTEM);
 	}
 
 
@@ -157,15 +178,16 @@ class Registry
 	 */
 	public function hasDatabase()
 	{
-		return $this->hasKey(self::KEY_DATABASE, self::KEY_SYSTEM );
+		return $this->hasKey(self::KEY_DATABASE, self::KEY_SYSTEM);
 	}
 
 	/**
 	 * @param Template $template
+	 * @return void
 	 */
 	public function setTemplate(Template $template)
 	{
-		$this->set(self::KEY_TEMPLATE, $template , self::KEY_SYSTEM);
+		$this->set(self::KEY_TEMPLATE, $template, self::KEY_SYSTEM);
 	}
 
 	/**
@@ -173,7 +195,7 @@ class Registry
 	 */
 	public function getTemplate()
 	{
-		return $this->get(self::KEY_TEMPLATE, self::KEY_SYSTEM );
+		return $this->get(self::KEY_TEMPLATE, self::KEY_SYSTEM);
 	}
 
 	/**
@@ -181,15 +203,16 @@ class Registry
 	 */
 	public function hasTemplate()
 	{
-		return $this->hasKey(self::KEY_TEMPLATE, self::KEY_SYSTEM );
+		return $this->hasKey(self::KEY_TEMPLATE, self::KEY_SYSTEM);
 	}
 
 	/**
 	 * @param Session $session
+	 * @return void
 	 */
 	public function setSession(Session $session)
 	{
-		$this->set(self::KEY_SESSION, $session , self::KEY_SYSTEM);
+		$this->set(self::KEY_SESSION, $session, self::KEY_SYSTEM);
 	}
 
 
@@ -198,7 +221,7 @@ class Registry
 	 */
 	public function getSession()
 	{
-		return $this->get(self::KEY_SESSION, self::KEY_SYSTEM );
+		return $this->get(self::KEY_SESSION, self::KEY_SYSTEM);
 	}
 
 
@@ -207,24 +230,29 @@ class Registry
 	 */
 	public function hasSession()
 	{
-		return $this->hasKey(self::KEY_SESSION, self::KEY_SYSTEM );
+		return $this->hasKey(self::KEY_SESSION, self::KEY_SYSTEM);
 	}
 
 	/**
 	 * Warum ist das public? und muss es static sein?
 	 * -- Vadim
+	 * Wegen Unittests, damit sie resetet werden kann
+	 * -- Mardl
+	 *
+	 * @return void
 	 */
 	public static function reset()
 	{
-        self::$uniqueInstance = NULL;
-    }
+		self::$uniqueInstance = null;
+	}
 
 	/**
 	 * @param EventDispatcher $eventDispatcher
+	 * @return void
 	 */
 	public function setEventDispatcher(EventDispatcher $eventDispatcher)
 	{
-		$this->set(self::KEY_EVENTDISPATCHER, $eventDispatcher , self::KEY_SYSTEM);
+		$this->set(self::KEY_EVENTDISPATCHER, $eventDispatcher, self::KEY_SYSTEM);
 	}
 
 	/**
@@ -232,7 +260,7 @@ class Registry
 	 */
 	public function getEventDispatcher()
 	{
-		return $this->get(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
+		return $this->get(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM);
 	}
 
 	/**
@@ -240,14 +268,14 @@ class Registry
 	 */
 	public function hasEventDispatcher()
 	{
-		return $this->hasKey(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM );
+		return $this->hasKey(self::KEY_EVENTDISPATCHER, self::KEY_SYSTEM);
 	}
-	
+
 	/* Private Funktionen zum Zugriff der Interzeptoren*/
 
 	/**
-	 * @param $key
-	 * @param $const
+	 * @param string $key
+	 * @param string $const
 	 * @return bool
 	 */
 	protected function hasKey($key, $const)
@@ -256,45 +284,48 @@ class Registry
 		{
 			return false;
 		}
-			
+
 		return isset($this->values[$const][$key]);
 	}
 
 	/**
-	 * @param $key
-	 * @param $const
+	 * @param string $key
+	 * @param string $const
+	 * @return void
 	 */
-	protected function unsetKey($key,$const)
+	protected function unsetKey($key, $const)
 	{
-		if($this->hasKey($key,$const)) {
+		if ($this->hasKey($key, $const))
+		{
 			unset($this->values[$const][$key]);
 		}
 	}
 
 	/**
-	 * @param $key
-	 * @param $value
-	 * @param $const
+	 * @param string $key
+	 * @param string $value
+	 * @param string $const
+	 * @return void
 	 */
-	protected function set($key, $value , $const)
+	protected function set($key, $value, $const)
 	{
 		$this->values[$const][$key] = $value;
 	}
 
 	/**
-	 * @param $key
-	 * @param $const
+	 * @param string $key
+	 * @param string $const
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	protected function get($key,$const)
+	protected function get($key, $const)
 	{
-		if($this->hasKey($key,$const)) 
+		if ($this->hasKey($key, $const))
 		{
 			return $this->values[$const][$key];
 		}
-		
+
 		throw new \Exception("Registry-Value '{$key}' ist nicht gesetzt!");
-	}	
+	}
 
 }

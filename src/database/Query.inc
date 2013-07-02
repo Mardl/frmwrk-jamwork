@@ -4,6 +4,7 @@ namespace jamwork\database;
 
 interface Query
 {
+
 	/**
 	 * @abstract
 	 * @param $table
@@ -69,8 +70,8 @@ interface Query
 
 	/**
 	 * @abstract
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -80,7 +81,7 @@ interface Query
 
 	/**
 	 * @abstract
-	 * @param $field
+	 * @param        $field
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -89,8 +90,8 @@ interface Query
 
 	/**
 	 * @abstract
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $phraseOrder
 	 * @param string $concat
 	 * @return Query
@@ -99,8 +100,8 @@ interface Query
 
 	/**
 	 * @abstract
-	 * @param $field
-	 * @param $value
+	 * @param        $field
+	 * @param        $value
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -108,9 +109,9 @@ interface Query
 	public function addHaving($field, $value, $op = '=', $concat = 'AND');
 
 	/**
-	 * @param $field
-	 * @param $valueMin
-	 * @param $valueMax
+	 * @param        $field
+	 * @param        $valueMin
+	 * @param        $valueMax
 	 * @param string $concat
 	 * @return mixed
 	 */
@@ -118,7 +119,7 @@ interface Query
 
 	/**
 	 * @abstract
-	 * @param $field
+	 * @param       $field
 	 * @param array $values
 	 * @return Query
 	 */
@@ -133,11 +134,11 @@ interface Query
 
 	/**
 	 * @abstract
-	 * @param $offset
+	 * @param      $offset
 	 * @param null $limit
 	 * @return Query
 	 */
-	public function limit($offset, $limit=null);
+	public function limit($offset, $limit = null);
 
 	/**
 	 * @abstract

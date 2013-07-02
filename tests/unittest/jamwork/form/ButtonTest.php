@@ -6,53 +6,54 @@ use jamwork\form\Button;
 
 class ButtonTest extends \PHPUnit_Framework_TestCase
 {
+
 	private $checkbox = false;
-	
+
 	public function testGetType()
 	{
 		$type = $this->button->getType();
 		$this->assertSame('button', $type);
 	}
-	
+
 	public function testButtonType()
 	{
 		$attr = $this->readAttribute($this->button, 'buttonType');
-		$this->assertSame($attr,'submit');
-		
+		$this->assertSame($attr, 'submit');
+
 		$someText = 'irgend ein Text';
-		
+
 		$this->button->buttonType($someText);
 		$attr = $this->readAttribute($this->button, 'buttonType');
 		$this->assertSame($attr, $someText);
 	}
-	
+
 	public function testGetButtonType()
 	{
-		$this->assertSame($this->button->getButtonType(),'submit');
+		$this->assertSame($this->button->getButtonType(), 'submit');
 		$this->button->buttonType('test');
 		$this->assertSame($this->button->getButtonType(), 'test');
 	}
-	
+
 	public function testText()
 	{
 		$attr = $this->readAttribute($this->button, 'text');
 		$this->assertEmpty($attr);
-		
+
 		$someText = 'irgend ein Text';
-		
+
 		$this->button->text($someText);
 		$attr = $this->readAttribute($this->button, 'text');
-		$this->assertSame($attr, $someText);		
+		$this->assertSame($attr, $someText);
 	}
-	
+
 	public function testGetText()
 	{
 		$this->assertEmpty($this->button->getText());
 		$this->button->text('test');
 		$this->assertSame($this->button->getText(), 'test');
 	}
-	
-	
+
+
 	/*public function testRequired()
 	{
 		$attr = $this->readAttribute($this->button, 'required');
@@ -183,20 +184,20 @@ class ButtonTest extends \PHPUnit_Framework_TestCase
 		$this->button->addClass('test2');
 		$this->assertSame($this->button->getClasses(), 'test1 test2');
 	}*/
-	
+
 	public function testGetFieldType()
 	{
 		$this->assertSame('button', $this->button->getFieldType());
 	}
-	
+
 	protected function setUp()
 	{
 		$this->button = new Button();
 	}
-	
+
 	protected function tearDown()
 	{
 		unset($this->button);
-	} 
-	
+	}
+
 }
