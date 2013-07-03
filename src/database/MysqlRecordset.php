@@ -4,6 +4,13 @@ namespace jamwork\database;
 
 use jamwork\common\Registry;
 
+/**
+ * Class MysqlRecordset
+ *
+ * @category Jamwork
+ * @package  Jamwork\database
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class MysqlRecordset implements Recordset
 {
 
@@ -43,8 +50,7 @@ class MysqlRecordset implements Recordset
 
 	/**
 	 * Führt den übergebenen Statement String aus
-	 *
-	 * @param $stmtString Statement das ausgeführt werden soll
+	 * @param string $stmtString Statement das ausgeführt werden soll
 	 * @return MysqlRecordset
 	 */
 	private function executeStmt($stmtString)

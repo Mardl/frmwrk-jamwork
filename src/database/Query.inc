@@ -2,76 +2,73 @@
 
 namespace jamwork\database;
 
+/**
+ * Interface Query
+ *
+ * @category Jamwork
+ * @package  Jamwork\database
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 interface Query
 {
 
 	/**
-	 * @abstract
-	 * @param $table
+	 * @param string $table
 	 * @return Query
 	 */
 	public function from($table);
 
 	/**
-	 * @abstract
-	 * @param $fields
+	 * @param string $fields
 	 * @return Query
 	 */
 	public function select($fields);
 
 	/**
-	 * @abstract
-	 * @param $clause
+	 * @param string $clause
 	 * @return Query
 	 */
 	public function where($clause);
 
 	/**
-	 * @abstract
-	 * @param $order
+	 * @param string $order
 	 * @return Query
 	 */
 	public function orderBy($order);
 
 	/**
-	 * @abstract
-	 * @param $order
+	 * @param string $order
 	 * @return Query
 	 */
 	public function join($order);
 
 	/**
-	 * @abstract
-	 * @param $joinOn
+	 * @param string $joinOn
 	 * @return Query
 	 */
 	public function on($joinOn);
 
 	/**
-	 * @abstract
-	 * @param $queryString
+	 * @param string $queryString
 	 * @return Query
 	 */
 	public function setQueryOnce($queryString);
 
 	/**
-	 * @abstract
 	 * @return Query
 	 */
 	public function get();
 
 	/**
-	 * @abstract
-	 * @param $distinct
+	 * @param bool $distinct
 	 * @return void
 	 */
 	public function distinct($distinct = true);
 
 
 	/**
-	 * @abstract
-	 * @param        $field
-	 * @param        $value
+	 * @param string $field
+	 * @param string $value
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -80,8 +77,7 @@ interface Query
 
 
 	/**
-	 * @abstract
-	 * @param        $field
+	 * @param string $field
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -89,9 +85,8 @@ interface Query
 	public function addWhereIsNull($field, $op = 'IS', $concat = 'AND');
 
 	/**
-	 * @abstract
-	 * @param        $field
-	 * @param        $value
+	 * @param string $field
+	 * @param string $value
 	 * @param string $phraseOrder
 	 * @param string $concat
 	 * @return Query
@@ -99,9 +94,8 @@ interface Query
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND');
 
 	/**
-	 * @abstract
-	 * @param        $field
-	 * @param        $value
+	 * @param string $field
+	 * @param string $value
 	 * @param string $op
 	 * @param string $concat
 	 * @return Query
@@ -109,47 +103,42 @@ interface Query
 	public function addHaving($field, $value, $op = '=', $concat = 'AND');
 
 	/**
-	 * @param        $field
-	 * @param        $valueMin
-	 * @param        $valueMax
+	 * @param string $field
+	 * @param string $valueMin
+	 * @param string $valueMax
 	 * @param string $concat
 	 * @return mixed
 	 */
 	public function addWhereBetween($field, $valueMin, $valueMax, $concat = 'AND');
 
 	/**
-	 * @abstract
-	 * @param       $field
-	 * @param array $values
+	 * @param string $field
+	 * @param array  $values
 	 * @return Query
 	 */
 	public function in($field, array $values);
 
 	/**
-	 * @abstract
-	 * @param $groupby
+	 * @param string $groupby
 	 * @return Query
 	 */
 	public function groupBy($groupby);
 
 	/**
-	 * @abstract
-	 * @param      $offset
-	 * @param null $limit
+	 * @param int $offset
+	 * @param int $limit
 	 * @return Query
 	 */
 	public function limit($offset, $limit = null);
 
 	/**
-	 * @abstract
-	 * @param $join
+	 * @param string $join
 	 * @return Query
 	 */
 	public function innerJoin($join);
 
 	/**
-	 * @abstract
-	 * @param $join
+	 * @param string $join
 	 * @return Query
 	 */
 	public function leftJoin($join);

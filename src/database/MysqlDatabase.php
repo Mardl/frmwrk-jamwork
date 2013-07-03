@@ -2,6 +2,13 @@
 
 namespace jamwork\database;
 
+/**
+ * Class MysqlDatabase
+ *
+ * @category Jamwork
+ * @package  Jamwork\database
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class MysqlDatabase implements Database
 {
 
@@ -15,9 +22,12 @@ class MysqlDatabase implements Database
 
 	public $counts = array('query' => 0, 'recordset' => 0, 'update' => 0, 'insert' => 0, 'delete' => 0);
 
-	private $mockQuery = false;
-	private $mockRecordset = false;
-
+	/**
+	 * @param string $host
+	 * @param string $user
+	 * @param string $pwd
+	 * @param string $name
+	 */
 	public function __construct($host, $user, $pwd, $name)
 	{
 		$this->dbhost = $host;
@@ -31,7 +41,7 @@ class MysqlDatabase implements Database
 	}
 
 	/**
-	 * start Transaction
+	 * @return void
 	 */
 	public function startTransaction()
 	{
@@ -48,7 +58,7 @@ class MysqlDatabase implements Database
 	}
 
 	/**
-	 * commit Transaction
+	 * @return void
 	 */
 	public function commit()
 	{
@@ -64,9 +74,9 @@ class MysqlDatabase implements Database
 		}
 	}
 
-
 	/**
-	 * @param bool $noException Exception nicht werfen. Z.B. wenn im catch der rollback gemacht wird
+	 * @param bool $throwException Exception nicht werfen. Z.B. wenn im catch der rollback gemacht wird
+	 * @return void
 	 * @throws \Exception
 	 */
 	public function rollback($throwException = true)
@@ -108,6 +118,10 @@ class MysqlDatabase implements Database
 		return new MysqlRecordset();
 	}
 
+	/**
+	 * @param string $tableName
+	 * @return int|string
+	 */
 	protected function getPrimary($tableName)
 	{
 		$this->readFields($tableName);
@@ -313,6 +327,7 @@ class MysqlDatabase implements Database
 
 	/**
 	 * @param string $tableName
+	 * @return void
 	 */
 	protected function readFields($tableName)
 	{
