@@ -154,14 +154,6 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 		$this->fail('An expected Exception has not been raised.');
 	}
 
-	public function testClear()
-	{
-
-		$str1 = "Das ist ein \"Test-Sring\"";
-		$ret = $this->mysqlDatabase->clear($str1);
-		$this->assertSame($ret, $str1);
-	}
-
 	public function testReadFields()
 	{
 		$fields = $this->readAttribute($this->mysqlDatabase, 'field');
