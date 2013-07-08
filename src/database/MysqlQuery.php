@@ -4,6 +4,13 @@ namespace jamwork\database;
 
 use \jamwork\database\Database;
 
+/**
+ * Class MysqlQuery
+ *
+ * @category Jamwork
+ * @package  Jamwork\database
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class MysqlQuery implements Query
 {
 
@@ -49,7 +56,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param $fields
+	 * @param string $fields
 	 * @return MysqlQuery|Query
 	 */
 	public function select($fields)
@@ -61,7 +68,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param $table
+	 * @param string $table
 	 * @return MysqlQuery
 	 */
 	public function update($table)
@@ -73,8 +80,8 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param $fieldName
-	 * @param $value
+	 * @param string $fieldName
+	 * @param string $value
 	 * @return MysqlQuery
 	 */
 	public function set($fieldName, $value)
@@ -85,7 +92,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param $clause
+	 * @param string $clause
 	 * @return MysqlQuery|Query
 	 */
 	public function where($clause)
@@ -126,35 +133,49 @@ class MysqlQuery implements Query
 		return $this;
 	}
 
+	/**
+	 * @return void
+	 */
 	private function setSelectType()
 	{
 		$this->queryTyp = 1;
 	}
 
+	/**
+	 * @return void
+	 */
 	private function setUpdateType()
 	{
 		$this->queryTyp = 2;
 	}
 
+	/**
+	 * @return bool
+	 * @deprecated
+	 */
 	protected function isSelectStatement()
 	{
 		return ($this->queryTyp == 1);
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected function isUpdateStatement()
 	{
 		return ($this->queryTyp == 2);
 	}
 
 	/**
-	 * Fügt eine neue WHERE-Klausel hinzu
-	 * und escaped jeden Parameter
+	 * Fügt eine neue WHERE-Klausel hinzu und escaped jeden Parameter
 	 *
 	 * @param string         $field Feld für die Bedingung
 	 * @param string|integer $value Vergleichswert
 	 * @param string         $op    Optionaler Operator, default "="
-	 *
-	 * @return MysqlQuery
+	 * @param string         $concat
+	 * @return $this|MysqlQuery|Query|string
+	 * @throws \InvalidArgumentException
+	 * @throws \Exception
 	 */
 	public function addWhere($field, $value, $op = '=', $concat = 'AND')
 	{
@@ -169,8 +190,6 @@ class MysqlQuery implements Query
 		{
 			//throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			throw new \Exception('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
-
-			return $this;
 		}
 		elseif (is_numeric($value))
 		{
@@ -186,7 +205,7 @@ class MysqlQuery implements Query
 		}
 		else
 		{
-			return 'NULL';
+			throw new \InvalidArgumentException('ACHTUNG: Aufruf von AddWhere mit unbekannten Parameter! Bitte überprüfen!');
 		}
 
 
@@ -194,7 +213,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param        $field
+	 * @param string $field
 	 * @param string $op
 	 * @param string $concat
 	 * @return MysqlQuery|Query
@@ -215,10 +234,10 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param        $field
-	 * @param        $value
-	 * @param string $op
-	 * @param string $concat
+	 * @param string     $field
+	 * @param string|int $value
+	 * @param string     $op
+	 * @param string     $concat
 	 * @return MysqlQuery|Query
 	 */
 	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
@@ -237,11 +256,12 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param        $field    betroffenens Feld
-	 * @param        $valueMin Wert von
-	 * @param        $valueMax Wert bis
-	 * @param string $concat
+	 * @param string     $field    betroffenens Feld
+	 * @param string|int $valueMin Wert von
+	 * @param string|int $valueMax Wert bis
+	 * @param string     $concat   default 'and'
 	 * @return MysqlQuery|Query
+	 * @throws \InvalidArgumentException
 	 */
 	public function addWhereBetween($field, $valueMin, $valueMax, $concat = 'AND')
 	{
@@ -271,10 +291,10 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param        $field
-	 * @param        $value
-	 * @param string $phraseOrder
-	 * @param string $concat
+	 * @param string           $field
+	 * @param string|int|array $value
+	 * @param string           $phraseOrder
+	 * @param string           $concat
 	 * @return MysqlQuery|Query
 	 */
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
@@ -292,17 +312,23 @@ class MysqlQuery implements Query
 	}
 
 
+	/**
+	 * @param string $field
+	 * @param string $value
+	 * @return MysqlQuery|Query
+	 */
 	public function innerStatement($field, $value)
 	{
-		return $this->addWhereFunc($field, '(' . $value . ')', 'in');
+		return $this->addWhereFunc($field, '(' . $value . ')', 'IN');
 	}
 
 	/**
-	 * @param        $field
-	 * @param        $value
-	 * @param string $op
-	 * @param string $concat
+	 * @param string           $field
+	 * @param string|int|array $value
+	 * @param string           $op
+	 * @param string           $concat
 	 * @return MysqlQuery|Query|string
+	 * @throws \InvalidArgumentException
 	 */
 	public function addHaving($field, $value, $op = '=', $concat = 'AND')
 	{
@@ -331,7 +357,7 @@ class MysqlQuery implements Query
 				}
 				else
 				{
-					return 'NULL';
+					throw new \InvalidArgumentException('ACHTUNG: Aufruf von addHaving mit unbekannten Parameter! Bitte überprüfen!');
 				}
 			}
 		}
@@ -354,15 +380,21 @@ class MysqlQuery implements Query
 	{
 		$string = $field . ' IN (';
 
-		$string .= implode(',', array_map(function ($item)
-		{
-			if (is_string($item))
-			{
-				return "'" . mysql_real_escape_string($item) . "'";
-			}
+		$string .= implode(
+			',',
+			array_map(
+				function ($item)
+				{
+					if (is_string($item))
+					{
+						return "'" . mysql_real_escape_string($item) . "'";
+					}
 
-			return mysql_real_escape_string($item);
-		}, $values));
+					return mysql_real_escape_string($item);
+				},
+				$values
+			)
+		);
 
 		$string .= ')';
 
@@ -370,7 +402,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param $order
+	 * @param string $order
 	 * @return MysqlQuery|Query
 	 */
 	public function orderBy($order)
@@ -381,7 +413,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param $groupby
+	 * @param string $groupby
 	 * @return MysqlQuery|Query
 	 */
 	public function groupBy($groupby)
@@ -392,8 +424,8 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param      $offset
-	 * @param null $limit
+	 * @param int      $offset
+	 * @param int|null $limit
 	 * @return MysqlQuery|Query
 	 */
 	public function limit($offset, $limit = null)
@@ -448,7 +480,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @param $joinOn
+	 * @param string $joinOn
 	 * @return MysqlQuery|Query
 	 */
 	public function on($joinOn)
@@ -461,9 +493,9 @@ class MysqlQuery implements Query
 	/**
 	 * Hinterlegt ein vorgefertigtes SQL-Statement.
 	 *
+	 * @param string $queryString
+	 * @return $this|Query
 	 * @throws \ErrorException Wenn ein SELECT-Statement ausgeführt werden soll
-	 *
-	 * @return MysqlQuery
 	 */
 	public function setQueryOnce($queryString)
 	{
@@ -491,6 +523,9 @@ class MysqlQuery implements Query
 		return $this->getSelect();
 	}
 
+	/**
+	 * @return string
+	 */
 	private function getSelect()
 	{
 		if (!empty($this->ownQuery))
@@ -558,6 +593,10 @@ class MysqlQuery implements Query
 		return $query;
 	}
 
+	/**
+	 * @return string
+	 * @throws \InvalidArgumentException
+	 */
 	private function getUpdate()
 	{
 		if (!empty($this->ownQuery))
@@ -575,23 +614,22 @@ class MysqlQuery implements Query
 
 			foreach ($this->sets as $key => $value)
 			{
+				$setValues .= empty($setValues) ? '' : ', ';
 				if (is_null($value))
 				{
 					$setValues .= $key . " = NULL";
 				}
+				elseif (is_numeric($value))
+				{
+					$setValues .= $key . " = " . mysql_real_escape_string($value);
+				}
+				elseif (is_string($value))
+				{
+					$setValues .= $key . ' = "' . mysql_real_escape_string($value) . '"';
+				}
 				else
 				{
-					if (is_numeric($value))
-					{
-						$setValues .= $key . " = " . $value;
-					}
-					else
-					{
-						if (is_string($value))
-						{
-							$setValues .= $key . " = '" . $value . "'";
-						}
-					}
+					throw new \InvalidArgumentException('ACHTUNG: Aufruf von getUpdate mit unbekannten Parameter von addSet! Bitte überprüfen!');
 				}
 			}
 
@@ -606,6 +644,12 @@ class MysqlQuery implements Query
 		return $this->database->clear($query);
 	}
 
+	/**
+	 * @param string $clause
+	 * @param string $concat
+	 * @param string $openClosure
+	 * @return string
+	 */
 	private function concatToClause($clause, $concat, $openClosure)
 	{
 		$strOut = "";

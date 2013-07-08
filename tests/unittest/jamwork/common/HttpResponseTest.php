@@ -109,6 +109,19 @@ class HttpResponseTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($returns[get_class($obj)], $data);
 	}
 
+	public function testAddReturn_twice()
+	{
+		$obj = $this->getMock('unittest\module\UnittestCommand');
+		$data = 'Das ist irgend ein Output...';
+		$data2 = 'und der 2te';
+
+		$this->response->addReturn($obj, $data);
+		$this->response->addReturn($obj, $data2);
+
+		$returns = $this->readAttribute($this->response, 'returns');
+		$this->assertSame($returns[get_class($obj)], $data.$data2);
+	}
+
 	public function testGetReturns()
 	{
 		$atr_returns = $this->readAttribute($this->response, 'returns');
@@ -151,16 +164,6 @@ class HttpResponseTest extends \PHPUnit_Framework_TestCase
 		$this->assertContains('HEADER: HTTP/1.0 302 Moved permanently', $return);
 		$this->assertContains('HEADER: location2: ./unittest2.php', $return);
 		$this->assertContains('[test]das ist ein test[/test]', $return);
-	}
-
-	public function testFlushHeader()
-	{
-		// wird mit testFlush() getestet;
-	}
-
-	public function testFlushStatus()
-	{
-		// wird mit testFlush() getestet;
 	}
 
 	public function testDownloadFile_fileexists()

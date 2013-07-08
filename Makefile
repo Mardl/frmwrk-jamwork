@@ -10,6 +10,9 @@ phpunit:
 	@phpunit $(unitpath)
 
 phpcs:
+	@phpcs --standard=./build/phpcs.xml -p $(path)
+
+phpcs-summery:
 	@phpcs --standard=./build/phpcs.xml --report=summary -p $(path)
 
 lint:

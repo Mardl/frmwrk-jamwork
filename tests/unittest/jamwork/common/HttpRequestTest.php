@@ -179,6 +179,7 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
 
 	}
 
+
 	public function testGetPostNames()
 	{
 		$array = $this->request->getPostNames();

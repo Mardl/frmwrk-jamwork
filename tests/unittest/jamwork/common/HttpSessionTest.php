@@ -9,7 +9,16 @@ class HttpSessionTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetId()
 	{
-		//Vadim fragen
+		$ses = $this->session->getId();
+		$this->assertSame(session_id(), $ses);
+	}
+
+	public function testConstruct()
+	{
+		$this->session = $this->getMockBuilder('\jamwork\common\HttpSession')->setMethods(array('destroy'))->disableOriginalConstructor()->getMock();
+
+		$ses = $this->session->getId();
+		$this->assertSame(session_id(), $ses);
 	}
 
 	public function testGet()
@@ -34,7 +43,7 @@ class HttpSessionTest extends \PHPUnit_Framework_TestCase
 		$attr = $this->session->get($name);
 		$this->assertSame($value, $attr);
 
-		$attr = $this->session->delete($name);
+		$this->session->delete($name);
 		$attr = $this->session->get($name);
 		$this->assertEmpty($attr);
 
