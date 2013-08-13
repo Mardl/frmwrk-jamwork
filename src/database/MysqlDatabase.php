@@ -18,6 +18,7 @@ class MysqlDatabase implements Database
 	protected $dbname = '';
 	protected $connection = false;
 	protected $field = array();
+	protected $fieldDescribe = array();
 	protected $transaction = 0;
 
 	public $counts = array('query' => 0, 'recordset' => 0, 'update' => 0, 'insert' => 0, 'delete' => 0);
@@ -161,21 +162,28 @@ class MysqlDatabase implements Database
 					$setField .= ', ';
 				}
 
-				if ($recordSet[$field] !== 'NULL' && $recordSet[$field] !== null)
-				{
-					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
-				}
-				else
+				if ($recordSet[$field] === 'NULL' || $recordSet[$field] === null  || $this->checkForeignkeyToNull($tableName, $field, $recordSet[$field]))
 				{
 					$setField .= $field . ' = NULL';
 				}
-
+				else
+				{
+					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
+				}
 
 				if ($key == 'PRI')
 				{
 					$priCount++;
-					$where = ' WHERE ' . $field . ' = ' . mysql_real_escape_string($recordSet[$field]);
-					$primary = $recordSet[$field];
+					if (empty($where))
+					{
+						$where = ' WHERE ';
+						$primary = $recordSet[$field];
+					}
+					else{
+						// !!! ACHTUNG: bei Multiprimary wird beim update nur der ERSTE zurück geliefert !!!
+						$where .= ' AND ';
+					}
+					$where .= $field . ' = ' . mysql_real_escape_string($recordSet[$field]);
 				}
 			}
 		}
@@ -183,7 +191,7 @@ class MysqlDatabase implements Database
 
 		if ($priCount > 1)
 		{
-			throw new \Exception("Update auf multi Primary key nicht möglich.");
+			//throw new \Exception("Update auf multi Primary key nicht möglich.");
 		}
 
 		if (empty($primary))
@@ -199,6 +207,16 @@ class MysqlDatabase implements Database
 
 		return false;
 
+	}
+
+	private function checkForeignkeyToNull($tableName, $field, $value)
+	{
+		$value = trim($value);
+		$isValueNull = $value === 'NULL' || $value === '0' || empty($value);
+		$isForeignkey = $this->field[$tableName][$field] == 'MUL';
+		$nullAllowed = $this->fieldDescribe[$tableName][$field]['Null'] == 'YES';
+
+		return $isForeignkey && $isValueNull && $nullAllowed;
 	}
 
 	/**
@@ -223,13 +241,13 @@ class MysqlDatabase implements Database
 					$setField .= ', ';
 				}
 
-				if ($recordSet[$field] !== 'NULL')
+				if ($recordSet[$field] === 'NULL' || $recordSet[$field] === null || $this->checkForeignkeyToNull($tableName, $field, $recordSet[$field]))
 				{
-					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
+					$setField .= $field . ' = NULL';
 				}
 				else
 				{
-					$setField .= $field . ' = NULL';
+					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
 				}
 
 			}
@@ -337,6 +355,7 @@ class MysqlDatabase implements Database
 			while ($res && $row = mysql_fetch_array($res))
 			{
 				$this->field[$tableName][$row['Field']] = $row['Key'];
+				$this->fieldDescribe[$tableName][$row['Field']] = $row;
 			}
 		}
 	}
