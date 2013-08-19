@@ -315,11 +315,12 @@ class MysqlQuery implements Query
 	/**
 	 * @param string $field
 	 * @param string $value
+	 * @param bool   $positiv
 	 * @return MysqlQuery|Query
 	 */
-	public function innerStatement($field, $value)
+	public function innerStatement($field, $value, $positiv = true)
 	{
-		return $this->addWhereFunc($field, '(' . $value . ')', 'IN');
+		return $this->addWhereFunc($field, '(' . $value . ')', $positiv ? 'IN' : 'NOT IN');
 	}
 
 	/**
