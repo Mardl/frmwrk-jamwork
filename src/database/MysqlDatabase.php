@@ -168,7 +168,7 @@ class MysqlDatabase implements Database
 				}
 				else
 				{
-					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
+					$setField .= $field . ' = "' . mysql_real_escape_string($this->getValue($tableName, $field, $recordSet[$field])) . '"';
 				}
 
 				if ($key == 'PRI')
@@ -209,6 +209,12 @@ class MysqlDatabase implements Database
 
 	}
 
+	/**
+	 * @param string $tableName
+	 * @param string $field
+	 * @param mixed  $value
+	 * @return bool
+	 */
 	private function checkForeignkeyToNull($tableName, $field, $value)
 	{
 		$value = trim($value);
@@ -217,6 +223,23 @@ class MysqlDatabase implements Database
 		$nullAllowed = $this->fieldDescribe[$tableName][$field]['Null'] == 'YES';
 
 		return $isForeignkey && $isValueNull && $nullAllowed;
+	}
+
+	/**
+	 * @param string $tableName
+	 * @param string $field
+	 * @param string $typeToCompare
+	 * @return bool
+	 */
+	private function checkFieldTypeFloat($tableName, $field)
+	{
+		$floatingTypes = array(
+			'float',
+			'double',
+			'decimal'
+		);
+		$fieldType = $this->fieldDescribe[$tableName][$field]['Type'];
+		return in_array($fieldType, $floatingTypes);
 	}
 
 	/**
@@ -247,7 +270,7 @@ class MysqlDatabase implements Database
 				}
 				else
 				{
-					$setField .= $field . ' = "' . mysql_real_escape_string($recordSet[$field]) . '"';
+					$setField .= $field . ' = "' . mysql_real_escape_string($this->getValue($tableName, $field, $recordSet[$field])) . '"';
 				}
 
 			}
@@ -359,4 +382,70 @@ class MysqlDatabase implements Database
 			}
 		}
 	}
+
+	/**
+	 * @param $tableName
+	 * @param $field
+	 * @param $value
+	 * @return bool|float
+	 */
+	private function getValue($tableName, $field, $value)
+	{
+		$valueConverted = $value;
+		if($this->checkFieldTypeFloat($tableName, $field))
+		{
+			$valueConverted = $this->getAsFloat($value);
+		}
+
+		// wenn nicht gewandelt werden konnte dann den original Wert verwenden
+		if(!$valueConverted)
+		{
+			$valueConverted = $value;
+		}
+
+		return $valueConverted;
+	}
+
+	/**
+	 * @param string $value
+	 * @return float
+	 */
+	private function getAsFloat($value)
+	{
+		preg_match('/([-0-9\.\,]+)/', $value, $result);
+
+		if(!isset($result[0]))
+		{
+			return $value;
+		}
+
+		$value = $result[0];
+
+		$lastposPoint = strrpos($value, '.');
+		$lastposComma = strrpos($value, ',');
+
+		if($lastposPoint === false && $lastposComma === false)
+		{
+			return $value;
+		}
+
+		if($lastposComma > $lastposPoint || $lastposPoint === false)
+		{
+			$lastPos = $lastposComma;
+		}
+		else
+		{
+			$lastPos = $lastposPoint;
+		}
+
+		$value = substr_replace($value, '####', $lastPos, 0);
+
+		$value = str_replace(',', '', $value);
+		$value = str_replace('.', '', $value);
+
+		$value = str_replace('####','.', $value);
+
+		return (float)$value;
+	}
+
 }
