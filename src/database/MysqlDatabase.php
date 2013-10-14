@@ -217,7 +217,10 @@ class MysqlDatabase implements Database
 	 */
 	private function checkForeignkeyToNull($tableName, $field, $value)
 	{
-		$value = trim($value);
+		if (is_string($value))
+		{
+			$value = trim($value);
+		}
 		$isValueNull = $value === 'NULL' || $value === '0' || empty($value);
 		$isForeignkey = $this->field[$tableName][$field] == 'MUL';
 		$nullAllowed = $this->fieldDescribe[$tableName][$field]['Null'] == 'YES';
