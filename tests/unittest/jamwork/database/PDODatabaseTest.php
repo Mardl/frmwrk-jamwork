@@ -3,42 +3,40 @@
 
 namespace unittest\jamwork\database;
 
-use jamwork\database\MysqlDatabase;
-use jamwork\database\MysqlRecordset;
-use jamwork\database\MysqlQuery;
+use jamwork\database\PDODatabase;
 use jamwork\common\Registry;
 
 /**
- * Class MysqlDatabaseTest
+ * Class PDODatabaseTest
  *
  * @category Jamwork
  * @package  unittest\jamwork\database
  * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
-class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
+class PDODatabaseTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
-	 * @var \jamwork\database\MysqlQuery
+	 * @var \jamwork\database\pdoQuery
 	 */
 	private $query;
 	/**
-	 * @var \jamwork\database\MysqlRecordset
+	 * @var \jamwork\database\pdoRecordset
 	 */
 	private $recordset;
 
 	/**
-	 * @var \jamwork\database\MysqlDatabase
+	 * @var \jamwork\database\pdoDatabase
 	 */
-	public $mysqlDatabase = null;
+	public $pdoDatabase = null;
 
 	/**
 	 * @return void
 	 */
 	public function testNewRecordSet()
 	{
-		$recordset = $this->mysqlDatabase->newRecordSet();
-		$this->assertInstanceOf('jamwork\database\MysqlRecordset', $recordset);
+		$recordset = $this->pdoDatabase->newRecordSet();
+		$this->assertInstanceOf('jamwork\database\pdoRecordset', $recordset);
 	}
 
 	/**
@@ -46,8 +44,8 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testNewQuery()
 	{
-		$query = $this->mysqlDatabase->newQuery();
-		$this->assertInstanceOf('jamwork\database\MysqlQuery', $query);
+		$query = $this->pdoDatabase->newQuery();
+		$this->assertInstanceOf('jamwork\database\pdoQuery', $query);
 	}
 
 	/**
@@ -57,7 +55,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_id' => '1', 'tst_name' => 'Tester5', 'tst_datum' => '0000-00-00 00:00:00');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 1);
 
@@ -73,7 +71,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id2' => '66', 'tst_id3' => 'NULL', 'tst_id4' => 'NULL');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -89,7 +87,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable2';
 		$array = array('tst_id' => '88', 'tst_id2' => 'NULL', 'tst_id3' => 'NULL');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId === 0);
 	}
@@ -101,7 +99,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id4' => '0');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -118,7 +116,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id4' => 0);
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -135,7 +133,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id4' => '    ');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -152,12 +150,12 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_id' => '123');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 		$this->assertTrue($newId == 123);
 
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id4' => '123');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -174,12 +172,12 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_id' => '123');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 		$this->assertTrue($newId == 123);
 
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id4' => 123);
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -196,7 +194,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id4' => 55);
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertFalse($newId);
 
@@ -208,7 +206,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	public function testInsert_insertEmpty()
 	{
 		$table = 'testtable';
-		$newId = $this->mysqlDatabase->insert($table, array());
+		$newId = $this->pdoDatabase->insert($table, array());
 
 		$this->assertTrue($newId !== false);
 	}
@@ -220,7 +218,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_name' => 'Tester5');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 
 		$this->query->from($table)->where('tst_id = ' . $newId);
@@ -236,14 +234,14 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_name' => 'testUpdate');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$table = 'testtable';
 		$this->query->from($table)->where('tst_id = ' . $newId);
 		$array = $this->recordset->execute($this->query)->get();
 
 		$array['tst_name'] = 'Tester2';
-		$retId = $this->mysqlDatabase->update($table, $array);
+		$retId = $this->pdoDatabase->update($table, $array);
 
 		$this->assertTrue($retId == $newId);
 
@@ -260,12 +258,12 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_id' => '123');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 		$this->assertTrue($newId == 123);
 
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id2' => '1', 'tst_id4' => '');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -275,7 +273,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(array('tst_id' => '88', 'tst_id2' => '1', 'tst_id3' => null, 'tst_id4' => null), $array);
 
 		$array['tst_id4'] = '123';
-		$retId = $this->mysqlDatabase->update($table, $array);
+		$retId = $this->pdoDatabase->update($table, $array);
 
 		$this->query->from($table)->where('tst_id = 88');
 		$compareArray = $this->recordset->execute($this->query)->get();
@@ -290,12 +288,12 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_id' => '123');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 		$this->assertTrue($newId == 123);
 
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id2' => '1', 'tst_id4' => '');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$this->assertTrue($newId == 88);
 
@@ -305,10 +303,10 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(array('tst_id' => '88', 'tst_id2' => '1', 'tst_id3' => null, 'tst_id4' => null), $array);
 
 		$array['tst_id4'] = '     ';
-		$retId = $this->mysqlDatabase->update($table, $array);
+		$retId = $this->pdoDatabase->update($table, $array);
 
 		// MultiPrimaryKey liefert nur den ersten PrimaryKey zurück!
-		$this->assertTrue($retId == 88);
+		$this->assertSame('88', $retId);
 
 		$this->query->from($table)->where('tst_id = 88');
 		$compareArray = $this->recordset->execute($this->query)->get();
@@ -323,12 +321,12 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_name' => 'MoreFields');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$array['tst_id'] = $newId;
 		$array['tst_name'] = 'Tester2';
 		$array['kun_name'] = 'Kundenname';
-		$retId = $this->mysqlDatabase->update($table, $array);
+		$retId = $this->pdoDatabase->update($table, $array);
 		$this->assertTrue($retId == $newId);
 
 		$this->query->from($table);
@@ -344,12 +342,12 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable';
 		$array = array('tst_name' => 'MoreFields');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$array['tst_name'] = 'Tester2';
 		try
 		{
-			$retId = $this->mysqlDatabase->update($table, $array);
+			$retId = $this->pdoDatabase->update($table, $array);
 		} catch (\Exception $expected)
 		{
 			return;
@@ -365,11 +363,11 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable3';
 		$array = array('tst_id' => '77', 'tst_id3' => '55');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$array['tst_id'] = $newId;
 		$array['tst_id3'] = 'NULL';
-		$retId = $this->mysqlDatabase->update($table, $array);
+		$retId = $this->pdoDatabase->update($table, $array);
 		$this->assertTrue($retId == $newId);
 
 		$this->query->from($table);
@@ -385,10 +383,10 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 
 		$table = 'testtable';
 		$array = array('tst_name' => 'Delete');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		$array['tst_id'] = $newId;
-		$ret = $this->mysqlDatabase->delete($table, $array);
+		$ret = $this->pdoDatabase->delete($table, $array);
 		$this->assertTrue($ret);
 
 		$this->query->from($table)->where('tst_id = ' . $newId);
@@ -407,7 +405,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 
 		$array['tst_id'] = 1;
 		$array['tst_id2'] = 2;
-		$ret = $this->mysqlDatabase->delete($table, $array);
+		$ret = $this->pdoDatabase->delete($table, $array);
 		$this->assertTrue($ret);
 	}
 
@@ -419,15 +417,16 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 
 		$table = 'testtable';
 		$array = array('tst_name' => 'Delete');
-		$newId = $this->mysqlDatabase->insert($table, $array);
+		$newId = $this->pdoDatabase->insert($table, $array);
 
 		try
 		{
-			$ret = $this->mysqlDatabase->delete($table, $array);
+			$ret = $this->pdoDatabase->delete($table, $array);
 		} catch (\Exception $expected)
 		{
 			return;
 		}
+
 		$this->fail('An expected Exception has not been raised.');
 	}
 
@@ -436,14 +435,14 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testReadFields()
 	{
-		$fields = $this->readAttribute($this->mysqlDatabase, 'field');
+		$fields = $this->readAttribute($this->pdoDatabase, 'field');
 		$this->assertEmpty($fields);
 
-		$method = new \ReflectionMethod($this->mysqlDatabase, 'readFields');
+		$method = new \ReflectionMethod($this->pdoDatabase, 'readFields');
 		$method->setAccessible(true);
-		$method->invoke($this->mysqlDatabase, 'testtable');
+		$method->invoke($this->pdoDatabase, 'testtable');
 
-		$fields = $this->readAttribute($this->mysqlDatabase, 'field');
+		$fields = $this->readAttribute($this->pdoDatabase, 'field');
 		$this->assertTrue(count($fields) > 0);
 	}
 
@@ -452,9 +451,9 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetPrimary_Mit()
 	{
-		$method = new \ReflectionMethod($this->mysqlDatabase, 'getPrimary');
+		$method = new \ReflectionMethod($this->pdoDatabase, 'getPrimary');
 		$method->setAccessible(true);
-		$field = $method->invoke($this->mysqlDatabase, 'testtable');
+		$field = $method->invoke($this->pdoDatabase, 'testtable');
 
 		$this->assertSame($field, 'tst_id');
 	}
@@ -464,9 +463,9 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetPrimary_Ohne()
 	{
-		$method = new \ReflectionMethod($this->mysqlDatabase, 'getPrimary');
+		$method = new \ReflectionMethod($this->pdoDatabase, 'getPrimary');
 		$method->setAccessible(true);
-		$field = $method->invoke($this->mysqlDatabase, 'testtable2');
+		$field = $method->invoke($this->pdoDatabase, 'testtable2');
 
 		$this->assertSame($field, '');
 	}
@@ -476,12 +475,12 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testStartTransaction()
 	{
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 0);
 
-		$this->mysqlDatabase->startTransaction();
+		$this->pdoDatabase->startTransaction();
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 1);
 	}
 
@@ -490,22 +489,22 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCommit_counter()
 	{
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 0);
 
-		$this->mysqlDatabase->commit();
+		$this->pdoDatabase->commit();
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 0);
 
-		$this->mysqlDatabase->startTransaction();
+		$this->pdoDatabase->startTransaction();
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 1);
 
-		$this->mysqlDatabase->commit();
+		$this->pdoDatabase->commit();
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 0);
 	}
 
@@ -514,22 +513,22 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRollback_counter()
 	{
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 0);
 
-		$this->mysqlDatabase->rollback();
+		$this->pdoDatabase->rollback();
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 0);
 
-		$this->mysqlDatabase->startTransaction();
+		$this->pdoDatabase->startTransaction();
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 1);
 
-		$this->mysqlDatabase->rollback(false);
+		$this->pdoDatabase->rollback(false);
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 0);
 	}
 
@@ -538,14 +537,14 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRollback_Exception()
 	{
-		$this->mysqlDatabase->startTransaction();
+		$this->pdoDatabase->startTransaction();
 
-		$transaction = $this->readAttribute($this->mysqlDatabase, 'transaction');
+		$transaction = $this->readAttribute($this->pdoDatabase, 'transaction');
 		$this->assertSame($transaction, 1);
 
 		try
 		{
-			$this->mysqlDatabase->rollback();
+			$this->pdoDatabase->rollback();
 		} catch (\Exception $e)
 		{
 			return;
@@ -559,13 +558,13 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->mysqlDatabase = new MysqlDatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
+		$this->pdoDatabase = new PDODatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
 		$registry = Registry::getInstance();
-		$registry->setDatabase($this->mysqlDatabase);
-		$this->query = $this->mysqlDatabase->newQuery();
-		$this->recordset = $this->mysqlDatabase->newRecordSet();
+		$registry->setDatabase($this->pdoDatabase);
+		$this->query = $this->pdoDatabase->newQuery();
+		$this->recordset = $this->pdoDatabase->newRecordSet();
 
-		$query = $this->mysqlDatabase->newQuery();
+		$query = $this->pdoDatabase->newQuery();
 		$query->setQueryOnce("DROP TABLE IF EXISTS testtable");
 		$this->recordset->execute($query);
 		$query->setQueryOnce("DROP TABLE IF EXISTS testtable2");
@@ -573,29 +572,35 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 		$query->setQueryOnce("DROP TABLE IF EXISTS testtable3");
 		$this->recordset->execute($query);
 
-		$query = $this->mysqlDatabase->newQuery();
-		$query->setQueryOnce("CREATE TABLE IF NOT EXISTS testtable (
-  tst_id int(11) NOT NULL AUTO_INCREMENT,
-  tst_name varchar(100) NOT NULL,
-  tst_datum datetime NOT NULL,
-  PRIMARY KEY (tst_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;");
+		$query = $this->pdoDatabase->newQuery();
+		$query->setQueryOnce(
+			"CREATE TABLE IF NOT EXISTS testtable (
+			  tst_id int(11) NOT NULL AUTO_INCREMENT,
+			  tst_name varchar(100) NOT NULL,
+			  tst_datum datetime NOT NULL,
+			  PRIMARY KEY (tst_id)
+			) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
+		);
 		$this->recordset->execute($query);
 
-		$query->setQueryOnce("CREATE TABLE IF NOT EXISTS testtable2 (
-  tst_id int(11) NOT NULL,
-  tst_name varchar(100) NOT NULL,
-  tst_datum datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;");
+		$query->setQueryOnce(
+			"CREATE TABLE IF NOT EXISTS testtable2 (
+			  tst_id int(11) NOT NULL,
+			  tst_name varchar(100) NOT NULL,
+			  tst_datum datetime NOT NULL
+			) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
+		);
 		$this->recordset->execute($query);
 
-		$query->setQueryOnce("CREATE TABLE IF NOT EXISTS testtable3 (
-  tst_id int(11) NOT NULL,
-  tst_id2 int(11) NOT NULL,
-  tst_id3 int(11) DEFAULT NULL,
-  tst_id4 int(11) DEFAULT NULL,
-  PRIMARY KEY (tst_id,tst_id2)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+		$query->setQueryOnce(
+			"CREATE TABLE IF NOT EXISTS testtable3 (
+			  tst_id int(11) NOT NULL,
+			  tst_id2 int(11) NOT NULL,
+			  tst_id3 int(11) DEFAULT NULL,
+			  tst_id4 int(11) DEFAULT NULL,
+			  PRIMARY KEY (tst_id,tst_id2)
+			) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
+		);
 		$this->recordset->execute($query);
 
 		$query->setQueryOnce("ALTER TABLE testtable3 ADD CONSTRAINT FK_314AF24EE913C2C8 FOREIGN KEY (tst_id4) REFERENCES testtable (tst_id);");
@@ -603,6 +608,7 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 
 		$query->setQueryOnce("CREATE INDEX IDX_314AF24EE913C2C8 ON testtable3 (tst_id4);");
 		$this->recordset->execute($query);
+
 
 	}
 
@@ -612,16 +618,16 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 
-		$query = $this->mysqlDatabase->newQuery();
-		$query->setQueryOnce("DROP TABLE IF EXISTS testtable");
+		$query = $this->pdoDatabase->newQuery();
+		$query->setQueryOnce("DROP TABLE IF EXISTS testtable3");
 		$this->recordset->execute($query);
 		$query->setQueryOnce("DROP TABLE IF EXISTS testtable2");
 		$this->recordset->execute($query);
-		$query->setQueryOnce("DROP TABLE IF EXISTS testtable3");
+		$query->setQueryOnce("DROP TABLE IF EXISTS testtable");
 		$this->recordset->execute($query);
 
 		Registry::reset();
-		unset($this->mysqlDatabase);
+		unset($this->pdoDatabase);
 		unset($this->query);
 		unset($this->recordset);
 	}

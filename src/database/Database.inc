@@ -17,8 +17,9 @@ interface Database
 	 * @param string $user
 	 * @param string $pwd
 	 * @param string $name
+	 * @param array  $options
 	 */
-	public function __construct($host, $user, $pwd, $name);
+	public function __construct($host, $user, $pwd, $name, $options=array());
 
 	/**
 	 * @return mixed

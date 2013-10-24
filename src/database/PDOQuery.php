@@ -3,19 +3,22 @@
 namespace jamwork\database;
 
 /**
- * Class MysqlQuery
+ * Class PDOQuery
  *
  * @category Jamwork
+ * @package  Jamwork\database
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
+/**
+ * Class PDOQuery
+ *
+ * @category Thomann
  * @package  jamwork\database
  * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
-class MysqlQuery implements Query
+class PDOQuery implements Query
 {
 
-	/**
-	 * @var int
-	 */
-	protected $queryTyp = 1;
 	/**
 	 * @var bool
 	 */
@@ -24,10 +27,6 @@ class MysqlQuery implements Query
 	 * @var string
 	 */
 	protected $table = '';
-	/**
-	 * @var string
-	 */
-	protected $sets = '';
 	/**
 	 * @var string
 	 */
@@ -76,10 +75,30 @@ class MysqlQuery implements Query
 	 * @var bool
 	 */
 	protected $closeClosure = false;
+	/**
+	 * @var array
+	 */
+	protected $keyValuePair = array();
+
+	/**
+	 * @var int
+	 */
+	private $prepare = 0;
+
+
+	/**
+	 * @return string
+	 */
+	private function getPrepareField()
+	{
+		$this->prepare++;
+
+		return 'fieldName' . $this->prepare;
+	}
 
 	/**
 	 * @param string $table
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function from($table)
 	{
@@ -90,43 +109,18 @@ class MysqlQuery implements Query
 
 	/**
 	 * @param string $fields
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function select($fields)
 	{
-		$this->setSelectType();
 		$this->fields = $fields;
 
 		return $this;
 	}
 
 	/**
-	 * @param string $table
-	 * @return MysqlQuery
-	 */
-	public function update($table)
-	{
-		$this->setUpdateType();
-		$this->table = $table;
-
-		return $this;
-	}
-
-	/**
-	 * @param string $fieldName
-	 * @param string $value
-	 * @return MysqlQuery
-	 */
-	public function set($fieldName, $value)
-	{
-		$this->sets[$fieldName] = $value;
-
-		return $this;
-	}
-
-	/**
 	 * @param string $clause
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function where($clause)
 	{
@@ -136,7 +130,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @return MysqlQuery
+	 * @return PDOQuery
 	 */
 	public function openClosure()
 	{
@@ -146,7 +140,7 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @return MysqlQuery
+	 * @return PDOQuery
 	 */
 	public function closeClosure()
 	{
@@ -157,7 +151,7 @@ class MysqlQuery implements Query
 
 	/**
 	 * @param bool $distinct
-	 * @return MysqlQuery|void
+	 * @return PDOQuery|void
 	 */
 	public function distinct($distinct = true)
 	{
@@ -167,46 +161,13 @@ class MysqlQuery implements Query
 	}
 
 	/**
-	 * @return void
-	 */
-	private function setSelectType()
-	{
-		$this->queryTyp = 1;
-	}
-
-	/**
-	 * @return void
-	 */
-	private function setUpdateType()
-	{
-		$this->queryTyp = 2;
-	}
-
-	/**
-	 * @return bool
-	 * @deprecated
-	 */
-	protected function isSelectStatement()
-	{
-		return ($this->queryTyp == 1);
-	}
-
-	/**
-	 * @return bool
-	 */
-	protected function isUpdateStatement()
-	{
-		return ($this->queryTyp == 2);
-	}
-
-	/**
 	 * Fügt eine neue WHERE-Klausel hinzu und escaped jeden Parameter
 	 *
 	 * @param string         $field Feld für die Bedingung
 	 * @param string|integer $value Vergleichswert
 	 * @param string         $op    Optionaler Operator, default "="
 	 * @param string         $concat
-	 * @return $this|MysqlQuery|Query|string
+	 * @return $this|PDOQuery|Query|string
 	 * @throws \InvalidArgumentException
 	 * @throws \Exception
 	 */
@@ -224,13 +185,11 @@ class MysqlQuery implements Query
 			//throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			throw new \Exception('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 		}
-		elseif (is_string($value))
+		elseif (is_string($value) || is_numeric($value))
 		{
-			$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
-		}
-		elseif (is_numeric($value))
-		{
-			$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
+			$fieldUnique = $this->getPrepareField();
+			$string .= $field . ' ' . $op . ' :' . $fieldUnique;
+			$this->keyValuePair[':' . $fieldUnique] = $value;
 		}
 		elseif (is_array($value))
 		{
@@ -249,7 +208,7 @@ class MysqlQuery implements Query
 	 * @param string $field
 	 * @param string $op
 	 * @param string $concat
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function addWhereIsNull($field, $op = 'IS', $concat = 'AND')
 	{
@@ -258,7 +217,6 @@ class MysqlQuery implements Query
 		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
-			//$string = $this->clause.' '.$concat.' ';
 		}
 
 		$string .= $field . ' ' . $op . ' NULL ';
@@ -271,7 +229,7 @@ class MysqlQuery implements Query
 	 * @param string|int $value
 	 * @param string     $op
 	 * @param string     $concat
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
 	{
@@ -280,10 +238,11 @@ class MysqlQuery implements Query
 		if (!empty($this->clause) || $this->openClosure)
 		{
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
-			//$string = $this->clause.' '.$concat.' ';
 		}
 
-		$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value) . ' ';
+		$fieldUnique = $this->getPrepareField();
+		$string .= $field . ' ' . $op . ' :' . $fieldUnique . ' ';
+		$this->keyValuePair[':' . $fieldUnique] = $value;
 
 		return $this->where($string);
 	}
@@ -293,7 +252,7 @@ class MysqlQuery implements Query
 	 * @param string|int $valueMin Wert von
 	 * @param string|int $valueMax Wert bis
 	 * @param string     $concat   default 'and'
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 * @throws \InvalidArgumentException
 	 */
 	public function addWhereBetween($field, $valueMin, $valueMax, $concat = 'AND')
@@ -311,14 +270,13 @@ class MysqlQuery implements Query
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
 
-		if (is_string($valueMin))
-		{
-			$string .= $field . ' between "' . mysql_real_escape_string($valueMin) . '" AND "' . mysql_real_escape_string($valueMax) . '"';
-		}
-		else
-		{
-			$string .= $field . ' between ' . mysql_real_escape_string($valueMin) . ' AND ' . mysql_real_escape_string($valueMax);
-		}
+		$fieldmin = $this->getPrepareField();
+		$fieldmax = $this->getPrepareField();
+
+		$string .= $field . ' between :' . $fieldmin . ' AND :' . $fieldmax . ' ';
+
+		$this->keyValuePair[':' . $fieldmin] = $valueMin;
+		$this->keyValuePair[':' . $fieldmax] = $valueMax;
 
 		return $this->where($string);
 	}
@@ -328,7 +286,7 @@ class MysqlQuery implements Query
 	 * @param string|int|array $value
 	 * @param string           $phraseOrder
 	 * @param string           $concat
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function addWhereLike($field, $value, $phraseOrder = '%%%s%%', $concat = 'AND')
 	{
@@ -339,7 +297,11 @@ class MysqlQuery implements Query
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
 
-		$string .= $field . ' LIKE "' . sprintf($phraseOrder, mysql_real_escape_string($value)) . '" ';
+		$fieldUnique = $this->getPrepareField();
+
+		$string .= $field . ' LIKE :' . $fieldUnique . ' ';
+
+		$this->keyValuePair[':' . $fieldUnique] = sprintf($phraseOrder, $value);
 
 		return $this->where($string);
 	}
@@ -349,7 +311,7 @@ class MysqlQuery implements Query
 	 * @param string $field
 	 * @param string $value
 	 * @param bool   $positiv
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function innerStatement($field, $value, $positiv = true)
 	{
@@ -361,7 +323,7 @@ class MysqlQuery implements Query
 	 * @param string|int|array $value
 	 * @param string           $op
 	 * @param string           $concat
-	 * @return MysqlQuery|Query|string
+	 * @return PDOQuery|Query|string
 	 * @throws \InvalidArgumentException
 	 */
 	public function addHaving($field, $value, $op = '=', $concat = 'AND')
@@ -379,13 +341,14 @@ class MysqlQuery implements Query
 		}
 		else
 		{
-			if (is_string($value))
+
+			if (is_numeric($value) || is_string($value))
 			{
-				$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
-			}
-			elseif (is_numeric($value))
-			{
-				$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
+				$fieldUnique = $this->getPrepareField();
+
+				$string .= $field . ' ' . $op . ' :' . $fieldUnique . ' ';
+
+				$this->keyValuePair[':' . $fieldUnique] = $value;
 			}
 			else
 			{
@@ -409,24 +372,17 @@ class MysqlQuery implements Query
 	 */
 	public function in($field, array $values)
 	{
+		$inStatement = array();
+
+		foreach ($values as $item)
+		{
+			$fieldUnique = $this->getPrepareField();
+			$inStatement[] = ':' . $fieldUnique;
+			$this->keyValuePair[':' . $fieldUnique] = $item;
+		}
+
 		$string = $field . ' IN (';
-
-		$string .= implode(
-			',',
-			array_map(
-				function ($item)
-				{
-					if (is_string($item))
-					{
-						return "'" . mysql_real_escape_string($item) . "'";
-					}
-
-					return mysql_real_escape_string($item);
-				},
-				$values
-			)
-		);
-
+		$string .= implode(',', $inStatement);
 		$string .= ')';
 
 		return $string;
@@ -434,7 +390,7 @@ class MysqlQuery implements Query
 
 	/**
 	 * @param string $order
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function orderBy($order)
 	{
@@ -445,7 +401,7 @@ class MysqlQuery implements Query
 
 	/**
 	 * @param string $groupby
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function groupBy($groupby)
 	{
@@ -457,7 +413,7 @@ class MysqlQuery implements Query
 	/**
 	 * @param int      $offset
 	 * @param int|null $limit
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function limit($offset, $limit = null)
 	{
@@ -477,7 +433,7 @@ class MysqlQuery implements Query
 	 * @param string $join Join-Table
 	 * @param string $type Art des Joins, default LEFT
 	 *
-	 * @return MysqlQuery
+	 * @return PDOQuery
 	 */
 	public function join($join, $type = 'LEFT')
 	{
@@ -491,7 +447,7 @@ class MysqlQuery implements Query
 	 *
 	 * @param string $join Join-Table
 	 *
-	 * @return MysqlQuery
+	 * @return PDOQuery
 	 */
 	public function innerJoin($join)
 	{
@@ -503,7 +459,7 @@ class MysqlQuery implements Query
 	 *
 	 * @param string $join Join-Table
 	 *
-	 * @return MysqlQuery
+	 * @return PDOQuery
 	 */
 	public function leftJoin($join)
 	{
@@ -512,7 +468,7 @@ class MysqlQuery implements Query
 
 	/**
 	 * @param string $joinOn
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function on($joinOn)
 	{
@@ -542,16 +498,27 @@ class MysqlQuery implements Query
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isQueryOnce()
+	{
+		return !empty($this->ownQuery);
+	}
+
+	/**
 	 * @return Query|string
 	 */
 	public function get()
 	{
-		if ($this->isUpdateStatement())
-		{
-			return $this->getUpdate();
-		}
-
 		return $this->getSelect();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getBindValues()
+	{
+		return $this->keyValuePair;
 	}
 
 	/**
@@ -559,7 +526,7 @@ class MysqlQuery implements Query
 	 */
 	private function getSelect()
 	{
-		if (!empty($this->ownQuery))
+		if ($this->isQueryOnce())
 		{
 			$query = $this->ownQuery;
 			/*
@@ -568,6 +535,9 @@ class MysqlQuery implements Query
 			 * Zitat: Vadim am 29.02.2012
 			 */
 			// $this->ownQuery = '';
+
+			$query = trim($query);
+
 			$this->lastQuery = str_split($query, 255);
 
 			return $query;
@@ -617,58 +587,9 @@ class MysqlQuery implements Query
 			$query .= " LIMIT " . implode(', ', $this->limit);
 		}
 
+		$query = trim($query);
+
 		$this->lastQuery = str_split($query, 255);
-
-		return $query;
-	}
-
-	/**
-	 * @return string
-	 * @throws \InvalidArgumentException
-	 */
-	private function getUpdate()
-	{
-		if (!empty($this->ownQuery))
-		{
-			$query = $this->ownQuery;
-
-			return $query;
-		}
-
-		$query = "UPDATE " . $this->table . " SET ";
-
-		if (is_array($this->sets))
-		{
-			$setValues = "";
-
-			foreach ($this->sets as $key => $value)
-			{
-				$setValues .= empty($setValues) ? '' : ', ';
-				if (is_null($value))
-				{
-					$setValues .= $key . " = NULL";
-				}
-				elseif (is_string($value))
-				{
-					$setValues .= $key . ' = "' . mysql_real_escape_string($value) . '"';
-				}
-				elseif (is_numeric($value))
-				{
-					$setValues .= $key . " = " . mysql_real_escape_string($value);
-				}
-				else
-				{
-					throw new \InvalidArgumentException('ACHTUNG: Aufruf von getUpdate mit unbekannten Parameter von addSet! Bitte überprüfen!');
-				}
-			}
-
-			$query .= $setValues;
-		}
-
-		if (!empty($this->clause))
-		{
-			$query .= " WHERE " . $this->clause;
-		}
 
 		return $query;
 	}

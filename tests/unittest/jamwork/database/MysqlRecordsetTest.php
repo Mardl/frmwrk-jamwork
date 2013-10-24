@@ -6,6 +6,13 @@ use jamwork\database\MysqlRecordset;
 use jamwork\database\MysqlQuery;
 use jamwork\database\MysqlDatabase;
 
+/**
+ * Class MysqlRecordsetTest
+ *
+ * @category Jamwork
+ * @package  unittest\jamwork\database
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
+ */
 class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -22,6 +29,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public $mysqlDB = null;
 
+	/**
+	 * @return void
+	 */
 	public function testExecute()
 	{
 		$this->mysqlRecordset->execute($this->query);
@@ -29,6 +39,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertAttributeEquals(false, 'result', $this->mysqlRecordset);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testGet_OK()
 	{
 		$this->query->setQueryOnce("SHOW STATUS");
@@ -38,6 +51,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertInternalType('array', $query);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testGet_FindNothing()
 	{
 		$this->mysqlRecordset->execute($this->query);
@@ -45,6 +61,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($query);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testCount()
 	{
 		$table = 'testtable';
@@ -61,6 +80,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(2, $count);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testCount_Empty()
 	{
 		$this->mysqlRecordset->execute($this->query);
@@ -68,6 +90,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($count);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testIsSuccessfull_negativ()
 	{
 		$this->query->select('*')->from('not_existing_table');
@@ -75,6 +100,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($ret);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testIsSuccessfull_positiv()
 	{
 		$table = 'testtable';
@@ -88,6 +116,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testGetErrorMessage()
 	{
 		$this->query->select('*')->from('not_existing_table');
@@ -96,6 +127,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame("Table 'test_jamwork.not_existing_table' doesn't exist",$this->mysqlRecordset->getErrorMessage());
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testGetErrorNumber()
 	{
 		$this->query->select('*')->from('not_existing_table');
@@ -104,6 +138,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(1146,$this->mysqlRecordset->getErrorNumber());
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function setUp()
 	{
 		$this->mysqlDB = new MysqlDatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
@@ -125,6 +162,9 @@ class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function tearDown()
 	{
 		$query = $this->mysqlDB->newQuery();

@@ -2,14 +2,17 @@
 
 namespace jamwork\database;
 
+use PDO;
+use PDOException;
+
 /**
  * Class MysqlDatabase
  *
  * @category Jamwork
- * @package  jamwork\database
+ * @package  Jamwork\database
  * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
-class MysqlDatabase implements Database
+class PDODatabase implements Database
 {
 
 	/**
@@ -49,6 +52,7 @@ class MysqlDatabase implements Database
 	 */
 	protected $transaction = 0;
 
+
 	/**
 	 * @var array
 	 */
@@ -67,21 +71,35 @@ class MysqlDatabase implements Database
 		$this->dbuser = $user;
 		$this->dbpwd = $pwd;
 		$this->dbname = $name;
-		$this->dboptions = $options;
+		$this->dboptions = array_merge(array('port' => '3306', 'driver' => 'mysql', 'charset' => 'UTF8'), $options);
+
 
 		$this->getConnection();
 	}
 
 	/**
-	 * @return mixed
+	 * @return bool|PDO
 	 */
 	public function getConnection()
 	{
 		if (!$this->connection)
 		{
-			$this->connection = mysql_connect($this->dbhost, $this->dbuser, $this->dbpwd) or die ('Error connecting to mysql');
 
-			$db = mysql_select_db($this->dbname) or die ('Error select_db to mysql');
+			$connect = $this->dboptions['driver'] . ':host=' . $this->dbhost . ';port=' . $this->dboptions['port'] . ';dbname=' . $this->dbname;
+
+			try
+			{
+				$options = array(
+					PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+				);
+				$this->connection = new PDO($connect, $this->dbuser, $this->dbpwd, $options);
+				$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+			} catch (PDOException $e)
+			{
+				print "Error!: " . $e->getMessage() . "<br/>";
+				die();
+			}
 		}
 
 		return $this->connection;
@@ -96,9 +114,8 @@ class MysqlDatabase implements Database
 		if ($this->transaction <= 0)
 		{
 			$this->transaction = 0; // initialisieren, sicher ist sicher;
-			$rs = $this->newRecordSet();
-			$rs->execute($this->newQuery()->setQueryOnce("SET AUTOCOMMIT=0;"));
-			$rs->execute($this->newQuery()->setQueryOnce("START TRANSACTION;"));
+
+			$this->getConnection()->beginTransaction();
 		}
 
 		$this->transaction++;
@@ -114,9 +131,7 @@ class MysqlDatabase implements Database
 			$this->transaction--;
 			if ($this->transaction == 0)
 			{
-				$rs = $this->newRecordSet();
-				$rs->execute($this->newQuery()->setQueryOnce("COMMIT;"));
-				$rs->execute($this->newQuery()->setQueryOnce("SET AUTOCOMMIT=1;"));
+				$this->getConnection()->commit();
 			}
 		}
 	}
@@ -130,16 +145,12 @@ class MysqlDatabase implements Database
 	{
 		if ($this->transaction > 0)
 		{
-			$errno = mysql_errno();
-			$error = mysql_error();
 			$this->transaction = 0;
-			$rs = $this->newRecordSet();
-			$rs->execute($this->newQuery()->setQueryOnce("ROLLBACK;"));
-			$rs->execute($this->newQuery()->setQueryOnce("SET AUTOCOMMIT=1;"));
+			$this->getConnection()->rollBack();
 
 			if ($throwException)
 			{
-				throw new \Exception("DB-Fehler\r\nFehler-Nr: " . $errno . "\r\nFehler: " . $error);
+				throw new \Exception("DB-Fehler\r\nFehler-Nr: " . $this->getConnection()->errorCode() . "\r\nFehler: " . $this->getConnection()->errorInfo());
 			}
 		}
 	}
@@ -149,7 +160,7 @@ class MysqlDatabase implements Database
 	 */
 	public function newQuery()
 	{
-		$query = new MysqlQuery();
+		$query = new PDOQuery();
 		$this->counts['query']++;
 
 		return $query;
@@ -162,7 +173,7 @@ class MysqlDatabase implements Database
 	{
 		$this->counts['recordset']++;
 
-		return new MysqlRecordset();
+		return new PDORecordset($this);
 	}
 
 	/**
@@ -194,47 +205,50 @@ class MysqlDatabase implements Database
 		$this->counts['update']++;
 		$primary = 0;
 		$priCount = 0;
-		$setField = '';
-		$where = '';
+		$setFieldPDO = '';
+		$wherePDO = '';
 		$this->readFields($tableName);
-		$query = 'UPDATE ' . $tableName . ' SET ';
+		$queryPDO = 'UPDATE ' . $tableName . ' SET ';
+		$keyValuePair = array();
 		foreach ($this->field[$tableName] as $field => $key)
 		{
 
 			if (array_key_exists($field, $recordSet))
 			{
-				if (!empty($setField))
+				if (!empty($setFieldPDO))
 				{
-					$setField .= ', ';
+					$setFieldPDO .= ' , ';
 				}
 
 				if ($recordSet[$field] === 'NULL' || $recordSet[$field] === null || $this->checkForeignkeyToNull($tableName, $field, $recordSet[$field]))
 				{
-					$setField .= $field . ' = NULL';
+					$setFieldPDO .= $field . ' = NULL';
 				}
 				else
 				{
-					$setField .= $field . ' = "' . mysql_real_escape_string($this->getValue($tableName, $field, $recordSet[$field])) . '"';
+					$setFieldPDO .= $field . ' = :' . $field;
+					$keyValuePair[':' . $field] = $this->getValue($tableName, $field, $recordSet[$field]);
 				}
 
 				if ($key == 'PRI')
 				{
 					$priCount++;
-					if (empty($where))
+					if (empty($wherePDO))
 					{
-						$where = ' WHERE ';
+						$wherePDO = ' WHERE ';
 						$primary = $recordSet[$field];
 					}
 					else
 					{
 						// !!! ACHTUNG: bei Multiprimary wird beim update nur der ERSTE zurück geliefert !!!
-						$where .= ' AND ';
+						$wherePDO .= ' AND ';
 					}
-					$where .= $field . ' = ' . mysql_real_escape_string($recordSet[$field]);
+					$wherePDO .= $field . ' = :' . $field;
+					$keyValuePair[':' . $field] = $recordSet[$field];
 				}
 			}
 		}
-		$query .= $setField . $where;
+		$queryPDO .= $setFieldPDO . $wherePDO;
 
 		if ($priCount > 1)
 		{
@@ -246,14 +260,25 @@ class MysqlDatabase implements Database
 			throw new \Exception("Kein Primary key angegeben.");
 		}
 
-		$queryObj = $this->newQuery()->setQueryOnce($query);
-		if ($recordSet = $this->newRecordSet()->execute($queryObj)->isSuccessful())
+
+		try
 		{
-			return $primary;
+			$stmt = $this->getConnection()->prepare($queryPDO);
+			foreach ($keyValuePair as $key => $value)
+			{
+				$stmt->bindValue($key, $value);
+			}
+			if ($stmt->execute())
+			{
+				return $primary;
+			}
+
+		} catch (\PDOException $e)
+		{
+			syslog(LOG_ERR, $e->getMessage());
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -302,9 +327,9 @@ class MysqlDatabase implements Database
 	{
 		$this->counts['insert']++;
 		$setField = '';
+		$keyValuePair = array();
 		$this->readFields($tableName);
 		$query = 'INSERT INTO ' . $tableName . ' SET ';
-
 
 		foreach ($this->field[$tableName] as $field => $key)
 		{
@@ -321,7 +346,8 @@ class MysqlDatabase implements Database
 				}
 				else
 				{
-					$setField .= $field . ' = "' . mysql_real_escape_string($this->getValue($tableName, $field, $recordSet[$field])) . '"';
+					$setField .= $field . ' = :' . $field;
+					$keyValuePair[':' . $field] = $recordSet[$field];
 				}
 
 			}
@@ -334,20 +360,28 @@ class MysqlDatabase implements Database
 
 		$query .= $setField;
 
-		$queryObj = $this->newQuery()->setQueryOnce($query);
 
-		$execRs = $this->newRecordSet()->execute($queryObj);
-
-		if ($execRs->isSuccessful())
+		try
 		{
-			$id = mysql_insert_id();
-			$pri = $this->getPrimary($tableName);
-			if (isset($recordSet[$pri]) && !empty($recordSet[$pri]))
+			$stmt = $this->getConnection()->prepare($query);
+			foreach ($keyValuePair as $key => $value)
 			{
-				$id = $recordSet[$pri];
+				$stmt->bindValue($key, $value);
 			}
+			if ($stmt->execute())
+			{
+				$id = intval($this->getConnection()->lastInsertId());
+				$pri = $this->getPrimary($tableName);
+				if (isset($recordSet[$pri]) && !empty($recordSet[$pri]))
+				{
+					$id = $recordSet[$pri];
+				}
 
-			return $id;
+				return $id;
+			}
+		} catch (\PDOException $e)
+		{
+			syslog(LOG_ERR, $e->getMessage());
 		}
 
 		return false;
@@ -399,7 +433,8 @@ class MysqlDatabase implements Database
 					}
 
 					$priCount++;
-					$where = $where . $field . ' = ' . mysql_real_escape_string($recordSet[$field]);
+					//$where = $where . $field . ' = ' . mysql_real_escape_string($recordSet[$field]);
+					$where = $where . $field . ' = ' . $this->clear($recordSet[$field]);
 					$primary = $recordSet[$field];
 				}
 			}
@@ -425,8 +460,8 @@ class MysqlDatabase implements Database
 	{
 		if (!isset($this->field[$tableName]))
 		{
-			$res = mysql_query('DESCRIBE ' . $tableName);
-			while ($res && $row = mysql_fetch_array($res))
+			$sql = 'DESCRIBE ' . $tableName;
+			foreach ($this->getConnection()->query($sql) as $row)
 			{
 				$this->field[$tableName][$row['Field']] = $row['Key'];
 				$this->fieldDescribe[$tableName][$row['Field']] = $row;
