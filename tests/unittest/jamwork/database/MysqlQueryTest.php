@@ -85,8 +85,14 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddWhere_numeric()
 	{
-		$this->mysqlQuery->addWhere('feld2',"88");
+		$this->mysqlQuery->addWhere('feld2',88);
 		$this->assertSame('SELECT * FROM  WHERE feld2 = 88',$this->mysqlQuery->get());
+	}
+
+	public function testAddWhere_numericAsString()
+	{
+		$this->mysqlQuery->addWhere('feld2',"88");
+		$this->assertSame('SELECT * FROM  WHERE feld2 = "88"',$this->mysqlQuery->get());
 	}
 
 	public function testAddWhere_array()
@@ -275,9 +281,16 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddWhereBetween_numeric()
 	{
-		$this->mysqlQuery->addWhereBetween('feld1','1',2);
+		$this->mysqlQuery->addWhereBetween('feld1',1,2);
 
 		$this->assertSame('SELECT * FROM  WHERE feld1 between 1 AND 2',$this->mysqlQuery->get());
+	}
+
+	public function testAddWhereBetween_numericAsString()
+	{
+		$this->mysqlQuery->addWhereBetween('feld1','1',2);
+
+		$this->assertSame('SELECT * FROM  WHERE feld1 between "1" AND "2"',$this->mysqlQuery->get());
 	}
 
 	public function testAddWhereBetween_string()

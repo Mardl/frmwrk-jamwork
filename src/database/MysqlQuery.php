@@ -191,13 +191,13 @@ class MysqlQuery implements Query
 			//throw new \ErrorException('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 			throw new \Exception('ACHTUNG: Aufruf von AddWhere mit Null Value! Bitte überprüfen!');
 		}
-		elseif (is_numeric($value))
-		{
-			$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
-		}
 		elseif (is_string($value))
 		{
 			$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
+		}
+		elseif (is_numeric($value))
+		{
+			$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
 		}
 		elseif (is_array($value))
 		{
@@ -278,13 +278,13 @@ class MysqlQuery implements Query
 			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
 		}
 
-		if (is_numeric($valueMin))
+		if (is_string($valueMin))
 		{
-			$string .= $field . ' between ' . mysql_real_escape_string($valueMin) . ' AND ' . mysql_real_escape_string($valueMax);
+			$string .= $field . ' between "' . mysql_real_escape_string($valueMin) . '" AND "' . mysql_real_escape_string($valueMax) . '"';
 		}
 		else
 		{
-			$string .= $field . ' between "' . mysql_real_escape_string($valueMin) . '" AND "' . mysql_real_escape_string($valueMax) . '"';
+			$string .= $field . ' between ' . mysql_real_escape_string($valueMin) . ' AND ' . mysql_real_escape_string($valueMax);
 		}
 
 		return $this->where($string);
@@ -346,20 +346,17 @@ class MysqlQuery implements Query
 		}
 		else
 		{
-			if (is_numeric($value))
+			if (is_string($value))
+			{
+				$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
+			}
+			elseif (is_numeric($value))
 			{
 				$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value);
 			}
 			else
 			{
-				if (is_string($value))
-				{
-					$string .= $field . ' ' . $op . ' "' . mysql_real_escape_string($value) . '"';
-				}
-				else
-				{
-					throw new \InvalidArgumentException('ACHTUNG: Aufruf von addHaving mit unbekannten Parameter! Bitte überprüfen!');
-				}
+				throw new \InvalidArgumentException('ACHTUNG: Aufruf von addHaving mit unbekannten Parameter! Bitte überprüfen!');
 			}
 		}
 
@@ -620,13 +617,13 @@ class MysqlQuery implements Query
 				{
 					$setValues .= $key . " = NULL";
 				}
-				elseif (is_numeric($value))
-				{
-					$setValues .= $key . " = " . mysql_real_escape_string($value);
-				}
 				elseif (is_string($value))
 				{
 					$setValues .= $key . ' = "' . mysql_real_escape_string($value) . '"';
+				}
+				elseif (is_numeric($value))
+				{
+					$setValues .= $key . " = " . mysql_real_escape_string($value);
 				}
 				else
 				{
