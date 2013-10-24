@@ -21,6 +21,11 @@ interface Database
 	public function __construct($host, $user, $pwd, $name);
 
 	/**
+	 * @return mixed
+	 */
+	public function getConnection();
+
+	/**
 	 * @return Query
 	 */
 	public function newQuery();

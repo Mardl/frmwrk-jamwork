@@ -36,9 +36,21 @@ class MysqlDatabase implements Database
 		$this->dbpwd = $pwd;
 		$this->dbname = $name;
 
-		$this->connection = mysql_connect($this->dbhost, $this->dbuser, $this->dbpwd) or die ('Error connecting to mysql');
+		$this->getConnection();
+	}
 
-		$db = mysql_select_db($this->dbname) or die ('Error select_db to mysql');
+	/**
+	 * @return mixed
+	 */
+	public function getConnection()
+	{
+		if (!$this->connection)
+		{
+			$this->connection = mysql_connect($this->dbhost, $this->dbuser, $this->dbpwd) or die ('Error connecting to mysql');
+
+			$db = mysql_select_db($this->dbname) or die ('Error select_db to mysql');
+		}
+		return $this->connection;
 	}
 
 	/**
