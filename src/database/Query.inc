@@ -7,7 +7,7 @@ namespace jamwork\database;
  *
  * @category Jamwork
  * @package  Jamwork\database
- * @author   Martin Eisenführer <martin@dreiwerken.de>
+ * @author   Martin Eisenfï¿½hrer <martin@dreiwerken.de>
  */
 interface Query
 {
@@ -142,4 +142,13 @@ interface Query
 	 * @return Query
 	 */
 	public function leftJoin($join);
+
+	/**
+	 * @param string $field
+	 * @param mixed  $value
+	 * @param bool   $positiv
+	 * @return mixed
+	 */
+	public function innerStatement($field, $value, $positiv = true);
+
 }

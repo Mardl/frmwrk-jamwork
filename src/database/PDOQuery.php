@@ -81,19 +81,12 @@ class PDOQuery implements Query
 	protected $keyValuePair = array();
 
 	/**
-	 * @var int
-	 */
-	private $prepare = 0;
-
-
-	/**
 	 * @return string
 	 */
 	private function getPrepareField()
 	{
-		$this->prepare++;
-
-		return 'fieldName' . $this->prepare;
+		$nextOne = uniqid('fieldName');
+		return $nextOne;
 	}
 
 	/**
@@ -225,29 +218,6 @@ class PDOQuery implements Query
 	}
 
 	/**
-	 * @param string     $field
-	 * @param string|int $value
-	 * @param string     $op
-	 * @param string     $concat
-	 * @return PDOQuery|Query
-	 */
-	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
-	{
-		$string = '';
-
-		if (!empty($this->clause) || $this->openClosure)
-		{
-			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
-		}
-
-		$fieldUnique = $this->getPrepareField();
-		$string .= $field . ' ' . $op . ' :' . $fieldUnique . ' ';
-		$this->keyValuePair[':' . $fieldUnique] = $value;
-
-		return $this->where($string);
-	}
-
-	/**
 	 * @param string     $field    betroffenens Feld
 	 * @param string|int $valueMin Wert von
 	 * @param string|int $valueMax Wert bis
@@ -315,7 +285,61 @@ class PDOQuery implements Query
 	 */
 	public function innerStatement($field, $value, $positiv = true)
 	{
-		return $this->addWhereFunc($field, '(' . $value . ')', $positiv ? 'IN' : 'NOT IN');
+		if (!($value instanceof PDOQuery))
+		{
+			throw new \Exception('InnerStatement muss PDOQuery Objekt sein!');
+		}
+
+		return $this->innerStatementEx($field, $value, $positiv);
+	}
+
+	/**
+	 * @param string                     $field
+	 * @param \jamwork\database\PDOQuery $query
+	 * @param bool                       $positiv
+	 * @return string
+	 */
+	private function innerStatementEx($field, PDOQuery $query, $positiv = true)
+	{
+		$innerStmt = $query->get();
+
+		$this->mergeBindValues($query->getBindValues());
+
+		$string = '';
+
+		if (!empty($this->clause) || $this->openClosure)
+		{
+			$string = $this->concatToClause($this->clause, 'AND', $this->openClosure);
+		}
+
+		$string .= $field . ' ' . ($positiv ? 'IN' : 'NOT IN') . ' ' . '(' . $innerStmt . ')' . ' ';
+
+		return $this->where($string);
+
+	}
+
+	/**
+	 * Verwenden wenn SQL-Parameter wie Date(), Now() usw. verwendet wird
+	 *
+	 * @param string     $field
+	 * @param string|int $value
+	 * @param string     $op
+	 * @param string     $concat
+	 * @return MysqlQuery|Query
+	 */
+	public function addWhereFunc($field, $value, $op = '=', $concat = 'AND')
+	{
+		$string = '';
+
+		if (!empty($this->clause) || $this->openClosure)
+		{
+			$string = $this->concatToClause($this->clause, $concat, $this->openClosure);
+			//$string = $this->clause.' '.$concat.' ';
+		}
+
+		$string .= $field . ' ' . $op . ' ' . $value . ' ';
+
+		return $this->where($string);
 	}
 
 	/**
@@ -527,6 +551,15 @@ class PDOQuery implements Query
 	}
 
 	/**
+	 * @param array $keyValuePairs
+	 * @return array
+	 */
+	public function mergeBindValues(array $keyValuePairs)
+	{
+		$this->keyValuePair = array_merge($this->keyValuePair, $keyValuePairs);
+	}
+
+	/**
 	 * @return string
 	 */
 	private function getSelect()
@@ -562,7 +595,10 @@ class PDOQuery implements Query
 		{
 			$query .= $this->fields;
 		}
-		$query .= " FROM " . $this->table;
+		if (!empty($this->table))
+		{
+			$query .= " FROM " . $this->table;
+		}
 		if (!empty($this->jointable))
 		{
 			foreach ($this->jointable as $key => $value)

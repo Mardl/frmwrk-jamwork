@@ -9,7 +9,7 @@ use jamwork\database\PDODatabase;
  *
  * @category Jamwork
  * @package  unittest\jamwork\database
- * @author   Martin Eisenführer <martin@dreiwerken.de>
+ * @author   Martin EisenfÃ¼hrer <martin@dreiwerken.de>
  */
 class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,8 +34,6 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->setExpectedException('\PDOException');
 		$this->pdoRecordset->execute($this->query);
-		$this->assertAttributeEquals($this->query, 'query', $this->pdoRecordset);
-		$this->assertAttributeEquals(false, 'result', $this->pdoRecordset);
 	}
 
 	/**

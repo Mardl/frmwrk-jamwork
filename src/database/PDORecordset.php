@@ -64,12 +64,15 @@ class PDORecordset implements Recordset
 
 	/**
 	 * Führt den übergebenen Statement String aus
+	 * @throws \PDOException
 	 * @return PDORecordset
 	 */
 	private function executeStmt()
 	{
 		$this->result = false;
 		$stmtString = $this->query->get();
+		//syslog(LOG_INFO, $stmtString);
+
 		try
 		{
 			if ($this->query->isQueryOnce())
@@ -93,7 +96,8 @@ class PDORecordset implements Recordset
 		{
 			$this->errorMessage = $e->getMessage();
 			$this->errorNumber = $e->getCode();
-			throw new \PDOException($e->getMessage(), $e->getCode());
+
+			throw new \PDOException($this->errorMessage);
 		}
 
 		if (!$this->result && isset($stmt))

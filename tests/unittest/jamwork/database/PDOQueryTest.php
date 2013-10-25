@@ -38,7 +38,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$sollSelect = array('header_one', 'header_one');
 		$this->pdoQuery->select($sollSelect);
 		$this->assertAttributeEquals($sollSelect, 'fields', $this->pdoQuery);
-		$this->assertSame('SELECT header_one,header_one FROM', $this->pdoQuery->get());
+		$this->assertSame('SELECT header_one,header_one', $this->pdoQuery->get());
 	}
 
 	/**
@@ -87,7 +87,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$this->pdoQuery->closeClosure();
 
 
-		$this->assertSame('SELECT * FROM  WHERE  )', $this->pdoQuery->get());
+		$this->assertSame('SELECT * WHERE  )', $this->pdoQuery->get());
 	}
 
 	/**
@@ -112,7 +112,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->addWhere('feld1', "erg1");
 		$this->pdoQuery->addWhere('feld2', "erg2");
-		$this->assertSame('SELECT * FROM  WHERE feld1 = erg1 AND feld2 = erg2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = erg1 AND feld2 = erg2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -121,7 +121,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhere_numeric()
 	{
 		$this->pdoQuery->addWhere('feld2', 88);
-		$this->assertSame('SELECT * FROM  WHERE feld2 = 88', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld2 = 88', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -130,7 +130,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhere_numericAsString()
 	{
 		$this->pdoQuery->addWhere('feld2', "88");
-		$this->assertSame('SELECT * FROM  WHERE feld2 = 88', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld2 = 88', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -139,7 +139,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhere_array()
 	{
 		$this->pdoQuery->addWhere('feld2', array(1, 2, 3));
-		$this->assertSame('SELECT * FROM  WHERE feld2 IN (1,2,3)', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld2 IN (1,2,3)', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -161,10 +161,21 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @return void
 	 */
+	public function testInnerStatement_Exception()
+	{
+		$this->setExpectedException('\Exception');
+		$this->pdoQuery->innerStatement('feld2', 'select 1');
+	}
+
+	/**
+	 * @return void
+	 */
 	public function testInnerStatement()
 	{
-		$this->pdoQuery->innerStatement('feld2', 'select 1');
-		$this->assertSame('SELECT * FROM  WHERE feld2 IN (select 1)', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$pdoQuery = new PDOQuery();
+		$pdoQuery->select(1);
+		$this->pdoQuery->innerStatement('feld2', $pdoQuery);
+		$this->assertSame('SELECT * WHERE feld2 IN (SELECT 1)', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -176,7 +187,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame("feld2 IN (as,df,qwert)", $this->replaceBind($this->pdoQuery->getBindValues(), $ret));
 
 		// die clause wird NICHT erweitert!
-		$this->assertSame('SELECT * FROM', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT *', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -202,7 +213,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->openClosure();
 		$this->pdoQuery->addWhere('feld2', "erg2");
-		$this->assertSame('SELECT * FROM  WHERE  (feld2 = erg2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE  (feld2 = erg2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 
@@ -212,7 +223,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereIsNull()
 	{
 		$this->pdoQuery->addWhereIsNull('feld1');
-		$this->assertSame('SELECT * FROM  WHERE feld1 IS NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 IS NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -221,7 +232,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereIsNull_Equal()
 	{
 		$this->pdoQuery->addWhereIsNull('feld1', '=');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -230,10 +241,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereIsNull_Twice()
 	{
 		$this->pdoQuery->addWhereIsNull('feld1', '=');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$this->pdoQuery->addWhereIsNull('feld2', 'is');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NULL  AND feld2 is NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NULL  AND feld2 is NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -242,10 +253,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereIsNull_TwiceConcat()
 	{
 		$this->pdoQuery->addWhereIsNull('feld1', '=');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$this->pdoQuery->addWhereIsNull('feld2', 'is', 'OR');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NULL  OR feld2 is NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NULL  OR feld2 is NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -255,7 +266,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->openClosure();
 		$this->pdoQuery->addWhereIsNull('feld1', '=');
-		$this->assertSame('SELECT * FROM  WHERE  (feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE  (feld1 = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 
@@ -265,7 +276,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereFunc()
 	{
 		$this->pdoQuery->addWhereFunc('feld1', 'NOW()');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -274,7 +285,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereFunc_Equal()
 	{
 		$this->pdoQuery->addWhereFunc('feld1', 'NOW()');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -283,10 +294,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereFunc_Twice()
 	{
 		$this->pdoQuery->addWhereFunc('feld1', 'NOW()');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$this->pdoQuery->addWhereFunc('feld2', 'DATE()', 'is');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NOW()  AND feld2 is DATE()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NOW()  AND feld2 is DATE()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -295,10 +306,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereFunc_TwiceConcat()
 	{
 		$this->pdoQuery->addWhereFunc('feld1', 'NOW()');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$this->pdoQuery->addWhereFunc('feld2', 'DATE()', 'is', 'or');
-		$this->assertSame('SELECT * FROM  WHERE feld1 = NOW()  or feld2 is DATE()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 = NOW()  or feld2 is DATE()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -308,7 +319,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->openClosure();
 		$this->pdoQuery->addWhereFunc('feld1', 'NOW()', '<');
-		$this->assertSame('SELECT * FROM  WHERE  (feld1 < NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE  (feld1 < NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -317,11 +328,11 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereFunc_OpenClosureTwice()
 	{
 		$this->pdoQuery->addWhereFunc('feld1', 'NOW()', '<');
-		$this->assertSame('SELECT * FROM  WHERE feld1 < NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 < NOW()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$this->pdoQuery->openClosure();
 		$this->pdoQuery->addWhereFunc('feld2', 'DATE()', 'is', 'or');
-		$this->assertSame('SELECT * FROM  WHERE feld1 < NOW()  or (feld2 is DATE()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 < NOW()  or (feld2 is DATE()', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -330,7 +341,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereLike()
 	{
 		$this->pdoQuery->addWhereLike('feld1', 'test');
-		$this->assertSame('SELECT * FROM  WHERE feld1 LIKE %test%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 LIKE %test%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -339,10 +350,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereLike_Twice()
 	{
 		$this->pdoQuery->addWhereLike('feld1', 'test');
-		$this->assertSame('SELECT * FROM  WHERE feld1 LIKE %test%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 LIKE %test%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$this->pdoQuery->addWhereLike('feld2', 'test2', '%s');
-		$this->assertSame('SELECT * FROM  WHERE feld1 LIKE %test%  AND feld2 LIKE test2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 LIKE %test%  AND feld2 LIKE test2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -351,10 +362,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testAddWhereLike_TwiceConcat()
 	{
 		$this->pdoQuery->addWhereLike('feld1', 'test');
-		$this->assertSame('SELECT * FROM  WHERE feld1 LIKE %test%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 LIKE %test%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$this->pdoQuery->addWhereLike('feld2', 'test2', '%s', 'or');
-		$this->assertSame('SELECT * FROM  WHERE feld1 LIKE %test%  or feld2 LIKE test2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 LIKE %test%  or feld2 LIKE test2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -364,7 +375,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->openClosure();
 		$this->pdoQuery->addWhereLike('feld1', 'unittest');
-		$this->assertSame('SELECT * FROM  WHERE  (feld1 LIKE %unittest%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE  (feld1 LIKE %unittest%', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -390,7 +401,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->addWhereBetween('feld1', 1, 2);
 
-		$this->assertSame('SELECT * FROM  WHERE feld1 between 1 AND 2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 between 1 AND 2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -400,7 +411,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->addWhereBetween('feld1', '1', 2);
 
-		$this->assertSame('SELECT * FROM  WHERE feld1 between 1 AND 2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 between 1 AND 2', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -410,7 +421,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->addWhereBetween('feld1', 'A', 'z');
 
-		$this->assertSame('SELECT * FROM  WHERE feld1 between A AND z', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 between A AND z', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -420,7 +431,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->pdoQuery->addWhereBetween('feld1', 'A"sd', 'z20as');
 
-		$this->assertSame('SELECT * FROM  WHERE feld1 between A"sd AND z20as', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE feld1 between A"sd AND z20as', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -432,7 +443,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 
 		$this->pdoQuery->addWhereBetween('feld1', 'A"sd', 'z20as');
 
-		$this->assertSame('SELECT * FROM  WHERE test = unit AND feld1 between A"sd AND z20as', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE test = unit AND feld1 between A"sd AND z20as', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -444,7 +455,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 
 		$this->pdoQuery->addWhereBetween('feld1', 'A"sd', 'z20as');
 
-		$this->assertSame('SELECT * FROM  WHERE  (feld1 between A"sd AND z20as', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertSame('SELECT * WHERE  (feld1 between A"sd AND z20as', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -541,7 +552,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testaddHaving()
 	{
 		$query = $this->pdoQuery->addHaving('unit', 'test');
-		$this->assertsame('SELECT * FROM  HAVING unit = test', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertsame('SELECT * HAVING unit = test', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -550,7 +561,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testaddHaving_numeric()
 	{
 		$query = $this->pdoQuery->addHaving('unit', 5);
-		$this->assertsame('SELECT * FROM  HAVING unit = 5', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertsame('SELECT * HAVING unit = 5', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -559,10 +570,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testaddHaving_isnull()
 	{
 		$query = $this->pdoQuery->addHaving('unit', null);
-		$this->assertsame('SELECT * FROM  HAVING unit = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertsame('SELECT * HAVING unit = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$query = $this->pdoQuery->addHaving('unit2', null, 'IS');
-		$this->assertsame('SELECT * FROM  HAVING unit = NULL AND unit2 IS NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertsame('SELECT * HAVING unit = NULL AND unit2 IS NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -571,10 +582,10 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	public function testaddHaving_concat()
 	{
 		$query = $this->pdoQuery->addHaving('unit', null);
-		$this->assertsame('SELECT * FROM  HAVING unit = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertsame('SELECT * HAVING unit = NULL', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 
 		$query = $this->pdoQuery->addHaving('unit2', 8, '=', 'OR');
-		$this->assertsame('SELECT * FROM  HAVING unit = NULL OR unit2 = 8', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+		$this->assertsame('SELECT * HAVING unit = NULL OR unit2 = 8', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
 	}
 
 	/**
@@ -700,7 +711,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(5, $limit[0]);
 		$this->assertSame(10, $limit[1]);
 
-		$this->assertSame('SELECT * FROM  LIMIT 5, 10', $this->pdoQuery->get());
+		$this->assertSame('SELECT * LIMIT 5, 10', $this->pdoQuery->get());
 	}
 
 	/**

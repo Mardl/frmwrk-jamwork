@@ -267,6 +267,8 @@ class MysqlQuery implements Query
 	}
 
 	/**
+	 * Verwenden wenn SQL-Parameter wie Date(), Now() usw. verwendet wird
+	 *
 	 * @param string     $field
 	 * @param string|int $value
 	 * @param string     $op
@@ -283,7 +285,7 @@ class MysqlQuery implements Query
 			//$string = $this->clause.' '.$concat.' ';
 		}
 
-		$string .= $field . ' ' . $op . ' ' . mysql_real_escape_string($value) . ' ';
+		$string .= $field . ' ' . $op . ' ' . $value . ' ';
 
 		return $this->where($string);
 	}
@@ -353,7 +355,13 @@ class MysqlQuery implements Query
 	 */
 	public function innerStatement($field, $value, $positiv = true)
 	{
-		return $this->addWhereFunc($field, '(' . $value . ')', $positiv ? 'IN' : 'NOT IN');
+		$innerStmt = $value;
+		if ($value instanceof MysqlQuery)
+		{
+			$innerStmt = $value->get();
+		}
+
+		return $this->addWhereFunc($field, '(' . $innerStmt . ')', $positiv ? 'IN' : 'NOT IN');
 	}
 
 	/**
