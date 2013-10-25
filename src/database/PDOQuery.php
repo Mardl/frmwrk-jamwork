@@ -372,6 +372,11 @@ class PDOQuery implements Query
 	 */
 	public function in($field, array $values)
 	{
+		if (empty($values))
+		{
+			/** Wenn leeres Array reinkommt, MUSS die Bedingung false sein. Leerer String würde die Bedingung aushebeln: Mardl */
+			return '1=2';
+		}
 		$inStatement = array();
 
 		foreach ($values as $item)

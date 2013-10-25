@@ -91,7 +91,7 @@ class PDORecordset implements Recordset
 			}
 		} catch (\PDOException  $e)
 		{
-			syslog(LOG_ERR, $e->getMessage());
+			throw new \PDOException($e->getMessage(), $e->getCode());
 		}
 
 		if (!$this->result)
