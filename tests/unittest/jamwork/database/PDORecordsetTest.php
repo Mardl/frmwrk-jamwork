@@ -32,6 +32,7 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExecute()
 	{
+		$this->setExpectedException('\PDOException');
 		$this->pdoRecordset->execute($this->query);
 		$this->assertAttributeEquals($this->query, 'query', $this->pdoRecordset);
 		$this->assertAttributeEquals(false, 'result', $this->pdoRecordset);
@@ -54,6 +55,7 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGet_FindNothing()
 	{
+		$this->query->select('*')->from('testtable')->addWhere('1','2');
 		$this->pdoRecordset->execute($this->query);
 		$query = $this->pdoRecordset->get();
 		$this->assertFalse($query);
@@ -83,19 +85,10 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCount_Empty()
 	{
+		$this->query->select('*')->from('testtable')->addWhere('1','2');
 		$this->pdoRecordset->execute($this->query);
 		$count = $this->pdoRecordset->count();
-		$this->assertFalse($count);
-	}
-
-	/**
-	 * @return void
-	 */
-	public function testIsSuccessfull_negativ()
-	{
-		$this->query->select('*')->from('not_existing_table');
-		$ret = $this->pdoRecordset->execute($this->query)->isSuccessfull();
-		$this->assertFalse($ret);
+		$this->assertSame(0, $count);
 	}
 
 	/**
@@ -151,11 +144,17 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetErrorMessage()
 	{
-		$this->query->select('*')->from('not_existing_table');
-		$this->pdoRecordset->execute($this->query);
+		try
+		{
+			$this->query->select('*')->from('not_existing_table');
+			$this->pdoRecordset->execute($this->query);
+		} catch (\Exception $e)
+		{
+
+		}
 		$errorMsg = $this->pdoRecordset->getErrorMessage();
 
-		$this->assertSame(array('42S02', 1146, "Table 'test_jamwork.not_existing_table' doesn't exist"), $errorMsg);
+		$this->assertSame("SQLSTATE[42S02]: Base table or view not found: 1146 Table 'test_jamwork.not_existing_table' doesn't exist", $errorMsg);
 	}
 
 	/**
@@ -163,8 +162,14 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetErrorNumber()
 	{
-		$this->query->select('*')->from('not_existing_table');
-		$this->pdoRecordset->execute($this->query);
+		try
+		{
+			$this->query->select('*')->from('not_existing_table');
+			$this->pdoRecordset->execute($this->query);
+		} catch (\Exception $e)
+		{
+
+		}
 		$errorNumber = $this->pdoRecordset->getErrorNumber();
 
 		$this->assertSame('42S02',$errorNumber);
@@ -175,7 +180,7 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->pdoDB = new PDODatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
+		$this->pdoDB = new PDODatabase('dakota.intern', 'test_jamwork', 'test_jamwork', 'test_jamwork');
 		$this->query = $this->pdoDB->newQuery();
 		$this->pdoRecordset = $this->pdoDB->newRecordSet();
 

@@ -91,10 +91,12 @@ class PDORecordset implements Recordset
 			}
 		} catch (\PDOException  $e)
 		{
+			$this->errorMessage = $e->getMessage();
+			$this->errorNumber = $e->getCode();
 			throw new \PDOException($e->getMessage(), $e->getCode());
 		}
 
-		if (!$this->result)
+		if (!$this->result && isset($stmt))
 		{
 			$this->errorMessage = $stmt->errorInfo();
 			$this->errorNumber = $stmt->errorCode();
