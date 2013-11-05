@@ -97,8 +97,7 @@ class PDORecordset implements Recordset
 			$this->errorMessage = $e->getMessage();
 			$this->errorNumber = $e->getCode();
 
-			// Exception raus, solange unittests nicht sauber sind
-			//throw new \PDOException($this->errorMessage);
+			throw new \PDOException($this->errorMessage);
 		}
 
 		if (!$this->result && isset($stmt))
