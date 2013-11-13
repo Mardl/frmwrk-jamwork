@@ -88,7 +88,7 @@ class Registry
 	 */
 	public function __unset($key)
 	{
-		return $this->unsetKey($key, self::KEY_REGISTRY);
+		$this->unsetKey($key, self::KEY_REGISTRY);
 	}
 
 
@@ -327,5 +327,26 @@ class Registry
 
 		throw new \Exception("Registry-Value '{$key}' ist nicht gesetzt!");
 	}
+
+	/**
+	 * Pfad zu log4php/Logger.php muss inkludiert sein!
+	 *
+	 * @param string|object $name
+	 * @param bool   $changeSlashes
+	 * @return \Logger
+	 */
+	public function getLogger($name, $changeSlashes = true)
+	{
+		if (is_object($name))
+		{
+			$name = get_class($name);
+		}
+		if ($changeSlashes)
+		{
+			$name = str_replace('\\', '.', $name);
+		}
+		return \Logger::getLogger($name);
+	}
+
 
 }
