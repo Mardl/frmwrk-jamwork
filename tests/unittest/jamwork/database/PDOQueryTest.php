@@ -864,6 +864,64 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expects, $statement);
 	}
 
+	/**
+	 * Tests für Aufbau komplexer Query mit dem Querybuilder.
+	 * Cases/Expects wurden aus einem echten System (Favesync) verwendet.
+	 *
+	 * @return void
+	 */
+	public function testComplexQueryBuilding3()
+	{
+		$query = $this->pdoQuery;
+		$query->select('*')->from('table_content');
+
+		// User Filter
+		$idUuser = 56668;
+		$query->join('table_faves')->on('cnt_idfave = fav_id');
+		$query->addWhere('fav_iduser', $idUuser);
+
+		$tags = array(10, 150, 5556, 23, 54);
+		// Join String....
+		$i=0;
+		foreach($tags as $tagid) {
+			$i++;
+			$join = 'j'.$i;
+			$query->join('table_tags as '.$join);
+			$query->on($join.".rct_idcontent = cnt_id");
+			$query->addWhere($join.".rct_idtag", $tagid);
+		}
+		// Date Filter
+		$date = '25-11-2012';
+		$query->addWhere("cnt_datetime", $date, '>');
+
+		$query->orderBy('cnt_datetime DESC');
+
+		$statement = $query->get();
+
+		$expects = '
+		select * from table_content
+			left join table_faves on cnt_idfave = fav_id
+			left join table_tags as j1 on j1.rct_idcontent = cnt_id
+			left join table_tags as j2 on j2.rct_idcontent = cnt_id
+			left join table_tags as j3 on j3.rct_idcontent = cnt_id
+			left join table_tags as j4 on j4.rct_idcontent = cnt_id
+			left join table_tags as j5 on j5.rct_idcontent = cnt_id
+		where fav_iduser = ?
+			and j1.rct_idtag = ?
+			and j2.rct_idtag = ?
+			and j3.rct_idtag = ?
+			and j4.rct_idtag = ?
+			and j5.rct_idtag = ?
+			and cnt_datetime > ?
+		order by cnt_datetime DESC
+		';
+
+		$expects = $this->cleanStatement($expects);
+		$statement = $this->cleanStatement($statement);
+
+		$this->assertSame($expects, $statement);
+	}
+
 	private function cleanStatement($stmt)
 	{
 		$stmt = preg_replace('/(:fieldName[a-f0-9]{13})/i', '?', $stmt);
@@ -873,6 +931,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$stmt = preg_replace('/(\s\))/is', ')', $stmt);
 		$stmt = preg_replace('/(\(\s)/is', '(', $stmt);
 		$stmt = trim($stmt);
+		$stmt = strtolower($stmt);
 		return $stmt;
 	}
 
