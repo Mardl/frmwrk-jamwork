@@ -741,7 +741,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$query->addWhere('fav_tmpclone', 0);
 		$query->addWhere('fav_invite', 0);
 		$query->addWhere('usr_id', 111, '!=');
-		$query->in('rft_idtag', $inTags);
+		$query->addWhere('rft_idtag', $inTags);
 		$query->openClosure();
 		$query->addWhere('fav_public', 1);
 		$query->openClosure();
@@ -765,6 +765,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 			AND fav_tmpclone = ?
 			AND fav_invite = ?
 			AND usr_id != ?
+			AND rft_idtag IN (?,?,?,?,?)
 			AND (
 				fav_public = ?
 				OR (
@@ -772,9 +773,9 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 					AND fav_id IN (
 						SELECT fav_id FROM test_table1
 							LEFT JOIN join_table3 ON fel_idfave = fav_id
-							WHERE fav_public = ?
-								AND fel_new = ?
-								AND fel_idfave_fellow = ?
+						WHERE fav_public = ?
+							AND fel_new = ?
+							AND fel_idfave_fellow = ?
 					)
 				)
 			)
