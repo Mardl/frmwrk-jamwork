@@ -788,8 +788,85 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expects, $statement);
 	}
 
+	/**
+	 * Tests für Aufbau komplexer Query mit dem Querybuilder.
+	 * Case identisch mit dem Vortest, jedoch werden diesmal
+	 * die query-Methoden in anderer Reihenfolge aufgerufen
+	 *
+	 * @return void
+	 */
+	public function testComplexQueryBuilding2()
+	{
+		$inQuery = new PDOQuery();
+		$inQuery->select('fav_id')->from('test_table1')
+			->addWhere('fav_public', '0')
+			->addWhere('fel_new', 0)
+			->addWhere('fel_idfave_fellow', 222)
+			->join('join_table3')->on("fel_idfave = fav_id");
+
+		$query = $this->pdoQuery;
+		$query->select('*');
+		$query->join('join_table1');
+		$query->from('test_table2');
+		$query->on('fav_iduser = usr_id');
+
+		$inTags = array(10, 15, 22, 2555, 13);
+
+		$query->groupBy('fav_id');
+
+		$query->addWhere('usr_confirm', 1);
+		$query->addWhere('fav_deleted', 0);
+		$query->addWhere('fav_tmpclone', 0);
+		$query->addWhere('fav_invite', 0);
+		$query->addWhere('usr_id', 111, '!=');
+		$query->addWhere('rft_idtag', $inTags);
+		$query->openClosure();
+		$query->addWhere('fav_public', 1);
+		$query->openClosure();
+		$query->addWhere('fav_public', 0, '=', 'OR');
+		$query->innerStatement('fav_id', $inQuery);
+		$query->closeClosure();
+		$query->closeClosure();
+
+		$query->join('join_table2')->on('(rft_idfave = fav_id AND rft_active = 1)');
+
+		$statement = $query->get();
+
+		$expects = '
+		SELECT * FROM test_table2
+			LEFT JOIN join_table1 ON fav_iduser = usr_id
+			LEFT JOIN join_table2 ON (rft_idfave = fav_id AND rft_active = 1)
+		WHERE usr_confirm = ?
+			AND fav_deleted = ?
+			AND fav_tmpclone = ?
+			AND fav_invite = ?
+			AND usr_id != ?
+			AND rft_idtag IN (?,?,?,?,?)
+			AND (
+				fav_public = ?
+				OR (
+					fav_public = ?
+					AND fav_id IN (
+						SELECT fav_id FROM test_table1
+							LEFT JOIN join_table3 ON fel_idfave = fav_id
+						WHERE fav_public = ?
+							AND fel_new = ?
+							AND fel_idfave_fellow = ?
+					)
+				)
+			)
+		GROUP BY fav_id
+		';
+
+		$expects = $this->cleanStatement($expects);
+		$statement = $this->cleanStatement($statement);
+
+		$this->assertSame($expects, $statement);
+	}
+
 	private function cleanStatement($stmt)
 	{
+		$stmt = preg_replace('/(:fieldName[a-f0-9]{13})/i', '?', $stmt);
 		$stmt = preg_replace('/([\r\t])/is', '', $stmt);
 		$stmt = preg_replace('/([\n])/is', ' ', $stmt);
 		$stmt = preg_replace('/(\s\s)/is', ' ', $stmt);
