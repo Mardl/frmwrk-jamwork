@@ -145,12 +145,18 @@ class PDODatabase implements Database
 	{
 		if ($this->transaction > 0)
 		{
+			$info = $this->getConnection()->errorInfo();
+
 			$this->transaction = 0;
 			$this->getConnection()->rollBack();
 
 			if ($throwException)
 			{
-				throw new \Exception("DB-Fehler\r\nFehler-Nr: " . $this->getConnection()->errorCode() . "\r\nFehler: " . $this->getConnection()->errorInfo());
+				if (is_array($info))
+				{
+					$info = var_export($info,true);
+				}
+				throw new \Exception("DB-Fehler \r\nFehler-Nr: " . $this->getConnection()->errorCode() . "\r\nFehler: " . $info);
 			}
 		}
 	}
