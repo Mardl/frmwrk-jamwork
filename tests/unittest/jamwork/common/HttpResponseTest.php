@@ -185,25 +185,24 @@ class HttpResponseTest extends \PHPUnit_Framework_TestCase
 
 	public function testDownloadFile_nofile()
 	{
-		$response = $this->getMockBuilder('jamwork\common\HttpResponse')->disableOriginalConstructor()->setMethods(array(
-		                                                                                                                'addHeader',
-		                                                                                                                'flush',
-		                                                                                                                'write'
-		                                                                                                           ))->getMock();
+		/** @var $response \jamwork\common\HttpResponse */
+		$response = $this->getMockBuilder('jamwork\common\HttpResponse')
+			->disableOriginalConstructor()
+			->setMethods(
+				array(
+					'addHeader',
+					'flush',
+					'write'
+				)
+			)
+			->getMock();
 
-		$response->expects($this->exactly(4))->method('addHeader')->will($this->returnValue(true));
-
+		$response->expects($this->exactly(7))->method('addHeader')->will($this->returnValue(true));
 		$response->expects($this->exactly(0))->method('write')->will($this->returnValue(true));
-
 		$response->expects($this->exactly(0))->method('flush')->will($this->returnValue(true));
-		try
-		{
-			$response->downloadFile('FOO', true);
-		} catch (\Exception $expected)
-		{
-			return;
-		}
-		$this->fail('An expected Exception has not been raised.');
+
+		// $this->setExpectedException('\Exception');
+		$response->downloadFile('FOO', true);
 	}
 
 	public function testHasHeader()
