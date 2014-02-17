@@ -2,6 +2,7 @@
 
 namespace jamwork\database;
 
+use jamwork\common\Registry;
 use PDO;
 use PDOException;
 
@@ -72,13 +73,19 @@ class PDODatabase implements Database
 		$this->dbpwd = $pwd;
 		$this->dbname = $name;
 		$this->dboptions = array_merge(array('port' => '3306', 'driver' => 'mysql', 'charset' => 'UTF8'), $options);
+	}
 
-
+	/**
+	 * @return void
+	 */
+	public function openConnection()
+	{
 		$this->getConnection();
 	}
 
 	/**
-	 * @return bool|PDO
+	 * @throws \Exception
+	 * @return PDO
 	 */
 	public function getConnection()
 	{
@@ -97,8 +104,7 @@ class PDODatabase implements Database
 				$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			} catch (PDOException $e)
 			{
-				print "Error!: " . $e->getMessage() . "<br/>";
-				die();
+				throw new \Exception($e->getMessage());
 			}
 		}
 
