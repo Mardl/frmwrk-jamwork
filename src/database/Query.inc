@@ -151,4 +151,9 @@ interface Query
 	 */
 	public function innerStatement($field, $value, $positiv = true);
 
+	/**
+	 * @return string
+	 */
+	public function getPreparedStatement();
+
 }

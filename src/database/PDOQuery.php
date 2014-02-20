@@ -668,4 +668,18 @@ class PDOQuery implements Query
 		return $strOut;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getPreparedStatement()
+	{
+		$statement = $this->getSelect();
+		foreach ($this->getBindValues() as $key => $value)
+		{
+			$statement = str_replace($key, "'".$value."'", $statement);
+		}
+
+		return $statement;
+	}
+
 }

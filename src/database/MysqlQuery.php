@@ -714,4 +714,12 @@ class MysqlQuery implements Query
 		return $strOut;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getPreparedStatement()
+	{
+		return $this->get();
+	}
+
 }

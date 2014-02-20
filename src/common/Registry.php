@@ -10,7 +10,7 @@ use jamwork\template\Template;
  *
  * @category Jamwork
  * @package  Jamwork\common
- * @author   Martin Eisenführer <martin@dreiwerken.de>
+ * @author   Martin Eisenfï¿½hrer <martin@dreiwerken.de>
  */
 class Registry
 {
