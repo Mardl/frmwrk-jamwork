@@ -104,7 +104,7 @@ class PDODatabase implements Database
 				$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			} catch (PDOException $e)
 			{
-				throw new \Exception($e->getMessage());
+				throw new \Exception('Open PDO Connection: '.$e->getMessage());
 			}
 		}
 
@@ -152,6 +152,7 @@ class PDODatabase implements Database
 		if ($this->transaction > 0)
 		{
 			$info = $this->getConnection()->errorInfo();
+			$code = $this->getConnection()->errorCode();
 
 			$this->transaction = 0;
 			$this->getConnection()->rollBack();
@@ -162,7 +163,7 @@ class PDODatabase implements Database
 				{
 					$info = var_export($info,true);
 				}
-				throw new \Exception("DB-Fehler \r\nFehler-Nr: " . $this->getConnection()->errorCode() . "\r\nFehler: " . $info);
+				throw new \Exception("DB-Fehler \r\nFehler-Nr: " . $code . "\r\nFehler: " . $info);
 			}
 		}
 	}
@@ -287,7 +288,8 @@ class PDODatabase implements Database
 
 		} catch (\PDOException $e)
 		{
-			syslog(LOG_ERR, $e->getMessage());
+			throw new \Exception('Update PDO Statement: '.$e->getMessage());
+//			syslog(LOG_ERR, $e->getMessage());
 		}
 
 		return false;
@@ -393,7 +395,8 @@ class PDODatabase implements Database
 			}
 		} catch (\PDOException $e)
 		{
-			syslog(LOG_ERR, $e->getMessage());
+			throw new \Exception('Insert PDO Statement: '.$e->getMessage());
+//			syslog(LOG_ERR, $e->getMessage());
 		}
 
 		return false;
