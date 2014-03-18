@@ -194,9 +194,10 @@ class PDODatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$table = 'testtable3';
 		$array = array('tst_id' => '88', 'tst_id4' => 55);
-		$newId = $this->pdoDatabase->insert($table, $array);
 
-		$this->assertFalse($newId);
+		$this->setExpectedException('\Exception');
+		$this->pdoDatabase->insert($table, $array);
+
 
 	}
 
