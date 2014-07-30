@@ -12,7 +12,7 @@ namespace jamwork\database;
 /**
  * Class PDOQuery
  *
- * @category Thomann
+ * @category Dreiwerken
  * @package  jamwork\database
  * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
