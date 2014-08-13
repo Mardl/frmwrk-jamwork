@@ -329,13 +329,23 @@ class Registry
 	}
 
 	/**
+	 * @param string $classname
+	 * @return void
+	 */
+	public function setLogger4php($classname)
+	{
+		$this->set('logger4php', $classname, self::KEY_SYSTEM);
+	}
+
+	/**
 	 * Pfad zu log4php/Logger.php muss inkludiert sein!
 	 *
 	 * @param string|object $name
-	 * @param bool   $changeSlashes
+	 * @param bool          $changeSlashes
+	 * @param string        $loggerInstance
 	 * @return \Logger
 	 */
-	public function getLogger($name, $changeSlashes = true)
+	public function getLogger($name, $changeSlashes = true, $loggerInstance = null)
 	{
 		if (is_object($name))
 		{
@@ -345,7 +355,16 @@ class Registry
 		{
 			$name = str_replace('\\', '.', $name);
 		}
-		return \Logger::getLogger($name);
+		if (is_null($loggerInstance))
+		{
+			$loggerInstance = '\Logger';
+
+			if ($this->hasKey('logger4php', self::KEY_SYSTEM))
+			{
+				$loggerInstance = $this->get('logger4php', self::KEY_SYSTEM);
+			}
+		}
+		return $loggerInstance::getLogger($name);
 	}
 
 
