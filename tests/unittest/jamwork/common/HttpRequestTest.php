@@ -283,7 +283,8 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
 
 	public function testDeleteCookie()
 	{
-		setcookie('testcookiedel', 'abctest');
+		$this->request->setCookie('testcookiedel', 'abctest');
+		$this->assertTrue($this->request->hasCookie('testcookiedel'));
 
 		$this->request->deleteCookie('testcookiedel');
 		$this->assertFalse($this->request->hasCookie('testcookiedel'));

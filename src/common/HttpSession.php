@@ -13,18 +13,28 @@ class HttpSession implements Session
 {
 
 	private $session = array();
+	private $sid = null;
 
 	/**
 	 * @param string $SID
 	 */
-	public function __construct($SID = '')
+	public function __construct($SID = '', $startSession=true)
 	{
-		if (!empty($SID))
+		$this->sid = $SID;
+		if ($startSession)
 		{
-			session_id($SID);
+			$this->startSession();
+		}
+	}
+
+	public function startSession()
+	{
+		if (!empty($this->sid))
+		{
+			session_id($this->sid);
 		}
 		session_start();
-		$this->session = $_SESSION;
+		$this->session = array_merge_recursive($_SESSION, $this->session);
 	}
 
 	/**
@@ -32,7 +42,15 @@ class HttpSession implements Session
 	 */
 	public function __destruct()
 	{
-		$_SESSION = $this->session;
+		if ($this->isSessionStarted())
+		{
+			$_SESSION = $this->session;
+		}
+	}
+
+	private function isSessionStarted()
+	{
+		return isset($_SESSION);
 	}
 
 	/**
@@ -93,6 +111,10 @@ class HttpSession implements Session
 	 */
 	public function destroy()
 	{
-		return session_destroy();
+		if ($this->isSessionStarted())
+		{
+			return session_destroy();
+		}
+		return true;
 	}
 }
