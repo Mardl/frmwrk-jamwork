@@ -294,6 +294,17 @@ class HttpRequest implements Request
 		return $this->getFromKeyInArray($this->server, $name);
 	}
 
+
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function hasHeader($name)
+	{
+		$name = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
+		return $this->isKeyInArray($this->server, $name);
+	}
+
 	/**
 	 * @param array  $array
 	 * @param string $name
