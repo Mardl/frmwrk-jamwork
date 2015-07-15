@@ -91,7 +91,6 @@ class MssqlDatabase implements Database
 	{
 		if (!$this->connection)
 		{
-
 			$connect = $this->dboptions['driver'] . ':host=' . $this->dbhost . ';port=' . $this->dboptions['port'] . ';dbname=' . $this->dbname;
 
 			try
@@ -160,7 +159,7 @@ class MssqlDatabase implements Database
 			$this->transaction = 0;
 			$this->getConnection()->rollBack();
 
-			if ($throwException)
+			if ($throwException && $code > 0)
 			{
 				if (is_array($info))
 				{
@@ -236,16 +235,6 @@ class MssqlDatabase implements Database
 					$setFieldPDO .= ' , ';
 				}
 
-				if ($recordSet[$field] === 'NULL' || $recordSet[$field] === null || $this->checkForeignkeyToNull($tableName, $field, $recordSet[$field]))
-				{
-					$setFieldPDO .= $field . ' = NULL';
-				}
-				else
-				{
-					$setFieldPDO .= $field . ' = :' . $field;
-					$keyValuePair[':' . $field] = $this->getValue($tableName, $field, $recordSet[$field]);
-				}
-
 				if ($key == 'PRI')
 				{
 					$priCount++;
@@ -261,6 +250,20 @@ class MssqlDatabase implements Database
 					}
 					$wherePDO .= $field . ' = :' . $field;
 					$keyValuePair[':' . $field] = $recordSet[$field];
+				}
+				else {
+					if ($this->checkForeignkeyToNull($tableName, $field, $recordSet[$field]) || ($this->isNullAllowed($tableName, $field) && ($recordSet[$field] === 'NULL' || $recordSet[$field] === null)) )
+					{
+						$setFieldPDO .= $field . ' = NULL';
+					}
+					else
+					{
+						if ($this->getPrimary($tableName) != $field)
+						{
+							$setFieldPDO .= $field . ' = :' . $field;
+							$keyValuePair[':' . $field] = $this->getValue($tableName, $field, $recordSet[$field]);
+						}
+					}
 				}
 			}
 		}
@@ -282,7 +285,8 @@ class MssqlDatabase implements Database
 			$stmt = $this->getConnection()->prepare($queryPDO);
 			foreach ($keyValuePair as $key => $value)
 			{
-				$stmt->bindValue($key, $value);
+				$check = !empty($value) ? iconv('UTF-8', 'ISO8859-1', $value) : $value;
+				$stmt->bindValue($key, $check);
 			}
 			if ($stmt->execute())
 			{
@@ -298,6 +302,14 @@ class MssqlDatabase implements Database
 		return false;
 	}
 
+	private function isNullAllowed($tableName, $field)
+	{
+		if (!isset($this->fieldDescribe[$tableName][$field]))
+		{
+			return false;
+		}
+		return $this->fieldDescribe[$tableName][$field]['IS_NULLABLE'] == 'YES';
+	}
 	/**
 	 * @param string $tableName
 	 * @param string $field
@@ -312,7 +324,7 @@ class MssqlDatabase implements Database
 		}
 		$isValueNull = $value === 'NULL' || $value === '0' || empty($value);
 		$isForeignkey = $this->field[$tableName][$field] == 'MUL';
-		$nullAllowed = $this->fieldDescribe[$tableName][$field]['Null'] == 'YES';
+		$nullAllowed = $this->isNullAllowed($tableName, $field);
 
 		return $isForeignkey && $isValueNull && $nullAllowed;
 	}
@@ -320,7 +332,6 @@ class MssqlDatabase implements Database
 	/**
 	 * @param string $tableName
 	 * @param string $field
-	 * @param string $typeToCompare
 	 * @return bool
 	 */
 	private function checkFieldTypeFloat($tableName, $field)
@@ -330,7 +341,24 @@ class MssqlDatabase implements Database
 			'double',
 			'decimal'
 		);
-		$fieldType = $this->fieldDescribe[$tableName][$field]['Type'];
+		$fieldType = $this->fieldDescribe[$tableName][$field]['TYPE_NAME'];
+
+		return in_array($fieldType, $floatingTypes);
+	}
+
+	/**
+	 * @param string $tableName
+	 * @param string $field
+	 * @return bool
+	 */
+	private function checkFieldTypeDatetime($tableName, $field)
+	{
+		$floatingTypes = array(
+			'date',
+			'time',
+			'datetime'
+		);
+		$fieldType = $this->fieldDescribe[$tableName][$field]['TYPE_NAME'];
 
 		return in_array($fieldType, $floatingTypes);
 	}
@@ -339,32 +367,40 @@ class MssqlDatabase implements Database
 	 * @param string $tableName
 	 * @param array  $recordSet
 	 * @return bool|int
+	 * @throws \Exception
 	 */
 	public function insert($tableName, array $recordSet)
 	{
 		$this->counts['insert']++;
 		$setField = '';
+		$setValue = '';
 		$keyValuePair = array();
 		$this->readFields($tableName);
-		$query = 'INSERT INTO ' . $tableName . ' SET ';
+		$query = 'INSERT INTO ' . $tableName ;
 
 		foreach ($this->field[$tableName] as $field => $key)
 		{
-			if (isset($recordSet[$field]))
+			if (array_key_exists($field, $recordSet))
 			{
 				if (!empty($setField))
 				{
 					$setField .= ', ';
+					$setValue .= ', ';
 				}
 
-				if ($recordSet[$field] === 'NULL' || $recordSet[$field] === null || $this->checkForeignkeyToNull($tableName, $field, $recordSet[$field]))
+				if ($this->checkForeignkeyToNull($tableName, $field, $recordSet[$field]) || ($this->isNullAllowed($tableName, $field) && ($recordSet[$field] === 'NULL' || $recordSet[$field] === null)) )
 				{
-					$setField .= $field . ' = NULL';
+					$setField .= $field;
+					$setValue .= 'NULL';
 				}
 				else
 				{
-					$setField .= $field . ' = :' . $field;
-					$keyValuePair[':' . $field] = $recordSet[$field];
+					if ($this->getPrimary($tableName) != $field)
+					{
+						$setField .= $field;
+						$setValue .= ':' . $field;
+						$keyValuePair[':' . $field] = $this->getValue($tableName, $field, $recordSet[$field]);
+					}
 				}
 
 			}
@@ -372,18 +408,24 @@ class MssqlDatabase implements Database
 
 		if (empty($setField))
 		{
-			$setField .= $this->getPrimary($tableName) . ' = null';
+			throw new \Exception('Insert Mssql Statement Tabelle nicht vorhanden: '.$tableName);
+			/*
+			$setField .= $this->getPrimary($tableName);
+			$setValue .= 'NULL';
+			*/
 		}
 
-		$query .= $setField;
+		$query .= ' ('.$setField.') VALUES ('.$setValue.')';
 
 
 		try
 		{
 			$stmt = $this->getConnection()->prepare($query);
+
 			foreach ($keyValuePair as $key => $value)
 			{
-				$stmt->bindValue($key, $value);
+				$check = !empty($value) ? iconv('UTF-8', 'ISO8859-1', $value) : $value;
+				$stmt->bindValue($key, $check);
 			}
 			if ($stmt->execute())
 			{
@@ -478,11 +520,24 @@ class MssqlDatabase implements Database
 	{
 		if (!isset($this->field[$tableName]))
 		{
-			$sql = 'DESCRIBE ' . $tableName;
+			$foreignKeys = array();
+			$sqlKeysH = 'sp_helpconstraint "'.$tableName.'", "nomsg"';
+			foreach ($this->getConnection()->query($sqlKeysH) as $row)
+			{
+				if ($row['constraint_type'] == 'FOREIGN KEY')
+				{
+					$foreignKeys[$row['constraint_keys']] = 'MUL';
+				}
+			}
+
+			$sqlKeys = 'sp_pkeys ' . $tableName;
+			$keyRowsStmt = $this->getConnection()->query($sqlKeys);
+			$keyRows = $keyRowsStmt->fetch();
+			$sql = 'sp_columns ' . $tableName;
 			foreach ($this->getConnection()->query($sql) as $row)
 			{
-				$this->field[$tableName][$row['Field']] = $row['Key'];
-				$this->fieldDescribe[$tableName][$row['Field']] = $row;
+				$this->field[$tableName][$row['COLUMN_NAME']] = $row['COLUMN_NAME'] == $keyRows['COLUMN_NAME']?  'PRI' : (isset($foreignKeys[$row['COLUMN_NAME']]) ? 'MUL' : '');
+				$this->fieldDescribe[$tableName][$row['COLUMN_NAME']] = $row;
 			}
 		}
 	}
@@ -501,15 +556,28 @@ class MssqlDatabase implements Database
 			$valueConverted = $this->getAsFloat($value);
 		}
 
-		// wenn nicht gewandelt werden konnte dann den original Wert verwenden
-		if (!$valueConverted)
+		if ($this->checkFieldTypeDatetime($tableName, $field))
 		{
-			$valueConverted = $value;
+			$valueConverted = $this->getAsDatetime($value);
 		}
 
 		return $valueConverted;
 	}
 
+	/**
+	 * @param string $value
+	 * @return float
+	 */
+	private function getAsDatetime($value)
+	{
+		$dt = new \DateTime($value);
+		if ($dt->format('Y') < 1900)
+		{
+			$value = NULL;
+		}
+
+		return $value;
+	}
 	/**
 	 * @param string $value
 	 * @return float

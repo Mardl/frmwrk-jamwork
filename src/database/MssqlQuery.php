@@ -275,6 +275,7 @@ class MssqlQuery implements Query
 	 * @param string $value
 	 * @param bool   $positiv
 	 * @return MssqlQuery|Query
+	 * @throws \Exception
 	 */
 	public function innerStatement($field, $value, $positiv = true)
 	{
@@ -514,7 +515,7 @@ class MssqlQuery implements Query
 		$checkString = strtoupper(trim($queryString));
 		if (substr($checkString, 0, 6) == 'SELECT' && strpos($checkString, "UNION") === false)
 		{
-			throw new \ErrorException('Benutze den Querybuilder für SELECT-Statements');
+		//	throw new \ErrorException('Benutze den Querybuilder für SELECT-Statements');
 		}
 
 		$this->ownQuery = $queryString;
@@ -585,7 +586,7 @@ class MssqlQuery implements Query
 
 		if (!empty($this->limit) && $this->limit[0] > 0)
 		{
-			$query .= " TOP " . $this->limit[0];
+			$query .= " TOP " . $this->limit[0]. ' ';
 		}
 
 		if (is_array($this->fields))

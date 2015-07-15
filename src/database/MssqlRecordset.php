@@ -41,6 +41,12 @@ class MssqlRecordset implements Recordset
 	 */
 	private $database = null;
 
+	/** @var array */
+	protected $allData = array();
+
+	/** @var integer */
+	protected $dataPointer = 0;
+
 	/**
 	 * @param Database $database
 	 */
@@ -71,6 +77,8 @@ class MssqlRecordset implements Recordset
 	{
 		$this->result = false;
 		$stmtString = $this->query->get();
+		$this->allData = array();
+		$this->dataPointer = -1;
 		//syslog(LOG_INFO, $stmtString);
 
 		try
@@ -82,28 +90,34 @@ class MssqlRecordset implements Recordset
 			else
 			{
 				$keyValuePair = $this->query->getBindValues();
-				$stmt = $this->database->getConnection()->prepare($stmtString);
+				$stmt = $this->database->getConnection()->prepare($stmtString, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
 				foreach ($keyValuePair as $key => $value)
 				{
-					$stmt->bindValue($key, $value);
+					$stmt->bindValue($key, iconv('UTF-8', 'ISO8859-1', $value)); // UTF 8 kann mssql nicht richtig
 				}
 				if ($stmt->execute())
 				{
 					$this->result = $stmt;
 				}
+
 			}
+
+			$errorInfo = $this->result->errorInfo();
+			if (isset($errorInfo[4]) && ! empty($errorInfo[4]))
+			{
+				throw new \PDOException($errorInfo[2]);
+			}
+
+			$this->allData = $this->result->fetchAll();
+
 		} catch (\PDOException  $e)
 		{
+			$stmtPreparedString = $this->query->getPreparedStatement();
+
 			$this->errorMessage = $e->getMessage();
 			$this->errorNumber = $e->getCode();
 
-			throw new \PDOException($this->errorMessage);
-		}
-
-		if (!$this->result && isset($stmt))
-		{
-			$this->errorMessage = $stmt->errorInfo();
-			$this->errorNumber = $stmt->errorCode();
+			throw new \PDOException($stmtPreparedString." ".$e->getMessage());//, (int) $this->errorNumber, $e);
 		}
 
 		try
@@ -162,7 +176,7 @@ class MssqlRecordset implements Recordset
 			return false;
 		}
 
-		return $this->result->rowCount();
+		return count($this->allData);
 	}
 
 	/**
@@ -170,12 +184,16 @@ class MssqlRecordset implements Recordset
 	 */
 	public function get()
 	{
-		if (!$this->result)
+		if (!$this->result || count($this->allData) == 0)
 		{
 			return false;
 		}
-
-		return $this->result->fetch(PDO::FETCH_ASSOC);
+		$this->dataPointer++;
+		if ($this->dataPointer >= count($this->allData))
+		{
+			return false;
+		}
+		return $this->allData[$this->dataPointer];
 	}
 
 	/**
