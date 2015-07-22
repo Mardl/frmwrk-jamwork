@@ -11,7 +11,7 @@ use jamwork\database\MysqlDatabase;
  *
  * @category Jamwork
  * @package  unittest\jamwork\database
- * @author   Martin Eisenführer <martin@dreiwerken.de>
+ * @author   Martin EisenfÃ¼hrer <martin@dreiwerken.de>
  */
 class MysqlRecordsetTest extends \PHPUnit_Framework_TestCase
 {

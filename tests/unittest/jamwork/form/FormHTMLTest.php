@@ -170,14 +170,14 @@ class FormHTMLTest extends \PHPUnit_Framework_TestCase
 		$method->setAccessible(true);
 		$ret = $method->invoke($this->form, $button);
 
-		//noch nicht gesetzt, darum muss hier '' zurück kommen! 
+		//noch nicht gesetzt, darum muss hier '' zurÃ¼ck kommen!
 		$this->assertSame($ret, '');
 
 		//Wert setzen; Return ist das eigene Objekt
 		$this->assertInstanceOf('\jamwork\form\Button', $button->placeholder('test1'));
 
 		$ret = $method->invoke($this->form, $button);
-		//Rückgabe String 
+		//RÃ¼ckgabe String
 		$this->assertSame($ret, ' placeholder="test1"');
 	}
 

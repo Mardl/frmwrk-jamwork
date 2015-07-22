@@ -64,7 +64,7 @@ class HttpSessionTest extends \PHPUnit_Framework_TestCase
 
 	public function testSet()
 	{
-		//siehe alle tests darüber
+		//siehe alle tests darÃ¼ber
 	}
 
 	public function testDestroy()

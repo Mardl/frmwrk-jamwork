@@ -3,7 +3,7 @@
 namespace jamwork\helper;
 
 /**
- * Analysiert einen in den Construktor übergebenen String, ob es sich dabei um eine Url handelt und liefert diverse Url-Parts
+ * Analysiert einen in den Construktor Ã¼bergebenen String, ob es sich dabei um eine Url handelt und liefert diverse Url-Parts
  *
  * @author Vadim Justus <vadim@dreiwerken.de>
  */
@@ -23,7 +23,7 @@ class UrlParser
 	private $originString = '';
 
 	/**
-	 * Array mit Informationen über die URL
+	 * Array mit Informationen Ã¼ber die URL
 	 * @param array $info
 	 */
 	private $info = array();
@@ -103,7 +103,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert true zurück, wenn den übergeben String tatsächtlich eine Url ist.
+	 * Liefert true zurÃ¼ck, wenn den Ã¼bergeben String tatsÃ¤chtlich eine Url ist.
 	 * @return boolean
 	 */
 	public function isUrl()
@@ -112,7 +112,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert den origialen String zurück
+	 * Liefert den origialen String zurÃ¼ck
 	 * @return string
 	 */
 	public function getString()
@@ -121,7 +121,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert das Scheme zurück - z.B. http
+	 * Liefert das Scheme zurÃ¼ck - z.B. http
 	 * @return string
 	 */
 	public function getScheme()
@@ -130,7 +130,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert den Host zurück
+	 * Liefert den Host zurÃ¼ck
 	 * @return string
 	 */
 	public function getHost()
@@ -139,7 +139,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert den Hash-Tag der URL zurück
+	 * Liefert den Hash-Tag der URL zurÃ¼ck
 	 * @return string
 	 */
 	public function getFragment()
@@ -148,7 +148,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert den User der URL zurück
+	 * Liefert den User der URL zurÃ¼ck
 	 * @return string
 	 */
 	public function getUser()
@@ -157,7 +157,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert das Passwort der URL zurück
+	 * Liefert das Passwort der URL zurÃ¼ck
 	 * @return string
 	 */
 	public function getPass()
@@ -166,7 +166,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert den Query der URL zurück
+	 * Liefert den Query der URL zurÃ¼ck
 	 * @return string
 	 */
 	public function getQuery()
@@ -175,7 +175,7 @@ class UrlParser
 	}
 
 	/**
-	 * Liefert den Pfad der URL zurück
+	 * Liefert den Pfad der URL zurÃ¼ck
 	 * @return string
 	 */
 	public function getPath()
@@ -184,7 +184,7 @@ class UrlParser
 	}
 
 	/**
-	 * Überprüft, ob der Query der URL einen bestimmten Key hat
+	 * Ã¼berprÃ¼ft, ob der Query der URL einen bestimmten Key hat
 	 * @param string $key
 	 * @return boolean
 	 */

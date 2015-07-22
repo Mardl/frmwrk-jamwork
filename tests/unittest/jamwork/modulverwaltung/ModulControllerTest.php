@@ -43,7 +43,7 @@ class ModulControllerTest extends \PHPUnit_Framework_TestCase
 		$modulObjects = $this->controller->getModulObjects();
 		$this->assertSame($modulObjects, $this->readAttribute($this->controller, 'modulMap'));
 
-		// Beim wiederholten Aufruf sollte readModule nicht nochmal ausgeführt werden...
+		// Beim wiederholten Aufruf sollte readModule nicht nochmal ausgefÃ¼hrt werden...
 		$modulObjects2 = $this->controller->getModulObjects();
 		$this->assertSame($modulObjects2, $modulObjects);
 	}

@@ -29,7 +29,7 @@ class AutoCommandResolverTest extends \PHPUnit_Framework_TestCase
 		$ret = $method->invoke($this->resolver, 'unittest/module/');
 
 
-		//muss einzeln getestet werden, da die Reihenfolge des Array´s variieren kann
+		//muss einzeln getestet werden, da die Reihenfolge des Arrays variieren kann
 
 		$this->assertTrue(isset($ret['Testmodul1Command.php']));
 		$this->assertTrue(isset($ret['TestmodulnonameCommand.php']));

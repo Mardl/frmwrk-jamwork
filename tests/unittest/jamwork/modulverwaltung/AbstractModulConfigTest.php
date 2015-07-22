@@ -40,7 +40,7 @@ class AbstractModulConfigTest extends \PHPUnit_Framework_TestCase
 		//Version gleich, also nicht kleiner
 		$this->assertFalse($this->ModulConfig->isVersionLower('1.5.5', '1.5.5'));
 
-		//Version ist größer
+		//Version ist grÃ¶ÃŸer
 		$this->assertFalse($this->ModulConfig->isVersionLower('1.5.6', '1.5.5'));
 		$this->assertFalse($this->ModulConfig->isVersionLower('1.6.0', '1.5.5'));
 		$this->assertFalse($this->ModulConfig->isVersionLower('2.0.0', '1.5.5'));

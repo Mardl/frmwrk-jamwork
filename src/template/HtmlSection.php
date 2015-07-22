@@ -7,7 +7,7 @@ namespace jamwork\template;
  *
  * @category Jamwork
  * @package  Jamwork\template
- * @author   Martin Eisenführer <martin@dreiwerken.de>
+ * @author   Martin EisenfÃ¼hrer <martin@dreiwerken.de>
  */
 class HtmlSection implements Section
 {

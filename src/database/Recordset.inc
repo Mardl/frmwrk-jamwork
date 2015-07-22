@@ -7,7 +7,7 @@ namespace jamwork\database;
  *
  * @category Jamwork
  * @package  Jamwork\database
- * @author   Martin Eisenführer <martin@dreiwerken.de>
+ * @author   Martin EisenfÃ¼hrer <martin@dreiwerken.de>
  */
 interface Recordset
 {

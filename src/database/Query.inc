@@ -7,7 +7,7 @@ namespace jamwork\database;
  *
  * @category Jamwork
  * @package  Jamwork\database
- * @author   Martin Eisenf�hrer <martin@dreiwerken.de>
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
 interface Query
 {

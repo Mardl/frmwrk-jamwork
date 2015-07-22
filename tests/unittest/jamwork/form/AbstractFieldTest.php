@@ -156,7 +156,7 @@ class AbstractFieldTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\jamwork\form\Button', $this->AbstractField->placeholder('test1'));
 
 		$ret = $this->AbstractField->getPlaceholder();
-		//Rückgabe String 
+		//RÃ¼ckgabe String
 		$this->assertSame($ret, 'test1');
 	}
 

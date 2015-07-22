@@ -9,7 +9,7 @@ use \jamwork\common\Request;
  *
  * @category Jamwork
  * @package  Jamwork\common
- * @author   Martin Eisenf�hrer <martin@dreiwerken.de>
+ * @author   Martin Eisenführer <martin@dreiwerken.de>
  */
 class HttpRequest implements Request
 {

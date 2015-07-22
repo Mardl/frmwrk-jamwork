@@ -505,7 +505,7 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 		// beim 2ten Lauf wieder standard
 		//$this->assertsame ('SELECT '.$sollSelect.' FROM '.$sollFrom.' WHERE '.$sollWhere, $this->pdoQuery->get());
 
-		//der Query Once ist in dem Fall h�her priorisiert!
+		//der Query Once ist in dem Fall höher priorisiert!
 		$this->assertsame($sollWhereOnce, $this->pdoQuery->get());
 	}
 

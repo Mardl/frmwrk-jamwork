@@ -7,7 +7,7 @@ namespace jamwork\common;
  *
  * @category Jamwork
  * @package  Jamwork\common
- * @author   Martin Eisenführer <martin@dreiwerken.de>
+ * @author   Martin EisenfÃ¼hrer <martin@dreiwerken.de>
  */
 interface Response
 {
