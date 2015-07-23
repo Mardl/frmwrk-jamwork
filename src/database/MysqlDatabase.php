@@ -137,7 +137,7 @@ class MysqlDatabase implements Database
 			$rs->execute($this->newQuery()->setQueryOnce("ROLLBACK;"));
 			$rs->execute($this->newQuery()->setQueryOnce("SET AUTOCOMMIT=1;"));
 
-			if ($throwException)
+			if ($throwException && $error > 0)
 			{
 				throw new \Exception("DB-Fehler\r\nFehler-Nr: " . $errno . "\r\nFehler: " . $error);
 			}

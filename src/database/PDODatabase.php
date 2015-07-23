@@ -157,7 +157,7 @@ class PDODatabase implements Database
 			$this->transaction = 0;
 			$this->getConnection()->rollBack();
 
-			if ($throwException)
+			if ($throwException && $code > 0)
 			{
 				if (is_array($info))
 				{
