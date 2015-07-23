@@ -545,6 +545,9 @@ class PDODatabaseTest extends \PHPUnit_Framework_TestCase
 
 		try
 		{
+			$query = $this->pdoDatabase->newQuery();
+			$query->setQueryOnce("SELECT tst_foobar FROM testtable WHERE tst_id = 4");
+			$this->recordset->execute($query);
 			$this->pdoDatabase->rollback();
 		} catch (\Exception $e)
 		{

@@ -545,6 +545,9 @@ class MysqlDatabaseTest extends \PHPUnit_Framework_TestCase
 
 		try
 		{
+			$query = $this->mysqlDatabase->newQuery();
+			$query->setQueryOnce("SELECT tst_foobar FROM testtable WHERE tst_id = 4");
+			$this->recordset->execute($query);
 			$this->mysqlDatabase->rollback();
 		} catch (\Exception $e)
 		{
