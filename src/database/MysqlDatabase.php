@@ -499,4 +499,13 @@ class MysqlDatabase implements Database
 		return (float)$value;
 	}
 
+	/**
+	 * @param $statement
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function execStoreProc($statement)
+	{
+		throw new \Exception('Funktion nicht implementiert');
+	}
 }

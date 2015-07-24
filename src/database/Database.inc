@@ -59,6 +59,13 @@ interface Database
 	public function delete($tableName, array $recordSet);
 
 	/**
+	 * @param $statement
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function execStoreProc($statement);
+
+	/**
 	 * @return Database
 	 */
 	public function startTransaction();

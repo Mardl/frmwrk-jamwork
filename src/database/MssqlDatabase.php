@@ -620,4 +620,57 @@ class MssqlDatabase implements Database
 		return (float)$value;
 	}
 
+	/**
+	 * @param $statement
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function execStoreProc($statement)
+	{
+		/*
+		 * Aufbau einer Store Procedure für SQL Server
+		CREATE PROCEDURE dsp_test_exception @_Param VARCHAR(50), @_IntVal INTEGER
+		AS
+		BEGIN
+			DECLARE @_tmp INTEGER = 55
+
+			BEGIN TRY
+
+				RAISERROR('Irgendwas ist schief gegangen', 11, 125)
+
+				select @_tmp = 55
+
+			END TRY
+			BEGIN CATCH
+				DECLARE @ErrorMessage NVARCHAR(4000)
+				DECLARE @ErrorSeverity INTEGER
+				DECLARE @ErrorState INTEGER
+
+				SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE()
+				RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState)
+
+				select ERROR_MESSAGE() as 'message', ERROR_STATE() as 'code'
+
+			END CATCH
+
+		END
+		*/
+		try
+		{
+			$result = $this->getConnection()->query($statement);
+
+			$errorInfo = $result->errorInfo();
+
+			if (isset($errorInfo[4]) && ! empty($errorInfo[4]))
+			{
+				$allData = $result->fetchAll();
+				throw new \PDOException($errorInfo[2].' '.$allData[0]['message'],$allData[0]['code']);
+			}
+
+		} catch (\PDOException  $e)
+		{
+			throw new \Exception($e->getMessage().' Code:'.$e->getCode());
+		}
+		return true;
+	}
 }
