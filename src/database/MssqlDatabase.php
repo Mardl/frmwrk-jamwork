@@ -91,6 +91,7 @@ class MssqlDatabase implements Database
 	{
 		if (!$this->connection)
 		{
+
 			$connect = $this->dboptions['driver'] . ':host=' . $this->dbhost . ';port=' . $this->dboptions['port'] . ';dbname=' . $this->dbname;
 
 			try
@@ -104,6 +105,8 @@ class MssqlDatabase implements Database
 				$this->connection = new PDO($connect, $this->dbuser, $this->dbpwd, $options);
 				$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+				$this->connection->query("SET ANSI_NULLS, ANSI_NULL_DFLT_ON, QUOTED_IDENTIFIER, CONCAT_NULL_YIELDS_NULL, ANSI_WARNINGS, ANSI_PADDING ON");
+
 			} catch (PDOException $e)
 			{
 				throw new \Exception('Open Mssql Connection: '.$e->getMessage());
@@ -285,8 +288,8 @@ class MssqlDatabase implements Database
 			$stmt = $this->getConnection()->prepare($queryPDO);
 			foreach ($keyValuePair as $key => $value)
 			{
-				$check = !empty($value) ? iconv('UTF-8', 'ISO8859-1', $value) : $value;
-				$stmt->bindValue($key, $check);
+				//$check = !empty($value) ? iconv('UTF-8', 'ISO8859-1', $value) : $value;
+				$stmt->bindValue($key, $value);
 			}
 			if ($stmt->execute())
 			{
@@ -424,8 +427,8 @@ class MssqlDatabase implements Database
 
 			foreach ($keyValuePair as $key => $value)
 			{
-				$check = !empty($value) ? iconv('UTF-8', 'ISO8859-1', $value) : $value;
-				$stmt->bindValue($key, $check);
+				//$check = !empty($value) ? iconv('UTF-8', 'ISO8859-1', $value) : $value;
+				$stmt->bindValue($key, $value);
 			}
 			if ($stmt->execute())
 			{
@@ -530,10 +533,14 @@ class MssqlDatabase implements Database
 				}
 			}
 
-			$sqlKeys = 'sp_pkeys ' . $tableName;
+			$tableNameArr = explode('.', $tableName);
+			$onlyTableName = count($tableNameArr) > 0 ? $tableNameArr[1] : $tableNameArr[0];
+			$schema = count($tableNameArr) > 0 ? $tableNameArr[0] : '';
+
+			$sqlKeys = 'sp_pkeys ' . $onlyTableName .', '.$schema;
 			$keyRowsStmt = $this->getConnection()->query($sqlKeys);
 			$keyRows = $keyRowsStmt->fetch();
-			$sql = 'sp_columns ' . $tableName;
+			$sql = 'sp_columns ' . $onlyTableName .', '.$schema;
 			foreach ($this->getConnection()->query($sql) as $row)
 			{
 				$this->field[$tableName][$row['COLUMN_NAME']] = $row['COLUMN_NAME'] == $keyRows['COLUMN_NAME']?  'PRI' : (isset($foreignKeys[$row['COLUMN_NAME']]) ? 'MUL' : '');

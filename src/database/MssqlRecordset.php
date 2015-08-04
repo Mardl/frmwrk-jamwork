@@ -93,7 +93,7 @@ class MssqlRecordset implements Recordset
 				$stmt = $this->database->getConnection()->prepare($stmtString, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
 				foreach ($keyValuePair as $key => $value)
 				{
-					$stmt->bindValue($key, iconv('UTF-8', 'ISO8859-1', $value)); // UTF 8 kann mssql nicht richtig
+					$stmt->bindValue($key, $value);
 				}
 				if ($stmt->execute())
 				{
@@ -108,7 +108,13 @@ class MssqlRecordset implements Recordset
 				throw new \PDOException($errorInfo[2]);
 			}
 
+			// dblib wandelt Datetime nur richtig um, wenn auf en_US gestellt ist!
+			$saveLocal = setlocale(LC_TIME, '0');
+			setlocale(LC_TIME, 'en_US.utf8');
+
 			$this->allData = $this->result->fetchAll();
+			// Locals zurück setzen auf Original
+			setlocale(LC_TIME, $saveLocal);
 
 		} catch (\PDOException  $e)
 		{
