@@ -511,7 +511,7 @@ class PDODatabase implements Database
 			'time',
 			'datetime'
 		);
-		$fieldType = $this->fieldDescribe[$tableName][$field]['TYPE_NAME'];
+		$fieldType = $this->fieldDescribe[$tableName][$field]['Type'];
 
 		return in_array($fieldType, $floatingTypes);
 	}
