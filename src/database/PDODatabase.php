@@ -485,6 +485,38 @@ class PDODatabase implements Database
 	}
 
 	/**
+	 * @param string $value
+	 * @return float
+	 */
+	private function getAsDatetime($value)
+	{
+		$dt = new \DateTime($value);
+		if ($dt->format('Y') < 1900)
+		{
+			$value = NULL;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @param string $tableName
+	 * @param string $field
+	 * @return bool
+	 */
+	private function checkFieldTypeDatetime($tableName, $field)
+	{
+		$floatingTypes = array(
+			'date',
+			'time',
+			'datetime'
+		);
+		$fieldType = $this->fieldDescribe[$tableName][$field]['TYPE_NAME'];
+
+		return in_array($fieldType, $floatingTypes);
+	}
+
+	/**
 	 * @param $tableName
 	 * @param $field
 	 * @param $value
@@ -498,10 +530,9 @@ class PDODatabase implements Database
 			$valueConverted = $this->getAsFloat($value);
 		}
 
-		// wenn nicht gewandelt werden konnte dann den original Wert verwenden
-		if (!$valueConverted)
+		if ($this->checkFieldTypeDatetime($tableName, $field))
 		{
-			$valueConverted = $value;
+			$valueConverted = $this->getAsDatetime($value);
 		}
 
 		return $valueConverted;
