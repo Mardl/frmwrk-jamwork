@@ -664,7 +664,7 @@ class MssqlDatabase implements Database
 		*/
 		try
 		{
-			$result = $this->getConnection()->query($statement);
+			$result = $this->getConnection()->query('EXEC '.$statement);
 
 			$errorInfo = $result->errorInfo();
 
