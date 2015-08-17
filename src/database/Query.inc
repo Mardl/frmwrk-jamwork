@@ -38,9 +38,10 @@ interface Query
 
 	/**
 	 * @param string $order
+	 * @param string $type
 	 * @return Query
 	 */
-	public function join($order);
+	public function join($order, $type = 'LEFT');
 
 	/**
 	 * @param string $joinOn
