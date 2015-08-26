@@ -91,8 +91,15 @@ class MssqlDatabase implements Database
 	{
 		if (!$this->connection)
 		{
+			if(stristr(PHP_OS, 'WIN') && PHP_OS != 'Darwin')
+			{
+				$connect = $this->dboptions['driver'] . ':server=' . $this->dbhost . ',' . $this->dboptions['port'] . ';Database=' . $this->dbname;
+			}
+			else
+			{
+				$connect = $this->dboptions['driver'] . ':host=' . $this->dbhost . ';port=' . $this->dboptions['port'] . ';dbname=' . $this->dbname;
+			}
 
-			$connect = $this->dboptions['driver'] . ':host=' . $this->dbhost . ';port=' . $this->dboptions['port'] . ';dbname=' . $this->dbname;
 
 			try
 			{
