@@ -461,7 +461,7 @@ class MssqlQuery implements Query
 	 *
 	 * @return MssqlQuery
 	 */
-	public function join($join, $type = 'LEFT')
+	public function join($join, $type = '')
 	{
 		$this->jointable[] = array($join, $type);
 
