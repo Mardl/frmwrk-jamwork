@@ -28,6 +28,10 @@ class MysqlDatabase implements Database
 	 * @var string
 	 */
 	protected $dbname = '';
+    /**
+     * @var string
+     */
+    protected $appname = '';
 	/**
 	 * @var array
 	 */
@@ -54,21 +58,22 @@ class MysqlDatabase implements Database
 	 */
 	public $counts = array('query' => 0, 'recordset' => 0, 'update' => 0, 'insert' => 0, 'delete' => 0);
 
-	/**
-	 * @param string $host
-	 * @param string $user
-	 * @param string $pwd
-	 * @param string $name
-	 * @param array  $options
-	 */
-	public function __construct($host, $user, $pwd, $name, $options = array())
+    /**
+     * @param string $host
+     * @param string $user
+     * @param string $pwd
+     * @param string $name
+     * @param array  $options
+     * @param null   $appname
+     */
+	public function __construct($host, $user, $pwd, $name, $options = array(), $appname = NULL)
 	{
 		$this->dbhost = $host;
 		$this->dbuser = $user;
 		$this->dbpwd = $pwd;
 		$this->dbname = $name;
 		$this->dboptions = $options;
-
+        $this->appname = $appname;
 		$this->getConnection();
 	}
 

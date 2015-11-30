@@ -12,14 +12,15 @@ namespace jamwork\database;
 interface Database
 {
 
-	/**
-	 * @param string $host
-	 * @param string $user
-	 * @param string $pwd
-	 * @param string $name
-	 * @param array  $options
-	 */
-	public function __construct($host, $user, $pwd, $name, $options=array());
+    /**
+     * @param string $host
+     * @param string $user
+     * @param string $pwd
+     * @param string $name
+     * @param array  $options
+     * @param null   $appname
+     */
+	public function __construct($host, $user, $pwd, $name, $options=array(), $appname = NULL);
 
 	/**
 	 * @return mixed
