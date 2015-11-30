@@ -64,18 +64,24 @@ class MysqlDatabase implements Database
      * @param string $pwd
      * @param string $name
      * @param array  $options
-     * @param null   $appname
      */
-	public function __construct($host, $user, $pwd, $name, $options = array(), $appname = NULL)
+	public function __construct($host, $user, $pwd, $name, $options = array())
 	{
 		$this->dbhost = $host;
 		$this->dbuser = $user;
 		$this->dbpwd = $pwd;
 		$this->dbname = $name;
 		$this->dboptions = $options;
-        $this->appname = $appname;
 		$this->getConnection();
 	}
+
+    /**
+     * @param string $appname
+     * @return void
+     */
+    public function setAppname($appname) {
+        $this->appname = $appname;
+    }
 
 	/**
 	 * @return mixed

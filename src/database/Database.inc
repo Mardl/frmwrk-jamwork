@@ -18,9 +18,8 @@ interface Database
      * @param string $pwd
      * @param string $name
      * @param array  $options
-     * @param null   $appname
      */
-	public function __construct($host, $user, $pwd, $name, $options=array(), $appname = NULL);
+	public function __construct($host, $user, $pwd, $name, $options=array());
 
 	/**
 	 * @return mixed
@@ -76,8 +75,13 @@ interface Database
 	 */
 	public function commit();
 
-	/**
-	 * @return Database
-	 */
-	public function rollback();
+    /**
+     * @return Database
+     */
+    public function rollback();
+
+    /**
+     * @return Database
+     */
+    public function setAppname($appname);
 }

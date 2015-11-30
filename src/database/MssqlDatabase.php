@@ -69,17 +69,23 @@ class MssqlDatabase implements Database
      * @param string $pwd
      * @param string $name
      * @param array  $options
-     * @param null   $appname
      */
-	public function __construct($host, $user, $pwd, $name, $options = array(), $appname = NULL)
+	public function __construct($host, $user, $pwd, $name, $options = array())
 	{
 		$this->dbhost = $host;
 		$this->dbuser = $user;
 		$this->dbpwd = $pwd;
 		$this->dbname = $name;
-        $this->appname = $appname;
 		$this->dboptions = array_merge(array('port' => '1433', 'driver' => 'dblib'), $options);
 	}
+
+    /**
+     * @param string $appname
+     * @return void
+     */
+    public function setAppname($appname) {
+        $this->appname = $appname;
+    }
 
 	/**
 	 * @return void
