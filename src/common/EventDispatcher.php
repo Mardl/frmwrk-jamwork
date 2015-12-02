@@ -41,4 +41,28 @@ class EventDispatcher
 
 		return $event;
 	}
+
+    /**
+     * Liefert alle Modulenamen in einem Array die sich auf ein Event gehängt haben
+     *
+     * @param string $eventName
+     * @return array of EventHandler
+     */
+    public function getEventListeners($eventName) {
+
+        $listenerModules = array();
+
+        if(!isset($this->handlers[$eventName]))
+        {
+            return $listenerModules;
+        }
+
+        $listeners = $this->handlers[$eventName];
+        foreach($listeners as $key => $eventHandlerObject)
+        {
+            $listenerModules[] = $eventHandlerObject;
+        }
+
+        return $listenerModules;
+    }
 }
