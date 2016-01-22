@@ -197,7 +197,7 @@ class MssqlDatabase implements Database
 	}
 
 	/**
-	 * @return MysqlQuery|Query
+	 * @return MssqlQuery|Query
 	 */
 	public function newQuery()
 	{
@@ -208,7 +208,7 @@ class MssqlDatabase implements Database
 	}
 
 	/**
-	 * @return MysqlRecordset|Recordset
+	 * @return MssqlRecordset|Recordset
 	 */
 	public function newRecordSet()
 	{
