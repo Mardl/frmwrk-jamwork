@@ -153,18 +153,18 @@ class PDOQuery implements Query
 		return $this;
 	}
 
-	/**
-	 * Fügt eine neue WHERE-Klausel hinzu und escaped jeden Parameter
-	 *
-	 * @param string         $field Feld für die Bedingung
-	 * @param string|integer $value Vergleichswert
-	 * @param string         $op    Optionaler Operator, default "="
-	 * @param string         $concat
-	 * @return $this|PDOQuery|Query|string
-	 * @throws \InvalidArgumentException
-	 * @throws \Exception
-	 */
-	public function addWhere($field, $value, $op = '=', $concat = 'AND')
+    /**
+     * Fügt eine neue WHERE-Klausel hinzu und escaped jeden Parameter
+     *
+     * @param string         $field Feld für die Bedingung
+     * @param string|integer $value Vergleichswert
+     * @param string         $op    Optionaler Operator, default "="
+     * @param string         $concat
+     * @param bool           $inOp
+     * @return $this|PDOQuery|Query|string
+     * @throws \Exception
+     */
+	public function addWhere($field, $value, $op = '=', $concat = 'AND', $inOp = true)
 	{
 		$string = '';
 
@@ -186,7 +186,7 @@ class PDOQuery implements Query
 		}
 		elseif (is_array($value))
 		{
-			$string .= $this->in($field, $value);
+			$string .= $this->in($field, $value, $inOp);
 		}
 		else
 		{
@@ -385,16 +385,17 @@ class PDOQuery implements Query
 		return $this;
 	}
 
-	/**
-	 * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
-	 * und escaped jeden Parameter
-	 *
-	 * @param string $field  Feld
-	 * @param array  $values Array mit Integer-Werten
-	 *
-	 * @return string
-	 */
-	public function in($field, array $values)
+    /**
+     * Präperiert für eine WHERE-Klausel eine Bedingung mit IN Operator
+     * und escaped jeden Parameter
+     *
+     * @param string $field  Feld
+     * @param array  $values Array mit Integer-Werten
+     *
+     * @param bool   $inOp
+     * @return string
+     */
+	public function in($field, array $values, $inOp = true)
 	{
 		if (empty($values))
 		{
@@ -410,7 +411,8 @@ class PDOQuery implements Query
 			$this->keyValuePair[':' . $fieldUnique] = $item;
 		}
 
-		$string = $field . ' IN (';
+//		$string = $field . ' IN (';
+        $string = $field . ($inOp ? ' IN' : ' NOT IN') .'(';
 		$string .= implode(',', $inStatement);
 		$string .= ')';
 
