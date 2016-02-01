@@ -145,6 +145,15 @@ class PDOQueryTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @return void
 	 */
+	public function testAddWhere_array_NOT_IN()
+	{
+		$this->pdoQuery->addWhere('feld2', array(1, 2, 3), '', 'AND', false);
+		$this->assertSame('SELECT * WHERE feld2 IN (1,2,3)', $this->replaceBind($this->pdoQuery->getBindValues(), $this->pdoQuery->get()));
+	}
+
+	/**
+	 * @return void
+	 */
 	public function testAddWhere_valueobject()
 	{
 		try

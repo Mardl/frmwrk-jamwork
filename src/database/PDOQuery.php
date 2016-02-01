@@ -412,7 +412,7 @@ class PDOQuery implements Query
 		}
 
 //		$string = $field . ' IN (';
-        $string = $field . ($inOp ? ' IN' : ' NOT IN') .'(';
+        $string = $field . ($inOp ? ' IN' : ' NOT IN') .' (';
 		$string .= implode(',', $inStatement);
 		$string .= ')';
 
