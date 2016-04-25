@@ -53,6 +53,10 @@ class MssqlDatabase implements Database
 	 */
 	protected $fieldDescribe = array();
 	/**
+	 * @var array
+	 */
+	protected $fieldAutoIncremental = array();
+	/**
 	 * @var int
 	 */
 	protected $transaction = 0;
@@ -233,6 +237,33 @@ class MssqlDatabase implements Database
 		}
 
 		return '';
+	}
+
+	/**
+	 * @param string $tableName
+	 * @return int|string
+	 */
+	protected function isAutoIncremental($tableName, $fieldToCheck)
+	{
+
+		return isset($this->fieldAutoIncremental[$tableName][$fieldToCheck]) && $this->fieldAutoIncremental[$tableName][$fieldToCheck] == true;
+	}
+
+	/**
+	 * @param string $tableName
+	 * @return int|string
+	 */
+	protected function getAutoIncremental($tableName, $fieldToCheck)
+	{
+		$sql = 'SELECT is_identity FROM sys.columns WHERE object_id = object_id(\''.$tableName.'\') AND name = \''.$fieldToCheck.'\'';
+		$fieldAutoIncrementStmt = $this->getConnection()->query($sql);
+		$fieldAutoIncrement = $fieldAutoIncrementStmt->fetch();
+		if(isset($fieldAutoIncrement['is_identity']) && $fieldAutoIncrement['is_identity'] == 1)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -421,7 +452,9 @@ class MssqlDatabase implements Database
 				}
 				else
 				{
-					if ($this->getPrimary($tableName) != $field)
+					//der Primarykey wird nicht im insert mit aufgeführt, außer er steht NICHT auf Autoincrement, dann muss man ihn auch setzen können!
+					$primaryField = $this->getPrimary($tableName);
+					if ($primaryField != $field || ($primaryField == $field && !$this->isAutoIncremental($tableName, $field)))
 					{
 						$setField .= $field;
 						$setValue .= ':' . $field;
@@ -557,17 +590,31 @@ class MssqlDatabase implements Database
 			}
 
 			$tableNameArr = explode('.', $tableName);
-			$onlyTableName = count($tableNameArr) > 0 ? $tableNameArr[1] : $tableNameArr[0];
-			$schema = count($tableNameArr) > 0 ? $tableNameArr[0] : '';
+			$onlyTableName = count($tableNameArr) > 1 ? $tableNameArr[1] : $tableNameArr[0];
+			$schema = count($tableNameArr) > 1 ? $tableNameArr[0] : '';
 
-			$sqlKeys = 'sp_pkeys ' . $onlyTableName .', '.$schema;
+			$sqlKeys = 'sp_pkeys ' . $onlyTableName;
+			if(!empty($schema))
+			{
+				$sqlKeys .= ', '.$schema;
+			}
 			$keyRowsStmt = $this->getConnection()->query($sqlKeys);
+
 			$keyRows = $keyRowsStmt->fetch();
-			$sql = 'sp_columns ' . $onlyTableName .', '.$schema;
-			foreach ($this->getConnection()->query($sql) as $row)
+			$sql = 'sp_columns ' . $onlyTableName;
+			if(!empty($schema))
+			{
+				$sql .= ', '.$schema;
+			}
+
+			$resultSet = $this->getConnection()->query($sql)->fetchAll();
+			foreach ($resultSet as $row)
 			{
 				$this->field[$tableName][$row['COLUMN_NAME']] = $row['COLUMN_NAME'] == $keyRows['COLUMN_NAME']?  'PRI' : (isset($foreignKeys[$row['COLUMN_NAME']]) ? 'MUL' : '');
 				$this->fieldDescribe[$tableName][$row['COLUMN_NAME']] = $row;
+				if ($this->field[$tableName][$row['COLUMN_NAME']] == 'PRI') {
+					$this->fieldAutoIncremental[$tableName][$row['COLUMN_NAME']] = $this->getAutoIncremental($tableName, $row['COLUMN_NAME']);
+				}
 			}
 		}
 	}
