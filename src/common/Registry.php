@@ -343,7 +343,7 @@ class Registry
 	 * @param string|object $name
 	 * @param bool          $changeSlashes
 	 * @param string        $loggerInstance
-	 * @return \Logger
+	 * @return \Logger|\Logger4php
 	 */
 	public function getLogger($name, $changeSlashes = true, $loggerInstance = null)
 	{
