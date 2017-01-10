@@ -810,7 +810,7 @@ class MysqlQueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->db = new MysqlDatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
+		$this->db = new MysqlDatabase('yuma.intern', 'root', '3werken', 'test_jamwork');
 
 		$registry = Registry::getInstance();
 		$registry->setDatabase($this->db);

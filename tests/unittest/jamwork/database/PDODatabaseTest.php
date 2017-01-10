@@ -562,7 +562,7 @@ class PDODatabaseTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->pdoDatabase = new PDODatabase('localhost', 'test_jamwork', 'test_jamwork', 'test_jamwork');
+		$this->pdoDatabase = new PDODatabase('yuma.intern', 'root', '3werken', 'test_jamwork');
 		$registry = Registry::getInstance();
 		$registry->setDatabase($this->pdoDatabase);
 		$this->query = $this->pdoDatabase->newQuery();
