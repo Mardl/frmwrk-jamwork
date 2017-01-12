@@ -181,7 +181,7 @@ class PDODatabase implements Database
 	}
 
 	/**
-	 * @return MysqlQuery|Query
+	 * @return PDOQuery|Query
 	 */
 	public function newQuery()
 	{
@@ -192,7 +192,7 @@ class PDODatabase implements Database
 	}
 
 	/**
-	 * @return MysqlRecordset|Recordset
+	 * @return PDORecordset|Recordset
 	 */
 	public function newRecordSet()
 	{
