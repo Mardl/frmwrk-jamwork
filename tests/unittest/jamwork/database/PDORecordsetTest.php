@@ -183,7 +183,7 @@ class PDORecordsetTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->pdoDB = new PDODatabase('dakota.intern', 'test_jamwork', 'test_jamwork', 'test_jamwork');
+		$this->pdoDB = new PDODatabase('yuma.intern', 'root', '3werken', 'test_jamwork');
 		$this->query = $this->pdoDB->newQuery();
 		$this->pdoRecordset = $this->pdoDB->newRecordSet();
 
