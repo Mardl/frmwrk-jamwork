@@ -1,15 +1,7 @@
 {
-    "name": "frameworks/jamwork",
+    "name": "Mardl/frmwrk-jamwork",
     "type": "package",
     "description": "Basis-Framework für Core und einige andere Projekte",
-    "homepage": "http://repo.dreiwerken.intern/frameworks/jamwork",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@repo.dreiwerken.intern:frameworks/jamwork.git"
-        }
-
-    ],
     "require": {
         "php" : ">=5.3.0"
     },
