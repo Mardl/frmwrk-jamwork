@@ -113,7 +113,6 @@ class JavascriptTest extends \PHPUnit_Framework_TestCase
 					$this->assertSame($arrScripts['tests/unittest/static/zfile.txt'], 'tests/unittest/static/zfile.txt');
 					break;
 				default:
-					continue;
 					break;
 			}
 
